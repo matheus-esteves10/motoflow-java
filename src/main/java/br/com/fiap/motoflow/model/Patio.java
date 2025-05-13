@@ -16,9 +16,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "t_mtf_patio")
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 public class Patio {
 
     @Id
@@ -41,5 +38,65 @@ public class Patio {
 
     @OneToMany(mappedBy = "patio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PosicaoPatio> posicoes;
+
+    public Patio() {
+    }
+
+    public Patio(Long id, String apelido, Integer capacidade, Integer area, Endereco endereco, List<PosicaoPatio> posicoes) {
+        this.id = id;
+        this.apelido = apelido;
+        this.capacidade = capacidade;
+        this.area = area;
+        this.endereco = endereco;
+        this.posicoes = posicoes;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getApelido() {
+        return apelido;
+    }
+
+    public void setApelido(String apelido) {
+        this.apelido = apelido;
+    }
+
+    public Integer getCapacidade() {
+        return capacidade;
+    }
+
+    public void setCapacidade(Integer capacidade) {
+        this.capacidade = capacidade;
+    }
+
+    public Integer getArea() {
+        return area;
+    }
+
+    public void setArea(Integer area) {
+        this.area = area;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+    public List<PosicaoPatio> getPosicoes() {
+        return posicoes;
+    }
+
+    public void setPosicoes(List<PosicaoPatio> posicoes) {
+        this.posicoes = posicoes;
+    }
 }
 

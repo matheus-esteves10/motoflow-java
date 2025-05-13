@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.*;
@@ -18,8 +19,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Data
-@NoArgsConstructor
 @Table(name = "t_mtf_moto")
 public class Moto {
 
@@ -44,7 +43,7 @@ public class Moto {
 
     @Positive(message = "O preço de aluguel deve ser um valor positivo.")
     @Column(name = "nr_preco_aluguel", precision = 8, scale = 2)
-    private double precoAluguel;
+    private BigDecimal precoAluguel;
 
     @Column(name = "fl_alugada", nullable = false, length = 1)
     private boolean isAlugada;
@@ -52,8 +51,10 @@ public class Moto {
     @Column(name = "dt_alocacao")
     private LocalDate dataAlocacao;
 
+    public Moto() {
+    }
 
-    public Moto(Long id, TipoMoto tipoMoto, int ano, String placa, double precoAluguel, boolean isAlugada) {
+    public Moto(Long id, TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, boolean isAlugada) {
         this.id = id;
         this.tipoMoto = tipoMoto;
         validaAnoMax(ano);
@@ -61,6 +62,62 @@ public class Moto {
         this.placa = placa;
         this.precoAluguel = precoAluguel;
         this.isAlugada = isAlugada;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public TipoMoto getTipoMoto() {
+        return tipoMoto;
+    }
+
+    public void setTipoMoto(TipoMoto tipoMoto) {
+        this.tipoMoto = tipoMoto;
+    }
+
+    public int getAno() {
+        return ano;
+    }
+
+    public void setAno(int ano) {
+        this.ano = ano;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    public BigDecimal getPrecoAluguel() {
+        return precoAluguel;
+    }
+
+    public void setPrecoAluguel(BigDecimal precoAluguel) {
+        this.precoAluguel = precoAluguel;
+    }
+
+    public boolean isAlugada() {
+        return isAlugada;
+    }
+
+    public void setAlugada(boolean alugada) {
+        isAlugada = alugada;
+    }
+
+    public LocalDate getDataAlocacao() {
+        return dataAlocacao;
+    }
+
+    public void setDataAlocacao(LocalDate dataAlocacao) {
+        this.dataAlocacao = dataAlocacao;
     }
 
     private void validaAnoMax(int ano) {

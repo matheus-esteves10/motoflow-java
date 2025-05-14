@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class MotoService {
 
@@ -22,7 +24,7 @@ public class MotoService {
     private PosicaoPatioRepository posicaoPatioRepository;
 
     public Moto save(MotoDto motoDto) {
-        Moto moto = new Moto(motoDto.tipoMoto(), motoDto.ano(), motoDto.placa(), motoDto.precoAluguel(), motoDto.isAlugada());
+        Moto moto = new Moto(motoDto.tipoMoto(), motoDto.ano(), motoDto.placa(), motoDto.precoAluguel(), motoDto.isAlugada(), motoDto.dataAlocacao());
 
         return motoRepository.save(moto);
     }
@@ -48,4 +50,5 @@ public class MotoService {
                 posicao.isPosicaoLivre()
         );
     }
+
 }

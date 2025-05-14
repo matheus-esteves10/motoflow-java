@@ -15,10 +15,12 @@ public record MotoDto(
         @Min(value = 2012, message = "O ano deve ser maior ou igual a 2012.")
         int ano,
         @NotBlank(message = "A placa é obrigatória.")
-        @Pattern(regexp = "^[A-Z]{3}-[0-9]{4}$", message = "A placa deve estar no formato AAA-0000.")
+        @Pattern(regexp = "^[A-Z]{3}[0-9]{4}$", message = "A placa deve estar no formato AAA0000.")
         String placa,
         @Positive(message = "O preço de aluguel deve ser um valor positivo.")
         BigDecimal precoAluguel,
         boolean isAlugada,
-        LocalDate dataAlocacao) {
+        LocalDate dataAlocacao)
+
+{
 }

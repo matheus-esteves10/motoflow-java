@@ -37,7 +37,7 @@ public class Moto {
     private int ano;
 
     @NotBlank(message = "A placa é obrigatória.")
-    @Pattern(regexp = "^[A-Z]{3}-[0-9]{4}$", message = "A placa deve estar no formato AAA-0000.")
+    @Pattern(regexp = "^[A-Z]{3}[0-9]{4}$", message = "A placa deve estar no formato AAA0000.")
     @Column(name = "nr_placa", length = 7, nullable = false)
     private String placa;
 
@@ -54,13 +54,14 @@ public class Moto {
     public Moto() {
     }
 
-    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, boolean isAlugada) {
+    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, boolean isAlugada, LocalDate dataAlocacao) {
         this.tipoMoto = tipoMoto;
         validaAnoMax(ano);
         this.ano = ano;
         this.placa = placa;
         this.precoAluguel = precoAluguel;
         this.isAlugada = isAlugada;
+        this.dataAlocacao = dataAlocacao;
     }
 
     public Long getId() {

@@ -54,7 +54,8 @@ public class Moto {
     public Moto() {
     }
 
-    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, boolean isAlugada) {
+    public Moto(Long id, TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, boolean isAlugada) {
+        this.id = id;
         this.tipoMoto = tipoMoto;
         validaAnoMax(ano);
         this.ano = ano;

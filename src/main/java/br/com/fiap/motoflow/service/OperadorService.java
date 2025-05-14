@@ -65,7 +65,7 @@ public class OperadorService {
 
     // Método de listagem com paginação
     public Page<Operador> listarOperadores(Pageable pageable) {
-        return operadorRepository.findAll(pageable); // Usa o método findAll(Pageable pageable) do JpaRepository
+        return operadorRepository.findAll(pageable);
     }
 
     public void excluirOperador(Long id) {

@@ -126,5 +126,6 @@ public class Moto {
             throw new InvalidYearException("O ano não pode ser maior que o ano atual: " + anoMax);
         }
     }
+
 }
 

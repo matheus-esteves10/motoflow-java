@@ -51,4 +51,19 @@ public class MotoService {
         );
     }
 
+    public void excluirMotoPorPlaca(String placa) {
+        Moto moto = motoRepository.findByPlaca(placa)
+                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
+
+        if (!moto.isAlugada()) {
+            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(posicao -> {
+                posicao.setMoto(null);
+                posicao.setPosicaoLivre(true);
+                posicaoPatioRepository.save(posicao);
+            });
+        }
+
+        motoRepository.delete(moto);
+    }
+
 }

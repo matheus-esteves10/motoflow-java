@@ -15,4 +15,6 @@ public interface PosicaoPatioRepository extends JpaRepository<PosicaoPatio, Long
         WHERE m.placa = :placa
     """)
     Optional<PosicaoPatio> findByMotoPlaca(@Param("placa") String placa);
+
+
 }

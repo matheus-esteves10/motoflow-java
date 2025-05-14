@@ -41,7 +41,7 @@ public class PosicaoPatio {
     private Patio patio;
 
     @OneToOne
-    @JoinColumn(name = "t_mtf_moto_cd_id_moto", unique = true, nullable = false)
+    @JoinColumn(name = "t_mtf_moto_cd_id_moto", unique = true, nullable = true)
     private Moto moto;
 
     public PosicaoPatio() {

@@ -1,5 +1,6 @@
 package br.com.fiap.motoflow.controller;
 
+import br.com.fiap.motoflow.dto.responses.AlocarMotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,5 +38,11 @@ public class MotoController {
     public ResponseEntity<Void> excluirMotoPorPlaca(@PathVariable String placa) {
         motoService.excluirMotoPorPlaca(placa);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/alocar")
+    public ResponseEntity<Void> alocarMoto(@RequestBody AlocarMotoDto dto) {
+        motoService.alocarMotoNaPosicao(dto.placa(), dto.posicaoHorizontal(), dto.posicaoVertical());
+        return ResponseEntity.ok().build();
     }
 }

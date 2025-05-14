@@ -66,4 +66,23 @@ public class MotoService {
         motoRepository.delete(moto);
     }
 
+    public void alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical) {
+        Moto moto = motoRepository.findByPlaca(placa)
+                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
+
+        PosicaoPatio posicao = posicaoPatioRepository
+                .findByPosicaoHorizontalAndPosicaoVerticalAndIsPosicaoLivreTrue(posicaoHorizontal, posicaoVertical)
+                .orElseThrow(() -> new MotoNotFoundException("Posição " + posicaoHorizontal + posicaoVertical + " não encontrada ou já ocupada"));
+
+
+        if (!posicao.isPosicaoLivre()) {
+            throw new IllegalStateException("A posição " + posicaoHorizontal + posicaoVertical + " já está ocupada.");
+        }
+
+        posicao.setMoto(moto);
+        posicao.setPosicaoLivre(false);
+        posicaoPatioRepository.save(posicao);
+    }
+
+
 }

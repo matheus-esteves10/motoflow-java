@@ -16,5 +16,7 @@ public interface PosicaoPatioRepository extends JpaRepository<PosicaoPatio, Long
     """)
     Optional<PosicaoPatio> findByMotoPlaca(@Param("placa") String placa);
 
-
+    Optional<PosicaoPatio> findByPosicaoHorizontalAndPosicaoVerticalAndIsPosicaoLivreTrue(
+            String posicaoHorizontal, int posicaoVertical
+    );
 }

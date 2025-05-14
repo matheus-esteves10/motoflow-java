@@ -1,6 +1,7 @@
 package br.com.fiap.motoflow.controller;
 
 import br.com.fiap.motoflow.dto.OperadorDto;
+import br.com.fiap.motoflow.dto.responses.OperadorResponse;
 import br.com.fiap.motoflow.model.Operador;
 import br.com.fiap.motoflow.service.OperadorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,9 +31,9 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Pátio não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<Operador> criarOperador(@RequestBody OperadorDto operadorDto) {
+    public ResponseEntity<OperadorResponse> criarOperador(@RequestBody OperadorDto operadorDto) {
         Operador operadorCriado = operadorService.salvarOperador(operadorDto);
-        return new ResponseEntity<>(operadorCriado, HttpStatus.CREATED);
+        return new ResponseEntity<>(new OperadorResponse(operadorCriado), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -44,9 +45,9 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<Operador> atualizarOperador(@PathVariable Long id, @RequestBody OperadorDto operadorDto) {
+    public ResponseEntity<OperadorResponse> atualizarOperador(@PathVariable Long id, @RequestBody OperadorDto operadorDto) {
         Operador operadorAtualizado = operadorService.atualizarOperador(id, operadorDto);
-        return new ResponseEntity<>(operadorAtualizado, HttpStatus.OK);
+        return new ResponseEntity<>(new OperadorResponse(operadorAtualizado), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -58,9 +59,9 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<Operador> buscarOperadorPorId(@PathVariable Long id) {
+    public ResponseEntity<OperadorResponse> buscarOperadorPorId(@PathVariable Long id) {
         Operador operador = operadorService.buscarOperadorPorId(id).orElseThrow();
-        return new ResponseEntity<>(operador, HttpStatus.OK);
+        return new ResponseEntity<>(new OperadorResponse(operador), HttpStatus.OK);
     }
 
     @GetMapping
@@ -71,9 +72,10 @@ public class OperadorController {
                     @ApiResponse(responseCode = "200", description = "Lista de operadores", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class)))
             }
     )
-    public ResponseEntity<Page<Operador>> listarOperadores(Pageable pageable) {
+    public ResponseEntity<Page<OperadorResponse>> listarOperadores(Pageable pageable) {
         Page<Operador> operadores = operadorService.listarOperadores(pageable);
-        return new ResponseEntity<>(operadores, HttpStatus.OK);
+        Page<OperadorResponse> operadorResponses = operadores.map(OperadorResponse::new);
+        return new ResponseEntity<>(operadorResponses, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -7,7 +7,9 @@ import lombok.*;
 
 @Entity
 @Table(name = "t_mtf_operador")
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Operador {
 
     @Id
@@ -29,46 +31,5 @@ public class Operador {
     @JoinColumn(name = "t_mtf_patio_cd_id_patio", nullable = false)
     private Patio patio;
 
-    public Operador() {
-    }
-
-    public Operador(Long id, String nome, String senha, Patio patio) {
-        this.id = id;
-        this.nome = nome;
-        this.senha = senha;
-        this.patio = patio;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public Patio getPatio() {
-        return patio;
-    }
-
-    public void setPatio(Patio patio) {
-        this.patio = patio;
-    }
 }
 

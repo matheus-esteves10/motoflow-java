@@ -88,4 +88,28 @@ public class MotoService {
         );
     }
 
+    public ResponsePosicao cadastrarMotoEAlocar(MotoDto motoDto, Long idPatio) {
+
+        Moto moto = save(motoDto); // Salva a moto
+
+
+        PosicaoPatio posicaoLivre = posicaoPatioRepository // Busca a primeira posição livre para o pátio específico
+                .findFirstByIsPosicaoLivreTrueAndPatioIdOrderByPosicaoHorizontalAscPosicaoVerticalAsc(idPatio)
+                .orElseThrow(() -> new PosicaoNotFoundException("Nenhuma posição livre disponível no pátio com ID " + idPatio));
+
+        // Aloca a moto
+        posicaoLivre.setMoto(moto);
+        posicaoLivre.setPosicaoLivre(false);
+        posicaoPatioRepository.save(posicaoLivre);
+
+        return new ResponsePosicao(
+                moto.getPlaca(),
+                posicaoLivre.getPosicaoHorizontal(),
+                posicaoLivre.getPosicaoVertical(),
+                posicaoLivre.getPatio().getId()
+        );
+    }
+
+
+
 }

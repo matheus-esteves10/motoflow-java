@@ -1,5 +1,6 @@
 package br.com.fiap.motoflow.controller;
 
+import br.com.fiap.motoflow.dto.CadastroMotoComPatioDto;
 import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.dto.responses.AlocarMotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,4 +62,25 @@ public class MotoController {
         ResponsePosicao response = motoService.alocarMotoNaPosicao(dto.placa(), dto.posicaoHorizontal(), dto.posicaoVertical());
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/cadastrar-e-alocar")
+    @Operation(
+            summary = "Cadastrar moto e alocar automaticamente",
+            description = "Cadastra uma nova moto e aloca na primeira posição livre no pátio informado, seguindo ordem A1, A2, B1..."
+    )
+    public ResponseEntity<ResponsePosicao> cadastrarEAlocar(@RequestBody CadastroMotoComPatioDto dto) {
+        MotoDto motoDto = new MotoDto(
+                dto.tipoMoto(),
+                dto.ano(),
+                dto.placa(),
+                dto.precoAluguel(),
+                dto.isAlugada(),
+                dto.dataAlocacao()
+        );
+
+        ResponsePosicao response = motoService.cadastrarMotoEAlocar(motoDto, dto.idPatio());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
 }

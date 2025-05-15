@@ -19,4 +19,9 @@ public interface PosicaoPatioRepository extends JpaRepository<PosicaoPatio, Long
     Optional<PosicaoPatio> findByPosicaoHorizontalAndPosicaoVerticalAndIsPosicaoLivreTrue(
             String posicaoHorizontal, int posicaoVertical
     );
+
+    Optional<PosicaoPatio> findFirstByIsPosicaoLivreTrueAndPatioIdOrderByPosicaoHorizontalAscPosicaoVerticalAsc(Long patioId);
+
+
+
 }

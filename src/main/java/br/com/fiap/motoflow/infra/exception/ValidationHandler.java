@@ -1,9 +1,6 @@
 package br.com.fiap.motoflow.infra.exception;
 
-import br.com.fiap.motoflow.exceptions.InvalidYearException;
-import br.com.fiap.motoflow.exceptions.MotoNotFoundException;
-import br.com.fiap.motoflow.exceptions.OperadorNotFoundException;
-import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
+import br.com.fiap.motoflow.exceptions.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -75,6 +72,15 @@ public class ValidationHandler {
     public Map<String, String> motoNotFound(MotoNotFoundException e) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Moto informada não foi encontrada");
+        error.put("message", e.getMessage());
+        return error;
+    }
+
+    @ExceptionHandler(PosicaoNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> posicaoNotFound(PosicaoNotFoundException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Posição informada não foi encontrada");
         error.put("message", e.getMessage());
         return error;
     }

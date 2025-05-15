@@ -2,6 +2,7 @@ package br.com.fiap.motoflow.controller;
 
 import br.com.fiap.motoflow.dto.responses.AlocarMotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
+import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,8 +27,6 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content)
             }
     )
-
-    @PostMapping
     public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorPlaca(@RequestParam String placa) {
         PosicaoMotoResponse response = motoService.buscarPosicaoPorPlaca(placa);
         return ResponseEntity.ok(response);
@@ -41,8 +40,15 @@ public class MotoController {
     }
 
     @PutMapping("/alocar")
-    public ResponseEntity<Void> alocarMoto(@RequestBody AlocarMotoDto dto) {
-        motoService.alocarMotoNaPosicao(dto.placa(), dto.posicaoHorizontal(), dto.posicaoVertical());
-        return ResponseEntity.ok().build();
+    @Operation(summary = "Alocar moto na posição",
+            description = "Aloca a moto na posição.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Posição alocada com sucesso", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "Moto ou Posição nao encontrada", content = @Content)
+            }
+    )
+    public ResponseEntity<ResponsePosicao> alocarMoto(@RequestBody AlocarMotoDto dto) {
+        ResponsePosicao response = motoService.alocarMotoNaPosicao(dto.placa(), dto.posicaoHorizontal(), dto.posicaoVertical());
+        return ResponseEntity.ok(response);
     }
 }

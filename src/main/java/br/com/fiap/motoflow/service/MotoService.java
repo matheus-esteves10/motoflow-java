@@ -2,7 +2,9 @@ package br.com.fiap.motoflow.service;
 
 import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
+import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
 import br.com.fiap.motoflow.exceptions.MotoNotFoundException;
+import br.com.fiap.motoflow.exceptions.PosicaoNotFoundException;
 import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.PosicaoPatio;
 import br.com.fiap.motoflow.repository.MotoRepository;
@@ -66,7 +68,7 @@ public class MotoService {
         motoRepository.delete(moto);
     }
 
-    public void alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical) {
+    public ResponsePosicao alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical) {
         Moto moto = motoRepository.findByPlaca(placa)
                 .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
 
@@ -74,15 +76,18 @@ public class MotoService {
                 .findByPosicaoHorizontalAndPosicaoVerticalAndIsPosicaoLivreTrue(posicaoHorizontal, posicaoVertical)
                 .orElseThrow(() -> new MotoNotFoundException("Posição " + posicaoHorizontal + posicaoVertical + " não encontrada ou já ocupada"));
 
-
-        if (!posicao.isPosicaoLivre()) {
-            throw new IllegalStateException("A posição " + posicaoHorizontal + posicaoVertical + " já está ocupada.");
-        }
-
         posicao.setMoto(moto);
         posicao.setPosicaoLivre(false);
         posicaoPatioRepository.save(posicao);
+
+        return new ResponsePosicao(
+                moto.getPlaca(),
+                posicao.getPosicaoHorizontal(),
+                posicao.getPosicaoVertical(),
+                posicao.getPatio().getId()
+        );
     }
+
 
 
 }

@@ -53,6 +53,5 @@ A solução idealizada busca resolver os problemas acima com os seguintes pilare
 > **Status**: Em desenvolvimento  
 > **Equipe**: [Matheus Esteves, Gabriel Falanga e Arthur Spedine]  
 > **Cliente/Desafio**: Mottu – Challenge  
->
 > **Instruções**: Somente rodar o projeto e fazer os requests no endpoint (swagger ou arquivo do insomnia que foi adicionado ao repositório)
 

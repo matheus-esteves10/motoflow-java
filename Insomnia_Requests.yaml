@@ -1,0 +1,315 @@
+type: collection.insomnia.rest/5.0
+name: Challenge
+meta:
+  id: wrk_36455fa2acce4678bf4eabdf5c80ab51
+  created: 1747105768492
+  modified: 1747105768492
+collection:
+  - name: OPERADOR
+    meta:
+      id: fld_fa1d9a0380f34ddf8e1e851e217e7381
+      created: 1747105807104
+      modified: 1747105807104
+      sortKey: -1747105807104
+    children:
+      - url: http://localhost:8080/operadores?sort=nome,asc
+        name: Listar todos
+        meta:
+          id: req_22b37601be204a7ca73ff4a30ccbf744
+          created: 1747105774107
+          modified: 1747329915929
+          isPrivate: false
+          sortKey: -1747105815094
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/operadores/1
+        name: Listar por id
+        meta:
+          id: req_d4164f18283c481f881824343bd54ca9
+          created: 1747105842292
+          modified: 1747246720788
+          isPrivate: false
+          sortKey: -1746009656227
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/operadores
+        name: Criar operador
+        meta:
+          id: req_abed19dc2fe8440a8585c601a62001c9
+          created: 1747105856231
+          modified: 1747330751449
+          isPrivate: false
+          sortKey: -1745461576793.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "nome": "Arthur Spedine",
+              "senha": "12346",
+              "patio": {
+                "id": 1
+              }
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/operadores/45
+        name: Editar operador
+        meta:
+          id: req_9df58b57fffc4870b02c595d54e802d3
+          created: 1747105863404
+          modified: 1747247485134
+          isPrivate: false
+          sortKey: -1745187537076.75
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Gabriel Falanga",
+              "senha": "123456",
+              "patio": {
+                "id": 2
+              }
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/operadores/44
+        name: Deletar operador
+        meta:
+          id: req_3b5e22723355458f8618320b72af01c2
+          created: 1747105871518
+          modified: 1747247510827
+          isPrivate: false
+          sortKey: -1745050517218.375
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Moto
+    meta:
+      id: fld_ec07a4f2e4a74e479b5a166cb166a480
+      created: 1747248763848
+      modified: 1747248763848
+      sortKey: -1747248763848
+    children:
+      - url: http://localhost:8080/motos/posicao?placa=ABC1234
+        name: Pegar posicao por placa
+        meta:
+          id: req_1dbbeed1c3f64830ba1d4b62e06e7722
+          created: 1747248767822
+          modified: 1747279131332
+          isPrivate: false
+          sortKey: -1747248767822
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/motos
+        name: Adicionar Moto
+        meta:
+          id: req_e93efac6936f45a8b17b224e412bfd4c
+          created: 1747279100528
+          modified: 1747280229430
+          isPrivate: false
+          sortKey: -1747177291458
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "tipoMoto": "MOTTU_E",
+              "ano": 2022,
+              "placa": "ABC7632",
+              "precoAluguel": 150.00,
+              "isAlugada": false,
+              "dataAlocacao": null
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/motos/ABC7632
+        name: Remover Moto
+        meta:
+          id: req_32cd86f0990c44b183332b9721278514
+          created: 1747279115292
+          modified: 1747280351780
+          isPrivate: false
+          sortKey: -1747279115292
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/motos/alocar
+        name: Alocar em uma posição
+        meta:
+          id: req_8bd8cea88450416fad3fe1ed96dd6ca8
+          created: 1747279193501
+          modified: 1747313817963
+          isPrivate: false
+          sortKey: -1747279115392
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "placa": "ABC7632",
+              "posicaoVertical": 2,
+              "posicaoHorizontal": "A"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/motos/cadastrar-e-alocar
+        name: Cadastrar e Alocar
+        meta:
+          id: req_a8418eacd7ab4d6086585be2b3f982f6
+          created: 1747313783152
+          modified: 1747314472711
+          isPrivate: false
+          sortKey: -1747313783152
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "tipoMoto": "MOTTU_E",
+              "ano": 2024,
+              "placa": "XYZ1231",
+              "precoAluguel": 100.0,
+              "isAlugada": false,
+              "dataAlocacao": "2025-05-14",
+              "idPatio": 2
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/motos/ABC9876/aluguel?alugada=true
+        name: Alterar para moto alugada
+        meta:
+          id: req_e6b78d747f2041299fb2abbf34e4cb3b
+          created: 1747329416638
+          modified: 1747330993549
+          isPrivate: false
+          sortKey: -1747329416638
+        method: PUT
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e0dc90331cb6cb83740efb127bc94b708f9fdecf
+    created: 1747105768549
+    modified: 1747105768549
+environments:
+  name: Base Environment
+  meta:
+    id: env_e0dc90331cb6cb83740efb127bc94b708f9fdecf
+    created: 1747105768547
+    modified: 1747105768547
+    isPrivate: false

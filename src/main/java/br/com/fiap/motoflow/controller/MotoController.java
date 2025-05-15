@@ -1,8 +1,10 @@
 package br.com.fiap.motoflow.controller;
 
+import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.dto.responses.AlocarMotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
+import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,6 +19,13 @@ public class MotoController {
 
     @Autowired
     private MotoService motoService;
+
+    @Operation(summary = "Cadastrar uma nova moto", description = "Salva uma nova moto no sistema")
+    @PostMapping
+    public ResponseEntity<Moto> salvarMoto(@RequestBody MotoDto dto) {
+        Moto novaMoto = motoService.save(dto);
+        return ResponseEntity.ok(novaMoto);
+    }
 
     @GetMapping("/posicao")
     @Operation(

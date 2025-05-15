@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ public class OperadorController {
     private OperadorService operadorService;
 
     @PostMapping
+    @CacheEvict(value = "operadores", allEntries = true)
     @Operation(
             summary = "Cadastrar operador",
             description = "Cria um novo operador com as informações fornecidas.",
@@ -65,9 +68,10 @@ public class OperadorController {
     }
 
     @GetMapping
+    @Cacheable(value = "operadores")
     @Operation(
             summary = "Listar operadores",
-            description = "Lista todos os operadores com paginação.",
+            description = "Lista todos os operadores com paginação. Use o parâmetro ?sort=nome,asc para ordenar por nome.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Lista de operadores", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class)))
             }

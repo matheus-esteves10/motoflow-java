@@ -66,7 +66,11 @@ public class MotoController {
     @PostMapping("/cadastrar-e-alocar")
     @Operation(
             summary = "Cadastrar moto e alocar automaticamente",
-            description = "Cadastra uma nova moto e aloca na primeira posição livre no pátio informado, seguindo ordem A1, A2, B1..."
+            description = "Cadastra uma nova moto e aloca na primeira posição livre no pátio informado, seguindo ordem A1, A2, B1...",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Moto cadastrada e alocada com sucesso", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "Moto ou patio nao encontrado", content = @Content)
+            }
     )
     public ResponseEntity<ResponsePosicao> cadastrarEAlocar(@RequestBody CadastroMotoComPatioDto dto) {
         MotoDto motoDto = new MotoDto(
@@ -80,6 +84,20 @@ public class MotoController {
 
         ResponsePosicao response = motoService.cadastrarMotoEAlocar(motoDto, dto.idPatio());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{placa}/aluguel")
+    @Operation(summary = "Atualiza status de aluguel da moto e remove do pátio se alugada",
+    responses = {
+        @ApiResponse(responseCode = "200", description = "Status de aluguel atualizado com sucesso", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
+    }
+    )
+    public ResponseEntity<Moto> atualizarStatusAluguel(
+            @PathVariable String placa,
+            @RequestParam boolean alugada) {
+        Moto motoAtualizada = motoService.atualizarStatusAluguel(placa, alugada);
+        return ResponseEntity.ok(motoAtualizada);
     }
 
 

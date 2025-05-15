@@ -9,11 +9,13 @@ import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.PosicaoPatio;
 import br.com.fiap.motoflow.repository.MotoRepository;
 import br.com.fiap.motoflow.repository.PosicaoPatioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -108,6 +110,26 @@ public class MotoService {
                 posicaoLivre.getPosicaoVertical(),
                 posicaoLivre.getPatio().getId()
         );
+    }
+
+    @Transactional
+    public Moto atualizarStatusAluguel(String placa, boolean isAlugada) {
+        Moto moto = motoRepository.findByPlaca(placa)
+                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
+
+        moto.setAlugada(isAlugada);
+
+        if (isAlugada) {
+            moto.setDataAlocacao(LocalDate.now());
+
+            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(posicao -> {
+                posicao.setMoto(null);
+                posicao.setPosicaoLivre(true);
+                posicaoPatioRepository.save(posicao);
+            });
+        }
+
+        return motoRepository.save(moto);
     }
 
 

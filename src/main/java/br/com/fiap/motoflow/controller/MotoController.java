@@ -32,7 +32,6 @@ public class MotoController {
     @GetMapping("/posicao")
     @Operation(
             summary = "Buscar posição da moto",
-            description = "Busca detalhes da moto pela placa.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Moto encontrada no patio", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content)
@@ -52,7 +51,7 @@ public class MotoController {
 
     @PutMapping("/alocar")
     @Operation(summary = "Alocar moto na posição",
-            description = "Aloca a moto na posição.",
+            description = "Esse método funciona para uma moto já existente no sistema ser alocada em uma posição especifica do patio.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Posição alocada com sucesso", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "404", description = "Moto ou Posição nao encontrada", content = @Content)
@@ -65,7 +64,7 @@ public class MotoController {
 
     @PostMapping("/cadastrar-e-alocar")
     @Operation(
-            summary = "Cadastrar moto e alocar automaticamente",
+            summary = "Cadastrar nova moto e alocar automaticamente",
             description = "Cadastra uma nova moto e aloca na primeira posição livre no pátio informado, seguindo ordem A1, A2, B1...",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Moto cadastrada e alocada com sucesso", content = @Content(mediaType = "application/json")),

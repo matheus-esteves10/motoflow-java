@@ -41,10 +41,10 @@ O fluxo operacional da aplicação ocorre da seguinte forma:
    O operador utiliza o aplicativo mobile para capturar e enviar a imagem da placa da moto por meio da interface da aplicação.
 
 2. **Processamento com Visão Computacional**  
-   Um script em Python consome essa imagem e utiliza um modelo de OCR (por exemplo, a API Plate Recognizer) para identificar automaticamente a placa da moto.
+   Um script em Python consome essa imagem e utiliza um modelo de indentificação de imagem (API Plate Recognizer) para identificar automaticamente a placa da moto.
 
 3. **Envio ao Backend**  
-   Após a leitura, o script envia para o backend em Java os dados da placa juntamente com a tarefa a ser executada (como o cadastro e posicionamento de uma nova moto no pátio).
+   Após a leitura, o script envia para o backend em Java os dados da placa juntamente com a tarefa a ser executada (como o cadastro e posicionamento de uma nova moto no pátio, por exemplo).
 
 4. **Persistência dos Dados**  
    O backend processa a solicitação, atualiza o banco de dados com as informações recebidas e associa a moto a uma posição no pátio.

@@ -88,7 +88,7 @@ public class MotoService {
         moto.setAlugada(isAlugada);
 
         if (isAlugada) {
-            moto.setDataAlocacao(LocalDate.now());
+            moto.setDataAluguel(LocalDate.now());
             posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
         }
 
@@ -154,6 +154,7 @@ public class MotoService {
     private void alocarMoto(PosicaoPatio posicao, Moto moto) {
         posicao.setMoto(moto);
         posicao.setPosicaoLivre(false);
+        moto.setDataAluguel(null);;
         posicaoPatioRepository.save(posicao);
     }
 

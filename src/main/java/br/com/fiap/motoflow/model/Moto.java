@@ -49,20 +49,20 @@ public class Moto {
     @Column(name = "fl_alugada", nullable = false, length = 1)
     private boolean isAlugada;
 
-    @Column(name = "dt_alocacao")
-    private LocalDate dataAlocacao;
+    @Column(name = "dt_aluguel")
+    private LocalDate dataAluguel;
 
     public Moto() {
     }
 
-    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, boolean isAlugada, LocalDate dataAlocacao) {
+    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, boolean isAlugada, LocalDate dataAluguel) {
         this.tipoMoto = tipoMoto;
         validaAnoMax(ano);
         this.ano = ano;
         this.placa = placa;
         this.precoAluguel = precoAluguel;
         this.isAlugada = isAlugada;
-        this.dataAlocacao = dataAlocacao;
+        this.dataAluguel = dataAluguel;
     }
 
     public Long getId() {
@@ -113,12 +113,12 @@ public class Moto {
         isAlugada = alugada;
     }
 
-    public LocalDate getDataAlocacao() {
-        return dataAlocacao;
+    public LocalDate getdataAluguel() {
+        return dataAluguel;
     }
 
-    public void setDataAlocacao(LocalDate dataAlocacao) {
-        this.dataAlocacao = dataAlocacao;
+    public void setDataAluguel(LocalDate dataAlocacao) {
+        this.dataAluguel = dataAlocacao;
     }
 
     private void validaAnoMax(int ano) {

@@ -251,7 +251,7 @@ collection:
         meta:
           id: req_a8418eacd7ab4d6086585be2b3f982f6
           created: 1747313783152
-          modified: 1747314472711
+          modified: 1747694644655
           isPrivate: false
           sortKey: -1747313783152
         method: POST
@@ -261,11 +261,10 @@ collection:
             {
               "tipoMoto": "MOTTU_E",
               "ano": 2024,
-              "placa": "XYZ1231",
+              "placa": "XYZ1237",
               "precoAluguel": 100.0,
               "isAlugada": false,
-              "dataAlocacao": "2025-05-14",
-              "idPatio": 2
+              "idPatio": 1
             }
         headers:
           - name: Content-Type
@@ -305,7 +304,7 @@ collection:
         meta:
           id: req_ff4a3c3b20a3447bb6fa41b48fefe151
           created: 1747666173330
-          modified: 1747666879410
+          modified: 1747693819793
           isPrivate: false
           sortKey: -1747666173330
         method: POST

@@ -13,5 +13,5 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 #docker build -t motoflow-server:1.0 .
 #docker run -p 8080:8080 motoflow-server:1.0
 #docker login
-#docker tag motoflow-server:1.0 NOMEUSUARIO/motoflow-server:1.0
-#docker push NOMEUSUARIO/motoflow-server:1.0
+#docker tag motoflow-server:1.0 matheusesteves10/motoflow-server:1.0
+#docker push matheusesteves10/motoflow-server:1.0

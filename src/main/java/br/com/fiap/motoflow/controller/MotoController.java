@@ -99,5 +99,21 @@ public class MotoController {
         return ResponseEntity.ok(motoAtualizada);
     }
 
+    @Operation(
+            summary = "Alocar moto existente em posição livre",
+            description = "Aloca uma moto já cadastrada no sistema em uma posição livre e sequencial no pátio especificado.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Moto alocada com sucesso", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "Moto ou posição não encontrada", content = @Content)
+            }
+    )
+    @PostMapping("/{placa}/alocar/{idPatio}")
+    public ResponseEntity<ResponsePosicao> alocarMotoExistente(
+            @PathVariable String placa,
+            @PathVariable Long idPatio) {
 
+        ResponsePosicao response = motoService.alocarMotoExistente(placa, idPatio);
+        return ResponseEntity.ok(response);
+    }
 }
+

@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Optional;
+
 
 @Service
 public class MotoService {
@@ -27,6 +27,7 @@ public class MotoService {
     @Autowired
     private PosicaoPatioRepository posicaoPatioRepository;
 
+    @Transactional
     public Moto save(MotoDto motoDto) {
         Moto moto = new Moto(motoDto.tipoMoto(), motoDto.ano(), motoDto.placa(), motoDto.precoAluguel(), motoDto.isAlugada(), motoDto.dataAlocacao());
 
@@ -55,6 +56,7 @@ public class MotoService {
         );
     }
 
+    @Transactional
     public void excluirMotoPorPlaca(String placa) {
         Moto moto = motoRepository.findByPlaca(placa)
                 .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
@@ -70,6 +72,7 @@ public class MotoService {
         motoRepository.delete(moto);
     }
 
+    @Transactional
     public ResponsePosicao alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical) {
         Moto moto = motoRepository.findByPlaca(placa)
                 .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
@@ -91,26 +94,10 @@ public class MotoService {
     }
 
     public ResponsePosicao cadastrarMotoEAlocar(MotoDto motoDto, Long idPatio) {
-
-        Moto moto = save(motoDto); // Salva a moto
-
-
-        PosicaoPatio posicaoLivre = posicaoPatioRepository // Busca a primeira posição livre para o pátio específico
-                .findFirstByIsPosicaoLivreTrueAndPatioIdOrderByPosicaoHorizontalAscPosicaoVerticalAsc(idPatio)
-                .orElseThrow(() -> new PosicaoNotFoundException("Nenhuma posição livre disponível no pátio com ID " + idPatio));
-
-        // Aloca a moto
-        posicaoLivre.setMoto(moto);
-        posicaoLivre.setPosicaoLivre(false);
-        posicaoPatioRepository.save(posicaoLivre);
-
-        return new ResponsePosicao(
-                moto.getPlaca(),
-                posicaoLivre.getPosicaoHorizontal(),
-                posicaoLivre.getPosicaoVertical(),
-                posicaoLivre.getPatio().getId()
-        );
+        Moto moto = save(motoDto);
+        return alocarMotoEmPosicaoLivre(moto, idPatio);
     }
+
 
     @Transactional
     public Moto atualizarStatusAluguel(String placa, boolean isAlugada) {
@@ -133,5 +120,38 @@ public class MotoService {
     }
 
 
+    @Transactional
+    public ResponsePosicao alocarMotoExistente(String placa, Long idPatio) {
+        Moto moto = motoRepository.findByPlaca(placa)
+                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
+
+        // Libera posição atual, se existir
+        posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(posicao -> {
+            posicao.setMoto(null);
+            posicao.setPosicaoLivre(true);
+            posicaoPatioRepository.save(posicao);
+        });
+
+        return alocarMotoEmPosicaoLivre(moto, idPatio);
+    }
+
+
+
+    private ResponsePosicao alocarMotoEmPosicaoLivre(Moto moto, Long idPatio) {
+        PosicaoPatio posicaoLivre = posicaoPatioRepository
+                .findFirstByIsPosicaoLivreTrueAndPatioIdOrderByPosicaoHorizontalAscPosicaoVerticalAsc(idPatio)
+                .orElseThrow(() -> new PosicaoNotFoundException("Nenhuma posição livre disponível no pátio com ID " + idPatio));
+
+        posicaoLivre.setMoto(moto);
+        posicaoLivre.setPosicaoLivre(false);
+        posicaoPatioRepository.save(posicaoLivre);
+
+        return new ResponsePosicao(
+                moto.getPlaca(),
+                posicaoLivre.getPosicaoHorizontal(),
+                posicaoLivre.getPosicaoVertical(),
+                posicaoLivre.getPatio().getId()
+        );
+    }
 
 }

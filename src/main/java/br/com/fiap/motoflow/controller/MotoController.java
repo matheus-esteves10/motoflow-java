@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,13 @@ public class MotoController {
     public ResponseEntity<Moto> salvarMoto(@RequestBody MotoDto dto) {
         Moto novaMoto = motoService.save(dto);
         return ResponseEntity.ok(novaMoto);
+    }
+
+    @GetMapping
+    @Operation(summary = "Listar todas as motos",
+            description = "Retorna uma lista paginada de motos cadastradas")
+    public Page<Moto> listarMotos(Pageable pageable) {
+        return motoService.findAll(pageable);
     }
 
     @GetMapping("/posicao")

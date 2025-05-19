@@ -143,12 +143,12 @@ collection:
       modified: 1747248763848
       sortKey: -1747248763848
     children:
-      - url: http://localhost:8080/motos/posicao?placa=ABC1234
+      - url: http://localhost:8080/motos/posicao?placa=ABC7630
         name: Pegar posicao por placa
         meta:
           id: req_1dbbeed1c3f64830ba1d4b62e06e7722
           created: 1747248767822
-          modified: 1747279131332
+          modified: 1747666893139
           isPrivate: false
           sortKey: -1747248767822
         method: GET
@@ -168,7 +168,7 @@ collection:
         meta:
           id: req_e93efac6936f45a8b17b224e412bfd4c
           created: 1747279100528
-          modified: 1747280229430
+          modified: 1747667464555
           isPrivate: false
           sortKey: -1747177291458
         method: POST
@@ -177,8 +177,8 @@ collection:
           text: |-
             {
               "tipoMoto": "MOTTU_E",
-              "ano": 2022,
-              "placa": "ABC7632",
+              "ano": 2012,
+              "placa": "ABC7630",
               "precoAluguel": 150.00,
               "isAlugada": false,
               "dataAlocacao": null
@@ -280,15 +280,55 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/motos/ABC9876/aluguel?alugada=true
+      - url: http://localhost:8080/motos/ABC7630/aluguel?alugada=true
         name: Alterar para moto alugada
         meta:
           id: req_e6b78d747f2041299fb2abbf34e4cb3b
           created: 1747329416638
-          modified: 1747330993549
+          modified: 1747666909931
           isPrivate: false
           sortKey: -1747329416638
         method: PUT
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/motos/ABC7630/alocar/1
+        name: Moto existente em posição aleatória
+        meta:
+          id: req_ff4a3c3b20a3447bb6fa41b48fefe151
+          created: 1747666173330
+          modified: 1747666879410
+          isPrivate: false
+          sortKey: -1747666173330
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/motos?page=0&size=10&sort=ano,desc
+        name: GetAll
+        meta:
+          id: req_b74658b6d74047b18b067bfd47862df4
+          created: 1747667840514
+          modified: 1747667887384
+          isPrivate: false
+          sortKey: -1747666173430
+        method: GET
         headers:
           - name: User-Agent
             value: insomnia/11.1.0

@@ -1,6 +1,8 @@
 package br.com.fiap.motoflow.infra.exception;
 
 import br.com.fiap.motoflow.exceptions.*;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -83,5 +85,19 @@ public class ValidationHandler {
         error.put("error", "Posição informada não foi encontrada");
         error.put("message", e.getMessage());
         return error;
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleConstraintViolation(ConstraintViolationException e) {
+        Map<String, String> errors = new HashMap<>();
+
+        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+            String field = violation.getPropertyPath().toString();
+            String message = violation.getMessage();
+            errors.put(field, message);
+        }
+
+        return errors;
     }
 }

@@ -1,5 +1,6 @@
 package br.com.fiap.motoflow.model;
 
+import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.exceptions.InvalidYearException;
 import br.com.fiap.motoflow.model.enums.TipoMoto;
 import jakarta.persistence.*;
@@ -126,6 +127,18 @@ public class Moto {
             throw new InvalidYearException("O ano não pode ser maior que o ano atual: " + anoMax);
         }
     }
+
+    public static Moto from(MotoDto dto) {
+        return new Moto(
+                dto.tipoMoto(),
+                dto.ano(),
+                dto.placa(),
+                dto.precoAluguel(),
+                dto.isAlugada(),
+                dto.dataAlocacao()
+        );
+    }
+
 
 }
 

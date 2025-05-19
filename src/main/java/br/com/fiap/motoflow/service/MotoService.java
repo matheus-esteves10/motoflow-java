@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-
 @Service
 public class MotoService {
 
@@ -27,63 +26,51 @@ public class MotoService {
     @Autowired
     private PosicaoPatioRepository posicaoPatioRepository;
 
+
     @Transactional
     public Moto save(MotoDto motoDto) {
-        Moto moto = new Moto(motoDto.tipoMoto(), motoDto.ano(), motoDto.placa(), motoDto.precoAluguel(), motoDto.isAlugada(), motoDto.dataAlocacao());
-
-        return motoRepository.save(moto);
+        return motoRepository.save(Moto.from(motoDto));
     }
 
     public Page<Moto> findAll(Pageable pageable) {
         return motoRepository.findAll(pageable);
     }
 
-    public PosicaoMotoResponse buscarPosicaoPorPlaca(String placa) {
-        PosicaoPatio posicao = posicaoPatioRepository.findByMotoPlaca(placa)
-                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada no pátio"));
-
-        return new PosicaoMotoResponse(
-                posicao.getMoto().getPlaca(),
-                posicao.getMoto().getTipoMoto(),
-                posicao.getMoto().getAno(),
-                posicao.getMoto().getPrecoAluguel(),
-                posicao.getPatio().getId(),
-                posicao.getPatio().getApelido(),
-                posicao.getPatio().getEndereco(),
-                posicao.getPosicaoVertical(),
-                posicao.getPosicaoHorizontal(),
-                posicao.isPosicaoLivre()
-        );
-    }
-
     @Transactional
     public void excluirMotoPorPlaca(String placa) {
-        Moto moto = motoRepository.findByPlaca(placa)
-                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
+        Moto moto = buscarMotoOrException(placa);
 
         if (!moto.isAlugada()) {
-            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(posicao -> {
-                posicao.setMoto(null);
-                posicao.setPosicaoLivre(true);
-                posicaoPatioRepository.save(posicao);
-            });
+            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
         }
 
         motoRepository.delete(moto);
     }
 
+    // --- ALOCAÇÃO ---
+
+    @Transactional
+    public ResponsePosicao cadastrarMotoEAlocar(MotoDto motoDto, Long idPatio) {
+        Moto moto = save(motoDto);
+        return alocarMotoEmPosicaoLivre(moto, idPatio);
+    }
+
+    @Transactional
+    public ResponsePosicao alocarMotoExistente(String placa, Long idPatio) {
+        Moto moto = buscarMotoOrException(placa);
+
+        posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
+
+        return alocarMotoEmPosicaoLivre(moto, idPatio);
+    }
+
     @Transactional
     public ResponsePosicao alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical) {
-        Moto moto = motoRepository.findByPlaca(placa)
-                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
+        Moto moto = buscarMotoOrException(placa);
 
-        PosicaoPatio posicao = posicaoPatioRepository
-                .findByPosicaoHorizontalAndPosicaoVerticalAndIsPosicaoLivreTrue(posicaoHorizontal, posicaoVertical)
-                .orElseThrow(() -> new MotoNotFoundException("Posição " + posicaoHorizontal + posicaoVertical + " não encontrada ou já ocupada"));
+        PosicaoPatio posicao = buscarPosicaoLivreOrException(posicaoHorizontal, posicaoVertical);
 
-        posicao.setMoto(moto);
-        posicao.setPosicaoLivre(false);
-        posicaoPatioRepository.save(posicao);
+        alocarMoto(posicao, moto);
 
         return new ResponsePosicao(
                 moto.getPlaca(),
@@ -93,58 +80,62 @@ public class MotoService {
         );
     }
 
-    public ResponsePosicao cadastrarMotoEAlocar(MotoDto motoDto, Long idPatio) {
-        Moto moto = save(motoDto);
-        return alocarMotoEmPosicaoLivre(moto, idPatio);
-    }
-
+    // --- ATUALIZAÇÃO DE STATUS ---
 
     @Transactional
     public Moto atualizarStatusAluguel(String placa, boolean isAlugada) {
-        Moto moto = motoRepository.findByPlaca(placa)
-                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
-
+        Moto moto = buscarMotoOrException(placa);
         moto.setAlugada(isAlugada);
 
         if (isAlugada) {
             moto.setDataAlocacao(LocalDate.now());
-
-            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(posicao -> {
-                posicao.setMoto(null);
-                posicao.setPosicaoLivre(true);
-                posicaoPatioRepository.save(posicao);
-            });
+            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
         }
 
         return motoRepository.save(moto);
     }
 
+    // --- CONSULTAS ---
 
-    @Transactional
-    public ResponsePosicao alocarMotoExistente(String placa, Long idPatio) {
-        Moto moto = motoRepository.findByPlaca(placa)
-                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
+    public PosicaoMotoResponse buscarPosicaoPorPlaca(String placa) {
+        PosicaoPatio posicao = posicaoPatioRepository.findByMotoPlaca(placa)
+                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada no pátio"));
 
-        // Libera posição atual, se existir
-        posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(posicao -> {
-            posicao.setMoto(null);
-            posicao.setPosicaoLivre(true);
-            posicaoPatioRepository.save(posicao);
-        });
+        Moto moto = posicao.getMoto();
 
-        return alocarMotoEmPosicaoLivre(moto, idPatio);
+        return new PosicaoMotoResponse(
+                moto.getPlaca(),
+                moto.getTipoMoto(),
+                moto.getAno(),
+                moto.getPrecoAluguel(),
+                posicao.getPatio().getId(),
+                posicao.getPatio().getApelido(),
+                posicao.getPatio().getEndereco(),
+                posicao.getPosicaoVertical(),
+                posicao.getPosicaoHorizontal(),
+                posicao.isPosicaoLivre()
+        );
     }
 
+    // --- MÉTODOS AUXILIARES PRIVADOS ---
 
+    private Moto buscarMotoOrException(String placa) {
+        return motoRepository.findByPlaca(placa)
+                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
+    }
+
+    private PosicaoPatio buscarPosicaoLivreOrException(String horizontal, int vertical) {
+        return posicaoPatioRepository
+                .findByPosicaoHorizontalAndPosicaoVerticalAndIsPosicaoLivreTrue(horizontal, vertical)
+                .orElseThrow(() -> new MotoNotFoundException("Posição " + horizontal + vertical + " não encontrada ou já ocupada"));
+    }
 
     private ResponsePosicao alocarMotoEmPosicaoLivre(Moto moto, Long idPatio) {
         PosicaoPatio posicaoLivre = posicaoPatioRepository
                 .findFirstByIsPosicaoLivreTrueAndPatioIdOrderByPosicaoHorizontalAscPosicaoVerticalAsc(idPatio)
                 .orElseThrow(() -> new PosicaoNotFoundException("Nenhuma posição livre disponível no pátio com ID " + idPatio));
 
-        posicaoLivre.setMoto(moto);
-        posicaoLivre.setPosicaoLivre(false);
-        posicaoPatioRepository.save(posicaoLivre);
+        alocarMoto(posicaoLivre, moto);
 
         return new ResponsePosicao(
                 moto.getPlaca(),
@@ -152,6 +143,18 @@ public class MotoService {
                 posicaoLivre.getPosicaoVertical(),
                 posicaoLivre.getPatio().getId()
         );
+    }
+
+    private void liberarPosicao(PosicaoPatio posicao) {
+        posicao.setMoto(null);
+        posicao.setPosicaoLivre(true);
+        posicaoPatioRepository.save(posicao);
+    }
+
+    private void alocarMoto(PosicaoPatio posicao, Moto moto) {
+        posicao.setMoto(moto);
+        posicao.setPosicaoLivre(false);
+        posicaoPatioRepository.save(posicao);
     }
 
 }

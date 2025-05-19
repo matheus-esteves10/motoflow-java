@@ -33,10 +33,29 @@ A solução idealizada busca resolver os problemas acima com os seguintes pilare
 - Plataforma web ou aplicativo com interface intuitiva para os operadores;
 - Compatível com qualquer layout de pátio, permitindo fácil adaptação.
 
+## 🔄 Fluxo da Aplicação
+
+O fluxo operacional da aplicação ocorre da seguinte forma:
+
+1. **Upload da Imagem da Placa**  
+   O operador utiliza o aplicativo mobile para capturar e enviar a imagem da placa da moto por meio da interface da aplicação.
+
+2. **Processamento com Visão Computacional**  
+   Um script em Python consome essa imagem e utiliza um modelo de OCR (por exemplo, a API Plate Recognizer) para identificar automaticamente a placa da moto.
+
+3. **Envio ao Backend**  
+   Após a leitura, o script envia para o backend em Java os dados da placa juntamente com a tarefa a ser executada (como o cadastro e posicionamento de uma nova moto no pátio).
+
+4. **Persistência dos Dados**  
+   O backend processa a solicitação, atualiza o banco de dados com as informações recebidas e associa a moto a uma posição no pátio.
+
+5. **Visualização na Interface**  
+   A interface web ou mobile exibe a nova posição da moto em tempo real no mapa do pátio, permitindo acompanhamento completo pelos operadores.
+
+
 ## 🧠 Tecnologias Envolvidas
 
-- Visão Computacional (OpenCV, YOLO, etc.)
-- Leitura de placas (OCR)
+- Visão Computacional para leitura da iamgem das placas (API Plater Recognizer)
 - Backend com integração de câmeras/sensores
 - Frontend Web/App com visualização do pátio em tempo real
 - Banco de dados georreferenciado/localização

@@ -25,7 +25,7 @@ public class OperadorService {
 
     public Operador salvarOperador(OperadorDto operadorDto) {
 
-        Long patioId = operadorDto.patio().getId();
+        Long patioId = operadorDto.patioId();
         Optional<Patio> patioExistente = patioRepository.findById(patioId);
 
         if (patioExistente.isEmpty()) {
@@ -48,7 +48,7 @@ public class OperadorService {
             throw new OperadorNotFoundException("Operador não encontrado.");
         }
 
-        Long patioId = operadorDto.patio().getId();
+        Long patioId = operadorDto.patioId();
         Optional<Patio> patioExistente = patioRepository.findById(patioId);
 
         if (patioExistente.isEmpty()) {

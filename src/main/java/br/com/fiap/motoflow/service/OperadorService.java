@@ -32,7 +32,7 @@ public class OperadorService {
     @Transactional
     public Operador salvarOperador(OperadorDto operadorDto) {
 
-        Long patioId = operadorDto.patio().getId();
+        Long patioId = operadorDto.patioId();
         Optional<Patio> patioExistente = patioRepository.findById(patioId);
 
         if (patioExistente.isEmpty()) {
@@ -50,7 +50,7 @@ public class OperadorService {
     @Transactional
     public Operador atualizarOperador(OperadorDto operadorDto, Operador operador) {
 
-        Long patioId = operadorDto.patio().getId();
+        Long patioId = operadorDto.patioId();
         Optional<Patio> patioExistente = patioRepository.findById(patioId);
 
         if (patioExistente.isEmpty()) {

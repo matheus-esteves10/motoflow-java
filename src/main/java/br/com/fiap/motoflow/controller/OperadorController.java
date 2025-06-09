@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,10 +16,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/operadores")
+@RequestMapping("/operador")
+@SecurityRequirement(name = "bearerAuth")
 public class OperadorController {
 
     @Autowired
@@ -39,7 +42,8 @@ public class OperadorController {
         return new ResponseEntity<>(new OperadorResponse(operadorCriado), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/me")
+    @CacheEvict(value = "operadores", allEntries = true)
     @Operation(
             summary = "Atualizar operador",
             description = "Atualiza os dados de um operador existente.",
@@ -48,12 +52,14 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<OperadorResponse> atualizarOperador(@PathVariable Long id, @RequestBody OperadorDto operadorDto) {
-        Operador operadorAtualizado = operadorService.atualizarOperador(id, operadorDto);
+    public ResponseEntity<OperadorResponse> atualizarOperador(@RequestBody OperadorDto operadorDto) {
+
+        Operador operador = (Operador) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Operador operadorAtualizado = operadorService.atualizarOperador(operadorDto, operador);
         return new ResponseEntity<>(new OperadorResponse(operadorAtualizado), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/me")
     @Operation(
             summary = "Buscar operador por ID",
             description = "Recupera os detalhes de um operador através do ID.",
@@ -62,9 +68,10 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<OperadorResponse> buscarOperadorPorId(@PathVariable Long id) {
-        Operador operador = operadorService.buscarOperadorPorId(id).orElseThrow();
-        return new ResponseEntity<>(new OperadorResponse(operador), HttpStatus.OK);
+    public ResponseEntity<OperadorResponse> operadorAuth() {
+        Operador operador = (Operador) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var response =operadorService.operadorAuth(operador).orElseThrow();
+        return new ResponseEntity<>(new OperadorResponse(response), HttpStatus.OK);
     }
 
     @GetMapping
@@ -82,17 +89,18 @@ public class OperadorController {
         return new ResponseEntity<>(operadorResponses, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/me")
+    @CacheEvict(value = "operadores", allEntries = true)
     @Operation(
             summary = "Excluir operador",
-            description = "Exclui um operador existente pelo ID.",
             responses = {
                     @ApiResponse(responseCode = "204", description = "Operador excluído com sucesso", content = @Content),
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<Void> excluirOperador(@PathVariable Long id) {
-        operadorService.excluirOperador(id);
+    public ResponseEntity<Void> excluirOperador() {
+        Operador operador = (Operador) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        operadorService.excluirOperador(operador);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

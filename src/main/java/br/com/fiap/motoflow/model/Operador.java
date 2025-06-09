@@ -4,11 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @Entity
 @Table(name = "t_mtf_operador")
-
-public class Operador {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Operador implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,46 +35,20 @@ public class Operador {
     @JoinColumn(name = "t_mtf_patio_cd_id_patio", nullable = false)
     private Patio patio;
 
-    public Operador(Long id, String nome, String senha, Patio patio) {
-        this.id = id;
-        this.nome = nome;
-        this.senha = senha;
-        this.patio = patio;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 
-    public Operador() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getSenha() {
+    @Override
+    public String getPassword() {
         return senha;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public Patio getPatio() {
-        return patio;
-    }
-
-    public void setPatio(Patio patio) {
-        this.patio = patio;
+    @Override
+    public String getUsername() {
+        return String.valueOf(id);
     }
 }
 

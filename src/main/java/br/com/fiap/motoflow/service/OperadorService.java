@@ -7,9 +7,11 @@ import br.com.fiap.motoflow.model.Operador;
 import br.com.fiap.motoflow.model.Patio;
 import br.com.fiap.motoflow.repository.OperadorRepository;
 import br.com.fiap.motoflow.repository.PatioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,6 +25,11 @@ public class OperadorService {
     @Autowired
     private PatioRepository patioRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+    @Transactional
     public Operador salvarOperador(OperadorDto operadorDto) {
 
         Long patioId = operadorDto.patio().getId();
@@ -34,19 +41,14 @@ public class OperadorService {
 
         Operador operador = new Operador();
         operador.setNome(operadorDto.nome());
-        operador.setSenha(operadorDto.senha());
+        operador.setSenha(passwordEncoder.encode(operadorDto.senha()));
         operador.setPatio(patioExistente.get());
 
         return operadorRepository.save(operador);
     }
 
-    public Operador atualizarOperador(Long id, OperadorDto operadorDto) {
-
-        Optional<Operador> operadorExistente = buscarOperadorPorId(id);
-
-        if (operadorExistente.isEmpty()) {
-            throw new OperadorNotFoundException("Operador não encontrado.");
-        }
+    @Transactional
+    public Operador atualizarOperador(OperadorDto operadorDto, Operador operador) {
 
         Long patioId = operadorDto.patio().getId();
         Optional<Patio> patioExistente = patioRepository.findById(patioId);
@@ -55,31 +57,26 @@ public class OperadorService {
             throw new PatioNotFoundException("Patio não encontrado.");
         }
 
-        Operador operador = operadorExistente.get();
         operador.setNome(operadorDto.nome());
-        operador.setSenha(operadorDto.senha());
+        operador.setSenha(passwordEncoder.encode(operadorDto.senha()));
         operador.setPatio(patioExistente.get());
 
         return operadorRepository.save(operador);
     }
 
-    // Método de listagem com paginação
     public Page<Operador> listarOperadores(Pageable pageable) {
         return operadorRepository.findAll(pageable);
     }
 
-    public void excluirOperador(Long id) {
-        Optional<Operador> operadorExistente = buscarOperadorPorId(id);
+    @Transactional
+    public void excluirOperador(Operador operador) {
 
-        if (operadorExistente.isEmpty()) {
-            throw new OperadorNotFoundException("Operador não encontrado.");
-        }
-
-        operadorRepository.deleteById(id);
+        operadorRepository.deleteById(operador.getId());
     }
 
-    public Optional<Operador> buscarOperadorPorId(Long id) {
-        return Optional.ofNullable(operadorRepository.findById(id)
+    public Optional<Operador> operadorAuth(Operador operador) {
+
+        return Optional.ofNullable(operadorRepository.findById(operador.getId())
                 .orElseThrow(() -> new OperadorNotFoundException("Operador não encontrado.")));
     }
 }

@@ -16,6 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "t_mtf_patio")
+@Data
 public class Patio {
 
     @Id
@@ -51,52 +52,5 @@ public class Patio {
         this.posicoes = posicoes;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getApelido() {
-        return apelido;
-    }
-
-    public void setApelido(String apelido) {
-        this.apelido = apelido;
-    }
-
-    public Integer getCapacidade() {
-        return capacidade;
-    }
-
-    public void setCapacidade(Integer capacidade) {
-        this.capacidade = capacidade;
-    }
-
-    public Integer getArea() {
-        return area;
-    }
-
-    public void setArea(Integer area) {
-        this.area = area;
-    }
-
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-
-    public List<PosicaoPatio> getPosicoes() {
-        return posicoes;
-    }
-
-    public void setPosicoes(List<PosicaoPatio> posicoes) {
-        this.posicoes = posicoes;
-    }
 }
 

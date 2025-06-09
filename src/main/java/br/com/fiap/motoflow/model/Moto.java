@@ -21,6 +21,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "t_mtf_moto")
+@Data
 public class Moto {
 
     @Id
@@ -63,62 +64,6 @@ public class Moto {
         this.precoAluguel = precoAluguel;
         this.isAlugada = isAlugada;
         this.dataAluguel = dataAluguel;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public TipoMoto getTipoMoto() {
-        return tipoMoto;
-    }
-
-    public void setTipoMoto(TipoMoto tipoMoto) {
-        this.tipoMoto = tipoMoto;
-    }
-
-    public int getAno() {
-        return ano;
-    }
-
-    public void setAno(int ano) {
-        this.ano = ano;
-    }
-
-    public String getPlaca() {
-        return placa;
-    }
-
-    public void setPlaca(String placa) {
-        this.placa = placa;
-    }
-
-    public BigDecimal getPrecoAluguel() {
-        return precoAluguel;
-    }
-
-    public void setPrecoAluguel(BigDecimal precoAluguel) {
-        this.precoAluguel = precoAluguel;
-    }
-
-    public boolean isAlugada() {
-        return isAlugada;
-    }
-
-    public void setAlugada(boolean alugada) {
-        isAlugada = alugada;
-    }
-
-    public LocalDate getdataAluguel() {
-        return dataAluguel;
-    }
-
-    public void setDataAluguel(LocalDate dataAlocacao) {
-        this.dataAluguel = dataAlocacao;
     }
 
     private void validaAnoMax(int ano) {

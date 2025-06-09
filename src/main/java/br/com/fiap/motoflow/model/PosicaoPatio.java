@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "t_mtf_posicao_patio")
-
+@Data
 public class PosicaoPatio {
 
     @Id
@@ -56,52 +56,6 @@ public class PosicaoPatio {
         this.moto = moto;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getPosicaoVertical() {
-        return posicaoVertical;
-    }
-
-    public void setPosicaoVertical(int posicaoVertical) {
-        this.posicaoVertical = posicaoVertical;
-    }
-
-    public String getPosicaoHorizontal() {
-        return posicaoHorizontal;
-    }
-
-    public void setPosicaoHorizontal(String posicaoHorizontal) {
-        this.posicaoHorizontal = posicaoHorizontal;
-    }
-
-    public boolean isPosicaoLivre() {
-        return isPosicaoLivre;
-    }
-
-    public void setPosicaoLivre(boolean posicaoLivre) {
-        isPosicaoLivre = posicaoLivre;
-    }
-
-    public Patio getPatio() {
-        return patio;
-    }
-
-    public void setPatio(Patio patio) {
-        this.patio = patio;
-    }
-
-    public Moto getMoto() {
-        return moto;
-    }
-
-    public void setMoto(Moto moto) {
-        this.moto = moto;
-    }
 }
 

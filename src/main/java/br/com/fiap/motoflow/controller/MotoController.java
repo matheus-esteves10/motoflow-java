@@ -58,7 +58,7 @@ public class MotoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/alocar")
+    @PutMapping("/alocacao")
     @Operation(summary = "Alocar moto na posição",
             description = "Esse método funciona para uma moto já existente no sistema ser alocada em uma posição especifica do patio.",
             responses = {
@@ -71,7 +71,7 @@ public class MotoController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/cadastrar-e-alocar")
+    @PostMapping("/cadastro-e-alocacao")
     @Operation(
             summary = "Cadastrar nova moto e alocar automaticamente",
             description = "Cadastra uma nova moto e aloca na primeira posição livre no pátio informado, seguindo ordem A1, A2, B1...",
@@ -116,13 +116,13 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto ou posição não encontrada", content = @Content)
             }
     )
-    @PostMapping("/{placa}/alocar/{idPatio}")
+    @PostMapping("/{placa}/alocacao/{idPatio}")
     public ResponseEntity<ResponsePosicao> alocarMotoExistente(
             @PathVariable String placa,
             @PathVariable Long idPatio) {
 
         ResponsePosicao response = motoService.alocarMotoExistente(placa, idPatio);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
 

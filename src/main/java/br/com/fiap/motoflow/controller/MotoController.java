@@ -6,19 +6,23 @@ import br.com.fiap.motoflow.dto.responses.AlocarMotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
 import br.com.fiap.motoflow.model.Moto;
+import br.com.fiap.motoflow.model.Operador;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/motos")
+@SecurityRequirement(name = "bearerAuth")
 public class MotoController {
 
     @Autowired
@@ -26,7 +30,7 @@ public class MotoController {
 
     @Operation(summary = "Cadastrar uma nova moto", description = "Salva uma nova moto no sistema")
     @PostMapping
-    public ResponseEntity<Moto> salvarMoto(@RequestBody MotoDto dto) {
+    public ResponseEntity<Moto> salvarMoto(@RequestBody MotoDto dto, @AuthenticationPrincipal Operador operador) {
         Moto novaMoto = motoService.save(dto);
         return ResponseEntity.ok(novaMoto);
     }
@@ -34,7 +38,7 @@ public class MotoController {
     @GetMapping
     @Operation(summary = "Listar todas as motos",
             description = "Retorna uma lista paginada de motos cadastradas")
-    public Page<Moto> listarMotos(Pageable pageable) {
+    public Page<Moto> listarMotos(Pageable pageable, @AuthenticationPrincipal Operador operador) {
         return motoService.findAll(pageable);
     }
 
@@ -46,14 +50,16 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content)
             }
     )
-    public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorPlaca(@RequestParam String placa) {
+    public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorPlaca(@RequestParam String placa, @AuthenticationPrincipal Operador operador) {
+
         PosicaoMotoResponse response = motoService.buscarPosicaoPorPlaca(placa);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{placa}")
     @Operation(summary = "Excluir moto por placa", description = "Exclui a moto pela placa. Remove o vínculo com a posição se não estiver alugada.")
-    public ResponseEntity<Void> excluirMotoPorPlaca(@PathVariable String placa) {
+    public ResponseEntity<Void> excluirMotoPorPlaca(@PathVariable String placa, @AuthenticationPrincipal Operador operador) {
+
         motoService.excluirMotoPorPlaca(placa);
         return ResponseEntity.noContent().build();
     }
@@ -66,7 +72,8 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto ou Posição nao encontrada", content = @Content)
             }
     )
-    public ResponseEntity<ResponsePosicao> alocarMoto(@RequestBody AlocarMotoDto dto) {
+    public ResponseEntity<ResponsePosicao> alocarMoto(@RequestBody AlocarMotoDto dto, @AuthenticationPrincipal Operador operador) {
+
         ResponsePosicao response = motoService.alocarMotoNaPosicao(dto.placa(), dto.posicaoHorizontal(), dto.posicaoVertical());
         return ResponseEntity.ok(response);
     }
@@ -80,7 +87,8 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto ou patio nao encontrado", content = @Content)
             }
     )
-    public ResponseEntity<ResponsePosicao> cadastrarEAlocar(@RequestBody CadastroMotoComPatioDto dto) {
+    public ResponseEntity<ResponsePosicao> cadastrarEAlocar(@RequestBody CadastroMotoComPatioDto dto, @AuthenticationPrincipal Operador operador) {
+
         MotoDto motoDto = new MotoDto(
                 dto.tipoMoto(),
                 dto.ano(),
@@ -101,9 +109,9 @@ public class MotoController {
         @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
     }
     )
-    public ResponseEntity<Moto> atualizarStatusAluguel(
-            @PathVariable String placa,
-            @RequestParam boolean alugada) {
+    public ResponseEntity<Moto> atualizarStatusAluguel(@PathVariable String placa, @RequestParam boolean alugada,
+                                                       @AuthenticationPrincipal Operador operador) {
+
         Moto motoAtualizada = motoService.atualizarStatusAluguel(placa, alugada);
         return ResponseEntity.ok(motoAtualizada);
     }
@@ -118,8 +126,7 @@ public class MotoController {
     )
     @PostMapping("/{placa}/alocacao/{idPatio}")
     public ResponseEntity<ResponsePosicao> alocarMotoExistente(
-            @PathVariable String placa,
-            @PathVariable Long idPatio) {
+            @PathVariable String placa, @PathVariable Long idPatio, @AuthenticationPrincipal Operador operador) {
 
         ResponsePosicao response = motoService.alocarMotoExistente(placa, idPatio);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

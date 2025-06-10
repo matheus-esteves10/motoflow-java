@@ -16,7 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -52,9 +52,8 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<OperadorResponse> atualizarOperador(@RequestBody OperadorDto operadorDto) {
+    public ResponseEntity<OperadorResponse> atualizarOperador(@RequestBody OperadorDto operadorDto, @AuthenticationPrincipal Operador operador) {
 
-        Operador operador = (Operador) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Operador operadorAtualizado = operadorService.atualizarOperador(operadorDto, operador);
         return new ResponseEntity<>(new OperadorResponse(operadorAtualizado), HttpStatus.OK);
     }
@@ -68,8 +67,8 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<OperadorResponse> operadorAuth() {
-        Operador operador = (Operador) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<OperadorResponse> operadorAuth(@AuthenticationPrincipal Operador operador) {
+
         var response =operadorService.operadorAuth(operador).orElseThrow();
         return new ResponseEntity<>(new OperadorResponse(response), HttpStatus.OK);
     }
@@ -98,8 +97,8 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<Void> excluirOperador() {
-        Operador operador = (Operador) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<Void> excluirOperador(@AuthenticationPrincipal Operador operador) {
+
         operadorService.excluirOperador(operador);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

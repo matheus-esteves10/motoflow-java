@@ -34,7 +34,7 @@ public class Patio {
     private Integer area;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "t_mtf_endereco_cd_id_endereco", referencedColumnName = "cd_id_endereco", unique = true, nullable = false)
+    @JoinColumn(name = "cd_id_endereco", referencedColumnName = "cd_id_endereco", unique = true, nullable = false)
     private Endereco endereco;
 
     @OneToMany(mappedBy = "patio", cascade = CascadeType.ALL, orphanRemoval = true)

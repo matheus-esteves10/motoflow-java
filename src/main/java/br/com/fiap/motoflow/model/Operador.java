@@ -32,7 +32,7 @@ public class Operador implements UserDetails {
     private String senha;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "t_mtf_patio_cd_id_patio", nullable = false)
+    @JoinColumn(name = "cd_id_patio", nullable = false)
     private Patio patio;
 
 

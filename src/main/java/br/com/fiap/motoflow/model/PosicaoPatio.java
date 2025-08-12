@@ -37,11 +37,11 @@ public class PosicaoPatio {
     private boolean isPosicaoLivre;
 
     @ManyToOne
-    @JoinColumn(name = "t_mtf_patio_cd_id_patio", nullable = false)
+    @JoinColumn(name = "cd_id_patio", nullable = false)
     private Patio patio;
 
     @OneToOne
-    @JoinColumn(name = "t_mtf_moto_cd_id_moto", unique = true, nullable = true)
+    @JoinColumn(name = "cd_id_moto", unique = true, nullable = true)
     private Moto moto;
 
     public PosicaoPatio() {

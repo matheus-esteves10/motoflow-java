@@ -5,6 +5,7 @@ import br.com.fiap.motoflow.exceptions.OperadorNotFoundException;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
 import br.com.fiap.motoflow.model.Operador;
 import br.com.fiap.motoflow.model.Patio;
+import br.com.fiap.motoflow.model.enums.Role;
 import br.com.fiap.motoflow.repository.OperadorRepository;
 import br.com.fiap.motoflow.repository.PatioRepository;
 import jakarta.transaction.Transactional;
@@ -42,6 +43,7 @@ public class OperadorService {
         Operador operador = new Operador();
         operador.setNome(operadorDto.nome());
         operador.setSenha(passwordEncoder.encode(operadorDto.senha()));
+        operador.setRole(Role.OPERADOR);
         operador.setPatio(patioExistente.get());
 
         return operadorRepository.save(operador);
@@ -69,9 +71,9 @@ public class OperadorService {
     }
 
     @Transactional
-    public void excluirOperador(Operador operador) {
+    public void excluirOperador(Long id) {
 
-        operadorRepository.deleteById(operador.getId());
+        operadorRepository.deleteById(id);
     }
 
     public Optional<Operador> operadorAuth(Operador operador) {
@@ -79,4 +81,17 @@ public class OperadorService {
         return Optional.ofNullable(operadorRepository.findById(operador.getId())
                 .orElseThrow(() -> new OperadorNotFoundException("Operador não encontrado.")));
     }
+
+    @Transactional
+    public Operador tornarAdmin(Long operadorId) {
+        Operador operador = operadorRepository.findById(operadorId)
+                .orElseThrow(() -> new OperadorNotFoundException("Operador não encontrado."));
+
+        operador.setRole(Role.ADMIN); 
+
+        return operadorRepository.save(operador);
+    }
+
+
+
 }

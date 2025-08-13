@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ public class OperadorController {
 
     @PostMapping
     @CacheEvict(value = "operadores", allEntries = true)
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Cadastrar operador",
             description = "Cria um novo operador com as informações fornecidas.",
@@ -88,8 +90,9 @@ public class OperadorController {
         return new ResponseEntity<>(operadorResponses, HttpStatus.OK);
     }
 
-    @DeleteMapping("/me")
+    @DeleteMapping("/{id}")
     @CacheEvict(value = "operadores", allEntries = true)
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Excluir operador",
             responses = {
@@ -97,9 +100,16 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<Void> excluirOperador(@AuthenticationPrincipal Operador operador) {
+    public ResponseEntity<Void> excluirOperador(@RequestParam Long id) {
 
-        operadorService.excluirOperador(operador);
+        operadorService.excluirOperador(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{id}/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<OperadorResponse> tornarOperadorAdmin(@PathVariable Long id) {
+        Operador operadorAtualizado = operadorService.tornarAdmin(id);
+        return new ResponseEntity<>(new OperadorResponse(operadorAtualizado), HttpStatus.OK);
     }
 }

@@ -100,7 +100,7 @@ public class OperadorController {
                     @ApiResponse(responseCode = "404", description = "Operador não encontrado", content = @Content)
             }
     )
-    public ResponseEntity<Void> excluirOperador(@RequestParam Long id) {
+    public ResponseEntity<Void> excluirOperador(@PathVariable Long id) {
 
         operadorService.excluirOperador(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

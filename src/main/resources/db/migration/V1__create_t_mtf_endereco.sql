@@ -10,9 +10,9 @@ CREATE TABLE t_mtf_endereco (
 );
 
 -- Inserção de dados
-INSERT INTO t_mtf_endereco (cd_id_endereco, nm_logradouro, nr_endereco, nm_bairro, nm_cidade, sg_estado, nr_cep) VALUES
-(1, 'Avenida Paulista', 1000, 'Bela Vista', 'São Paulo', 'SP', '01310-100'),
-(2, 'Rua dos Três Irmãos', 250, 'Vila Progredior', 'Rio de Janeiro', 'RJ', '22241-030'),
-(3, 'Rua dos Eucaliptos', 500, 'Alphaville', 'Barueri', 'SP', '06474-080'),
-(4, 'Rua Fagundes Filho', 650, 'Vila Independência', 'São Paulo', 'SP', '04283-000'),
-(5, 'Rua Rio do Ouro', 325, 'Jardim Acapulco', 'Guarulhos', 'SP', '07084-010');
+INSERT INTO t_mtf_endereco (nm_logradouro, nr_endereco, nm_bairro, nm_cidade, sg_estado, nr_cep) VALUES
+('Avenida Paulista', 1000, 'Bela Vista', 'São Paulo', 'SP', '01310-100'),
+('Rua dos Três Irmãos', 250, 'Vila Progredior', 'Rio de Janeiro', 'RJ', '22241-030'),
+('Rua dos Eucaliptos', 500, 'Alphaville', 'Barueri', 'SP', '06474-080'),
+('Rua Fagundes Filho', 650, 'Vila Independência', 'São Paulo', 'SP', '04283-000'),
+('Rua Rio do Ouro', 325, 'Jardim Acapulco', 'Guarulhos', 'SP', '07084-010');

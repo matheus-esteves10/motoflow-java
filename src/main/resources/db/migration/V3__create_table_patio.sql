@@ -9,12 +9,12 @@ CREATE TABLE t_mtf_patio (
 );
 
 -- Inserção de dados
-INSERT INTO t_mtf_patio (cd_id_patio, nm_apelido_patio, nr_capacidade, nr_area, cd_id_endereco) VALUES
-(1, 'Pátio A', 50, 200, 1),
-(2, 'Pátio B', 100, 500, 2),
-(3, 'Pátio C', 75, 300, 3),
-(4, 'Pátio D', 40, 150, 4),
-(5, 'Pátio E', 60, 350, 5);
+INSERT INTO t_mtf_patio (nm_apelido_patio, nr_capacidade, nr_area, cd_id_endereco) VALUES
+('Pátio A', 50, 200, 1),
+('Pátio B', 100, 500, 2),
+('Pátio C', 75, 300, 3),
+('Pátio D', 40, 150, 4),
+('Pátio E', 60, 350, 5);
 
 -- Constraint de chave estrangeira
 ALTER TABLE t_mtf_patio

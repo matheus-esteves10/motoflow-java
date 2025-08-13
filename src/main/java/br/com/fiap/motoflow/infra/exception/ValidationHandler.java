@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -83,6 +84,15 @@ public class ValidationHandler {
     public Map<String, String> posicaoNotFound(PosicaoNotFoundException e) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Posição informada não foi encontrada");
+        error.put("message", e.getMessage());
+        return error;
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, String> acessoNegado(AccessDeniedException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getClass().getSimpleName());
         error.put("message", e.getMessage());
         return error;
     }

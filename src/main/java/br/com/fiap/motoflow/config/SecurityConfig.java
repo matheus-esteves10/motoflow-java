@@ -38,6 +38,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/operador").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/patio/{id}").permitAll() //todo: remover e passar o jwt para o frontend thymeleaf
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)

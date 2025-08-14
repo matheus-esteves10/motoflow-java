@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard do Pátio</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h1>Dashboard do Pátio</h1>
+
+<div style="width: 400px;">
+    <canvas id="patioChart"></canvas>
+</div>
+
+<script>
+    const ctx = document.getElementById('patioChart').getContext('2d');
+    const patioChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Posições Disponíveis', 'Posições Alugadas'],
+            datasets: [{
+                label: 'Ocupação do Pátio',
+                data: [
+                    /* Thymeleaf injeta os valores no JS */
+                    [[${patioInfo.posicoesDisponiveis}]],
+                    [[${patioInfo.quantidadeAlugadas}]]
+                ],
+                backgroundColor: ['#000000', '#09ff00']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

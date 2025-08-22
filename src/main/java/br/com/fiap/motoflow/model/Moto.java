@@ -2,6 +2,7 @@ package br.com.fiap.motoflow.model;
 
 import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.exceptions.InvalidYearException;
+import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.model.enums.TipoMoto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -47,8 +48,9 @@ public class Moto {
     @Column(name = "nr_preco_aluguel", precision = 8, scale = 2)
     private BigDecimal precoAluguel;
 
-    @Column(name = "fl_alugada", nullable = false, length = 1)
-    private boolean isAlugada;
+    @Column(name = "nm_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusMoto statusMoto;
 
     @Column(name = "dt_aluguel")
     private LocalDate dataAluguel;
@@ -56,13 +58,13 @@ public class Moto {
     public Moto() {
     }
 
-    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, boolean isAlugada, LocalDate dataAluguel) {
+    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, StatusMoto statusMoto, LocalDate dataAluguel) {
         this.tipoMoto = tipoMoto;
         validaAnoMax(ano);
         this.ano = ano;
         this.placa = placa;
         this.precoAluguel = precoAluguel;
-        this.isAlugada = isAlugada;
+        this.statusMoto = statusMoto;
         this.dataAluguel = dataAluguel;
     }
 
@@ -79,7 +81,7 @@ public class Moto {
                 dto.ano(),
                 dto.placa(),
                 dto.precoAluguel(),
-                dto.isAlugada(),
+                dto.statusMoto(),
                 dto.dataAlocacao()
         );
     }

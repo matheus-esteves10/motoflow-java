@@ -1,5 +1,6 @@
 package br.com.fiap.motoflow.dto;
 
+import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.model.enums.TipoMoto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,7 +20,7 @@ public record MotoDto(
         String placa,
         @Positive(message = "O preço de aluguel deve ser um valor positivo.")
         BigDecimal precoAluguel,
-        boolean isAlugada,
+        StatusMoto statusMoto,
         LocalDate dataAlocacao)
 
 {

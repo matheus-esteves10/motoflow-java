@@ -7,6 +7,7 @@ import br.com.fiap.motoflow.exceptions.MotoNotFoundException;
 import br.com.fiap.motoflow.exceptions.PosicaoNotFoundException;
 import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.PosicaoPatio;
+import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.repository.MotoRepository;
 import br.com.fiap.motoflow.repository.PosicaoPatioRepository;
 import jakarta.transaction.Transactional;
@@ -40,7 +41,7 @@ public class MotoService {
     public void excluirMotoPorPlaca(String placa) {
         Moto moto = buscarMotoOrException(placa);
 
-        if (!moto.isAlugada()) {
+        if (!moto.getStatusMoto().equals(StatusMoto.ALUGADA)) {
             posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
         }
 
@@ -83,11 +84,11 @@ public class MotoService {
     // --- ATUALIZAÇÃO DE STATUS ---
 
     @Transactional
-    public Moto atualizarStatusAluguel(String placa, boolean isAlugada) {
+    public Moto atualizarStatusAluguel(String placa, StatusMoto statusMoto) {
         Moto moto = buscarMotoOrException(placa);
-        moto.setAlugada(isAlugada);
+        moto.setStatusMoto(statusMoto);
 
-        if (isAlugada) {
+        if (statusMoto.equals(StatusMoto.ALUGADA)) {
             moto.setDataAluguel(LocalDate.now());
             posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
         }

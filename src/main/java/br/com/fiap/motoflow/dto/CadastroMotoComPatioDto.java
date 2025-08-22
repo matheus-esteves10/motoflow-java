@@ -1,5 +1,6 @@
 package br.com.fiap.motoflow.dto;
 
+import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.model.enums.TipoMoto;
 
 import java.math.BigDecimal;
@@ -10,7 +11,8 @@ public record CadastroMotoComPatioDto(
         int ano,
         String placa,
         BigDecimal precoAluguel,
-        boolean isAlugada,
+        StatusMoto statusMoto,
         LocalDate dataAlocacao,
         Long idPatio
-) {}
+) {
+}

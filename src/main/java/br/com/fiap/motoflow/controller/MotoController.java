@@ -7,6 +7,7 @@ import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
 import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.Operador;
+import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -94,7 +95,7 @@ public class MotoController {
                 dto.ano(),
                 dto.placa(),
                 dto.precoAluguel(),
-                dto.isAlugada(),
+                dto.statusMoto(),
                 dto.dataAlocacao()
         );
 
@@ -109,10 +110,10 @@ public class MotoController {
         @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
     }
     )
-    public ResponseEntity<Moto> atualizarStatusAluguel(@PathVariable String placa, @RequestParam boolean alugada,
+    public ResponseEntity<Moto> atualizarStatusAluguel(@PathVariable String placa, @RequestParam StatusMoto statusMoto,
                                                        @AuthenticationPrincipal Operador operador) {
 
-        Moto motoAtualizada = motoService.atualizarStatusAluguel(placa, alugada);
+        Moto motoAtualizada = motoService.atualizarStatusAluguel(placa, statusMoto);
         return ResponseEntity.ok(motoAtualizada);
     }
 

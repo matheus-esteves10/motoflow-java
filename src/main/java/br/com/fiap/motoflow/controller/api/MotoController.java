@@ -1,4 +1,4 @@
-package br.com.fiap.motoflow.controller;
+package br.com.fiap.motoflow.controller.api;
 
 import br.com.fiap.motoflow.dto.CadastroMotoComPatioDto;
 import br.com.fiap.motoflow.dto.MotoDto;
@@ -22,7 +22,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/motos")
+@RequestMapping("api/motos")
 @SecurityRequirement(name = "bearerAuth")
 public class MotoController {
 
@@ -34,13 +34,6 @@ public class MotoController {
     public ResponseEntity<Moto> salvarMoto(@RequestBody MotoDto dto, @AuthenticationPrincipal Operador operador) {
         Moto novaMoto = motoService.save(dto);
         return ResponseEntity.ok(novaMoto);
-    }
-
-    @GetMapping
-    @Operation(summary = "Listar todas as motos",
-            description = "Retorna uma lista paginada de motos cadastradas")
-    public Page<Moto> listarMotos(Pageable pageable, @AuthenticationPrincipal Operador operador) {
-        return motoService.findAll(pageable);
     }
 
     @GetMapping("/posicao")

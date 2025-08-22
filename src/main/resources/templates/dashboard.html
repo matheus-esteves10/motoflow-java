@@ -4,12 +4,63 @@
     <meta charset="UTF-8">
     <title>Dashboard do Pátio</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 20px;
+            background-color: #0d7000;
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+
+        .dashboard-container {
+            margin-top: 40px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .dashboard-container h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #0d7000;
+        }
+
+        canvas {
+            max-width: 350px;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Dashboard do Pátio</h1>
+<header>
+    <h1>Dashboard do Pátio</h1>
+</header>
 
-<div style="width: 400px;">
+<div class="dashboard-container">
+    <h2>Ocupação Atual</h2>
     <canvas id="patioChart"></canvas>
 </div>
 
@@ -22,17 +73,23 @@
             datasets: [{
                 label: 'Ocupação do Pátio',
                 data: [
-                    /* Thymeleaf injeta os valores no JS */
                     [[${patioInfo.posicoesDisponiveis}]],
                     [[${patioInfo.quantidadeAlugadas}]]
                 ],
-                backgroundColor: ['#000000', '#09ff00']
+                backgroundColor: ['#e0e0e0', '#0d7000'],
+                borderColor: '#ffffff',
+                borderWidth: 2
             }]
         },
         options: {
             responsive: true,
             plugins: {
-                legend: { position: 'bottom' }
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: { size: 14 }
+                    }
+                }
             }
         }
     });

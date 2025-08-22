@@ -1,4 +1,4 @@
-package br.com.fiap.motoflow.controller;
+package br.com.fiap.motoflow.controller.api;
 
 import br.com.fiap.motoflow.dto.OperadorDto;
 import br.com.fiap.motoflow.dto.responses.OperadorResponse;

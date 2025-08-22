@@ -33,8 +33,8 @@ public class MotoService {
         return motoRepository.save(Moto.from(motoDto));
     }
 
-    public Page<Moto> findAll(Pageable pageable) {
-        return motoRepository.findAll(pageable);
+    public Page<Moto> findAllByPatioId(Long patioId, Pageable pageable) {
+        return motoRepository.findByPatioId(patioId, pageable);
     }
 
     @Transactional

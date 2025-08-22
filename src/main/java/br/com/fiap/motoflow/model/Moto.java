@@ -55,6 +55,9 @@ public class Moto {
     @Column(name = "dt_aluguel")
     private LocalDate dataAluguel;
 
+    @OneToOne(mappedBy = "moto")
+    private PosicaoPatio posicaoPatio;
+
     public Moto() {
     }
 

@@ -3,73 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard do Pátio</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .dashboard-container {
-            margin-top: 40px;
-            background: #fff;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-        }
-        .dashboard-container h2 {
-            margin-bottom: 20px;
-            font-size: 20px;
-            color: #0d7000;
-        }
-        canvas {
-            max-width: 350px;
-            margin: auto;
-        }
-    </style>
 </head>
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
     <div class="dashboard-container">
         <h2>Ocupação Atual</h2>
         <canvas id="patioChart"></canvas>
     </div>
-    <script>
-        const ctx = document.getElementById('patioChart').getContext('2d');
-        const patioChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Posições Disponíveis', 'Posições Alugadas'],
-                datasets: [{
-                    label: 'Ocupação do Pátio',
-                    data: [
-                        [[${patioInfo.posicoesDisponiveis}]],
-                        [[${patioInfo.quantidadeAlugadas}]]
-                    ],
-                    backgroundColor: ['#e0e0e0', '#0d7000'],
-                    borderColor: '#ffffff',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: { size: 14 }
-                        }
-                    }
-                }
-            }
-        });
-    </script>
 </body>
 </html>

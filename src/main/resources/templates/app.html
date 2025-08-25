@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Motoflow - App</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; background: #f6f7f9; }
         .layout { display: flex; height: calc(100vh - 60px); }
@@ -13,22 +14,126 @@
         .nav a:hover { background: rgba(255,255,255,0.18); }
         .content { flex: 1; padding: 20px; overflow: auto; }
         .hint { color: #555; }
+        .loading { text-align: center; color: #666; font-style: italic; }
+        
+        /* Estilos globais para todas as páginas */
+        .content .container { max-width: 100%; margin: 0; background: transparent; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .content table th, .content table td { padding: 12px; border-bottom: 1px solid #ddd; text-align: center; }
+        .content table th { background: #0d7000; color: white; font-weight: bold; }
+        .content .btn { padding: 8px 14px; border: none; border-radius: 6px; background: #0d7000; color: white; cursor: pointer; font-size: 14px; }
+        .content .btn.delete { background: #a30000; }
+        .content .btn:hover { opacity: 0.9; }
+        .content .form-inline { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+        .content .form-inline input { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+        .content .pagination { margin-top: 20px; display: flex; justify-content: center; gap: 8px; }
+        .content .pagination a { padding: 8px 12px; border-radius: 6px; text-decoration: none; color: #0d7000; border: 1px solid #0d7000; }
+        .content .pagination a.active { background: #0d7000; color: white; }
+        .content .pagination a:hover { background: #0d7000; color: white; }
+        .content h2 { margin-bottom: 20px; color: #0d7000; }
+        
+        /* Estilos para o dashboard */
+        .content .dashboard-container { 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        .content .dashboard-container h2 { 
+            margin: 0 0 20px 0; 
+            font-size: 20px; 
+            color: #0d7000; 
+        }
+        .content .dashboard-container canvas { 
+            max-width: 350px; 
+            margin: 20px auto; 
+        }
     </style>
 </head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
     <div class="layout">
-        <aside class="sidebar">
-            <h2>Pátio <span th:text="${patioId}"></span></h2>
-            <div class="nav">
-                <a th:href="@{'/usuarios/' + ${patioId}}">Usuários</a>
-                <a th:href="@{'/motos/patio/' + ${patioId}}">Motos</a>
-                <a th:href="@{'/patio/' + ${patioId}}">Dashboard</a>
-            </div>
-        </aside>
-        <main class="content">
+        <div th:replace="~{fragments/sidebar :: sidebar(${patioId})}"></div>
+        <main class="content" id="mainContent">
             <p class="hint">Escolha uma opção no menu ao lado.</p>
         </main>
     </div>
+    
+    <script>
+        function loadContent(url) {
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = '<div class="loading">Carregando...</div>';
+            
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const container = doc.querySelector('.container');
+                    
+                    if (container) {
+                        mainContent.innerHTML = container.outerHTML;
+                    } else {
+                        mainContent.innerHTML = html;
+                    }
+                    
+                    applyPageSpecificStyles();
+                })
+                .catch(error => {
+                    mainContent.innerHTML = '<div class="error">Erro ao carregar conteúdo: ' + error.message + '</div>';
+                });
+        }
+        
+        function applyPageSpecificStyles() {
+            const mainContent = document.getElementById('mainContent');
+            
+            if (mainContent.querySelector('#patioChart')) {
+                const patioId = document.querySelector('.sidebar h2').textContent.match(/\d+/)[0];
+                loadDashboardData(patioId);
+            }
+        }
+        
+        function loadDashboardData(patioId) {
+            fetch(`/patio/${patioId}/stats`)
+                .then(response => response.json())
+                .then(data => createDashboardChart(data))
+                .catch(error => {
+                    console.error('Erro ao carregar dados do pátio:', error);
+                    createDashboardChart({ posicoesDisponiveis: 0, quantidadeAlugadas: 0 });
+                });
+        }
+        
+        function createDashboardChart(data) {
+            const canvas = document.querySelector('#patioChart');
+            const ctx = canvas.getContext('2d');
+            
+            if (canvas.chart) {
+                canvas.chart.destroy();
+            }
+            
+            canvas.chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Posições Disponíveis', 'Posições Alugadas'],
+                    datasets: [{
+                        label: 'Ocupação do Pátio',
+                        data: [data.posicoesDisponiveis, data.quantidadeAlugadas],
+                        backgroundColor: ['#e0e0e0', '#0d7000'],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { size: 14 } }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>

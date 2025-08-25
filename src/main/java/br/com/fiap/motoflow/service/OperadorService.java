@@ -10,12 +10,14 @@ import br.com.fiap.motoflow.repository.OperadorRepository;
 import br.com.fiap.motoflow.repository.PatioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class OperadorService {
@@ -68,6 +70,11 @@ public class OperadorService {
 
     public Page<Operador> listarOperadores(Pageable pageable) {
         return operadorRepository.findAll(pageable);
+    }
+
+    @Cacheable(value = "operadoresPorPatioWeb", key = "T(java.util.Objects).hash(#patioId, #pageable.pageNumber, #pageable.pageSize, #pageable.sort)")
+    public Page<Operador> listarOperadoresPorPatio(Long patioId, Pageable pageable) {
+        return operadorRepository.findByPatioId(patioId, pageable);
     }
 
     @Transactional

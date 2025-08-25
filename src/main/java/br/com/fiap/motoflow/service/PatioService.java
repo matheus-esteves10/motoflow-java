@@ -28,5 +28,10 @@ public class PatioService {
                 .build();
     }
 
+    public Patio getPatioById(Long id) {
+        return patioRepository.findById(id)
+                .orElseThrow(() -> new PatioNotFoundException("Pátio não encontrado."));
+    }
+
 
 }

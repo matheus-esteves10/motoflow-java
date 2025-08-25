@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <aside th:fragment="sidebar(patioId)" class="sidebar" style="width: 240px; background: #0d7000; color: white; padding: 20px; box-sizing: border-box;">
-        <h2 style="margin-top: 0; font-size: 18px;">Pátio <span th:text="${patioId}"></span></h2>
-        <div class="nav" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
-            <a href="#" th:onclick="'loadContent(\'/usuarios/' + ${patioId} + '\')'" style="color: white; text-decoration: none; padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.08);">Usuários</a>
-            <a href="#" th:onclick="'loadContent(\'/motos/' + ${patioId} + '\')'" style="color: white; text-decoration: none; padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.08);">Motos</a>
-            <a href="#" th:onclick="'loadContent(\'/patio/' + ${patioId} + '\')'" style="color: white; text-decoration: none; padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.08);">Dashboard</a>
-        </div>
-    </aside>
+<aside th:fragment="sidebar(patioId)" class="sidebar w-60 bg-green-900 text-white p-5">
+    <h2 class="text-lg font-semibold">Pátio <span th:text="${patioId}"></span></h2>
+    <nav class="flex flex-col gap-3 mt-5">
+        <a href="#" th:onclick="'loadContent(\'/usuarios/' + ${patioId} + '\')'"
+           class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Usuários</a>
+        <a href="#" th:onclick="'loadContent(\'/motos/' + ${patioId} + '\')'"
+           class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Motos</a>
+        <a href="#" th:onclick="'loadContent(\'/patio/' + ${patioId} + '\')'"
+           class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Dashboard</a>
+    </nav>
+</aside>
 </body>
 </html>

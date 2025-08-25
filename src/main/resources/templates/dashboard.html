@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard do Pátio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="dashboard-container">
-        <h2>Ocupação Atual</h2>
-        <canvas id="patioChart"></canvas>
-    </div>
+<body class="bg-gray-100 p-6">
+<div class="dashboard-container max-w-3xl mx-auto bg-white rounded-lg shadow-md p-8">
+    <h2 class="text-xl font-bold text-green-900 mb-4">Ocupação Atual</h2>
+    <canvas id="patioChart" class="w-full max-w-[350px] mx-auto"></canvas>
+</div>
 </body>
 </html>

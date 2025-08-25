@@ -1,47 +1,53 @@
+<!-- src/main/resources/templates/motos.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Motos do Pátio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div th:replace="~{fragments/header :: header}"></div>
-    <div class="container">
-        <h2 th:text="'Motos do Pátio ' + ${patioId}"></h2>
-        <table>
+<body class="bg-gray-100">
+<div class="w-full max-w-6xl mx-auto p-6">
+    <h2 class="text-2xl font-bold text-green-900 mb-4 text-center" th:text="'Motos do Pátio ' + ${patioId}"></h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full border-collapse shadow-md bg-white rounded-lg overflow-hidden">
             <thead>
-            <tr>
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Placa</th>
-                <th>Ano</th>
-                <th>Preço Aluguel</th>
-                <th>Status</th>
-                <th>Data Aluguel</th>
+            <tr class="bg-green-900 text-white">
+                <th class="px-6 py-3 text-left">ID</th>
+                <th class="px-6 py-3 text-left">Tipo</th>
+                <th class="px-6 py-3 text-left">Placa</th>
+                <th class="px-6 py-3 text-left">Ano</th>
+                <th class="px-6 py-3 text-left">Preço Aluguel</th>
+                <th class="px-6 py-3 text-left">Status</th>
+                <th class="px-6 py-3 text-left">Data Aluguel</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="moto : ${motos.content}">
-                <td th:text="${moto.id}"></td>
-                <td th:text="${moto.tipoMoto}"></td>
-                <td th:text="${moto.placa}"></td>
-                <td th:text="${moto.ano}"></td>
-                <td th:text="${#numbers.formatDecimal(moto.precoAluguel, 1, 2)}"></td>
-                <td>
-                    <span th:class="'status ' + ${moto.statusMoto}" th:text="${moto.statusMoto}"></span>
+            <tr th:each="moto : ${motos.content}" class="border-b hover:bg-gray-50">
+                <td class="px-6 py-3" th:text="${moto.id}"></td>
+                <td class="px-6 py-3" th:text="${moto.tipoMoto}"></td>
+                <td class="px-6 py-3" th:text="${moto.placa}"></td>
+                <td class="px-6 py-3" th:text="${moto.ano}"></td>
+                <td class="px-6 py-3" th:text="${#numbers.formatDecimal(moto.precoAluguel, 1, 2)}"></td>
+                <td class="px-6 py-3">
+                    <span th:classappend="${moto.statusMoto.name() == 'DISPONIVEL'} ? 'bg-green-100 text-green-700 px-2 py-1 rounded' : 'bg-red-100 text-red-700 px-2 py-1 rounded'"
+                          th:text="${moto.statusMoto.name()}">
+                    </span>
                 </td>
-                <td th:text="${moto.dataAluguel != null ? #temporals.format(moto.dataAluguel, 'dd/MM/yyyy') : '-'}"></td>
+                <td class="px-6 py-3" th:text="${moto.dataAluguel != null ? #temporals.format(moto.dataAluguel, 'dd/MM/yyyy') : '-'}"></td>
             </tr>
             </tbody>
         </table>
-        <div class="pagination" th:if="${motos.totalPages > 1}">
-            <a th:if="${motos.hasPrevious()}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${motos.previousPageable().pageNumber}}">Anterior</a>
-            <span th:each="i : ${#numbers.sequence(0, motos.totalPages - 1)}">
-                <a th:if="${i != motos.number}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}"></a>
-                <a th:if="${i == motos.number}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="active"></a>
-            </span>
-            <a th:if="${motos.hasNext()}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${motos.nextPageable().pageNumber}}">Próximo</a>
-        </div>
     </div>
+    <!-- Paginação -->
+    <div class="flex justify-center gap-2 mt-4" th:if="${motos.totalPages > 1}">
+        <a th:if="${motos.hasPrevious()}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${motos.previousPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Anterior</a>
+        <span th:each="i : ${#numbers.sequence(0, motos.totalPages - 1)}">
+            <a th:if="${i != motos.number}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white"></a>
+            <a th:if="${i == motos.number}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded bg-green-900 text-white"></a>
+        </span>
+        <a th:if="${motos.hasNext()}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${motos.nextPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Próximo</a>
+    </div>
+</div>
 </body>
 </html>

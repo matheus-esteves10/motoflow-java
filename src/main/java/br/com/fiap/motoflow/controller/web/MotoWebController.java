@@ -18,7 +18,7 @@ public class MotoWebController {
         this.motoService = motoService;
     }
 
-    @GetMapping("/patio/{id}")
+    @GetMapping("/{id}")
     public String index(@PathVariable Long id, Model model, Pageable pageable) {
         var motos = motoService.findAllByPatioId(id, pageable);
         model.addAttribute("motos", motos);

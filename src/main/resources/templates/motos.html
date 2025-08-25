@@ -3,76 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Motos do Pátio</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #0d7000;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        table th, table td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-        }
-        table th {
-            background: #0d7000;
-            color: white;
-            font-weight: bold;
-        }
-        .status {
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-        .status.DISPONIVEL {
-            background: #e6ffe6;
-            color: #0d7000;
-        }
-        .status.ALOCADA {
-            background: #ffe6e6;
-            color: #a30000;
-        }
-        /* Paginação */
-        .pagination {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-        }
-        .pagination a {
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            color: #0d7000;
-            border: 1px solid #0d7000;
-        }
-        .pagination a.active {
-            background: #0d7000;
-            color: white;
-        }
-        .pagination a:hover {
-            background: #0d7000;
-            color: white;
-        }
-    </style>
 </head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
@@ -98,24 +28,19 @@
                 <td th:text="${moto.ano}"></td>
                 <td th:text="${#numbers.formatDecimal(moto.precoAluguel, 1, 2)}"></td>
                 <td>
-                    <span class="status"
-                          th:text="${moto.statusMoto}"
-                          th:classappend="' ' + ${moto.statusMoto}">
-                    </span>
+                    <span th:class="'status ' + ${moto.statusMoto}" th:text="${moto.statusMoto}"></span>
                 </td>
                 <td th:text="${moto.dataAluguel != null ? #temporals.format(moto.dataAluguel, 'dd/MM/yyyy') : '-'}"></td>
             </tr>
             </tbody>
         </table>
-        <!-- Paginação -->
-        <div class="pagination">
-            <a th:if="${motos.hasPrevious()}" th:href="@{/motos(page=${motos.number - 1}, size=${motos.size})}">Anterior</a>
-            <a th:each="i : ${#numbers.sequence(0, motos.totalPages - 1)}"
-               th:classappend="${i == motos.number} ? 'active'"
-               th:href="@{/motos(page=${i}, size=${motos.size})}"
-               th:text="${i + 1}">
-            </a>
-            <a th:if="${motos.hasNext()}" th:href="@{/motos(page=${motos.number + 1}, size=${motos.size})}">Próxima</a>
+        <div class="pagination" th:if="${motos.totalPages > 1}">
+            <a th:if="${motos.hasPrevious()}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${motos.previousPageable().pageNumber}}">Anterior</a>
+            <span th:each="i : ${#numbers.sequence(0, motos.totalPages - 1)}">
+                <a th:if="${i != motos.number}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}"></a>
+                <a th:if="${i == motos.number}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="active"></a>
+            </span>
+            <a th:if="${motos.hasNext()}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${motos.nextPageable().pageNumber}}">Próximo</a>
         </div>
     </div>
 </body>

@@ -8,7 +8,7 @@
         <h2 style="margin-top: 0; font-size: 18px;">Pátio <span th:text="${patioId}"></span></h2>
         <div class="nav" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
             <a href="#" th:onclick="'loadContent(\'/usuarios/' + ${patioId} + '\')'" style="color: white; text-decoration: none; padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.08);">Usuários</a>
-            <a href="#" th:onclick="'loadContent(\'/motos/patio/' + ${patioId} + '\')'" style="color: white; text-decoration: none; padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.08);">Motos</a>
+            <a href="#" th:onclick="'loadContent(\'/motos/' + ${patioId} + '\')'" style="color: white; text-decoration: none; padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.08);">Motos</a>
             <a href="#" th:onclick="'loadContent(\'/patio/' + ${patioId} + '\')'" style="color: white; text-decoration: none; padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.08);">Dashboard</a>
         </div>
     </aside>

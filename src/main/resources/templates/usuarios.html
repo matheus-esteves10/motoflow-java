@@ -3,67 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Usuários do Pátio</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #0d7000;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        table th, table td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-        }
-        table th {
-            background: #0d7000;
-            color: white;
-            font-weight: bold;
-        }
-        .btn {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 6px;
-            background: #0d7000;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .btn.delete {
-            background: #a30000;
-        }
-        .btn:hover {
-            opacity: 0.9;
-        }
-        .form-inline {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            align-items: center;
-        }
-        .form-inline input {
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-    </style>
 </head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
@@ -98,12 +37,12 @@
             </tbody>
         </table>
         <div class="pagination" th:if="${operadores.totalPages > 1}">
-            <a th:if="${operadores.hasPrevious()}" th:href="@{'/usuarios/' + ${patioId} + '(page=' + ${operadores.number - 1} + ',size=' + ${operadores.size} + ')'}">Anterior</a>
-            <a th:each="i : ${#numbers.sequence(0, operadores.totalPages - 1)}"
-               th:classappend="${i == motos.number} ? 'active'"
-               th:href="@{'/usuarios/' + ${patioId} + '(page=' + ${i} + ',size=' + ${operadores.size} + ')'}"
-               th:text="${i + 1}"></a>
-            <a th:if="${operadores.hasNext()}" th:href="@{'/usuarios/' + ${patioId} + '(page=' + ${operadores.number + 1} + ',size=' + ${operadores.size} + ')'}">Próxima</a>
+            <a th:if="${operadores.hasPrevious()}" th:href="@{'/usuarios/' + ${patioId} + '?page=' + ${operadores.previousPageable().pageNumber}}">Anterior</a>
+            <span th:each="i : ${#numbers.sequence(0, operadores.totalPages - 1)}">
+                <a th:if="${i != operadores.number}" th:href="@{'/usuarios/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}"></a>
+                <a th:if="${i == operadores.number}" th:href="@{'/usuarios/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="active"></a>
+            </span>
+            <a th:if="${operadores.hasNext()}" th:href="@{'/usuarios/' + ${patioId} + '?page=' + ${operadores.nextPageable().pageNumber}}">Próximo</a>
         </div>
     </div>
 </body>

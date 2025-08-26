@@ -10,6 +10,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +34,13 @@ public class OperadorWebController {
         Page<Operador> operadores = operadorService.listarOperadoresPorPatio(idPatio, pageable);
         Patio patio = patioService.getPatioById(idPatio);
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
         model.addAttribute("operadores", operadores);
         model.addAttribute("patio", patio);
         model.addAttribute("patioId", idPatio);
+        model.addAttribute("isAdmin", isAdmin);
         return "usuarios";
     }
 

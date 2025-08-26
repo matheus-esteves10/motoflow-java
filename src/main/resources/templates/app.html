@@ -38,6 +38,7 @@
                 }
 
                 applyPageSpecificStyles();
+                applyUsuariosListeners();
             })
             .catch(error => {
                 mainContent.innerHTML = '<div class="text-red-600">Erro ao carregar conteúdo: ' + error.message + '</div>';
@@ -51,6 +52,55 @@
             const patioId = document.querySelector('.sidebar h2').textContent.match(/\d+/)[0];
             loadDashboardData(patioId);
         }
+    }
+
+    function applyUsuariosListeners() {
+        const mainContent = document.getElementById('mainContent');
+        const formCadastro = mainContent.querySelector('form[method="post"]');
+        if (formCadastro) {
+            formCadastro.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const data = new FormData(formCadastro);
+                fetch(formCadastro.action, {
+                    method: 'POST',
+                    body: data
+                })
+                .then(response => response.redirected ? fetch(response.url) : response.text())
+                .then(res => res.text ? res.text() : res)
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const container = doc.querySelector('.container');
+                    if (container) {
+                        mainContent.innerHTML = container.outerHTML;
+                        applyUsuariosListeners();
+                    }
+                });
+            });
+        }
+        // Listeners para exclusão
+        const deleteForms = mainContent.querySelectorAll('form.inline');
+        deleteForms.forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const data = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: data
+                })
+                .then(response => response.redirected ? fetch(response.url) : response.text())
+                .then(res => res.text ? res.text() : res)
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const container = doc.querySelector('.container');
+                    if (container) {
+                        mainContent.innerHTML = container.outerHTML;
+                        applyUsuariosListeners();
+                    }
+                });
+            });
+        });
     }
 
     function loadDashboardData(patioId) {

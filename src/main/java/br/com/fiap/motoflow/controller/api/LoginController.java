@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 @Tag(name = "Autenticação", description = "Endpoint para autenticação e geração de token JWT")
 public class LoginController {
 

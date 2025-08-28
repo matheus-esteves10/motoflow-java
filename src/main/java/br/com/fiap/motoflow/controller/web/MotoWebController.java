@@ -1,12 +1,16 @@
 package br.com.fiap.motoflow.controller.web;
 
+import br.com.fiap.motoflow.dto.web.MotoDtoWeb;
 import br.com.fiap.motoflow.service.MotoService;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.data.domain.Pageable;
+
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/motos")
@@ -20,10 +24,25 @@ public class MotoWebController {
 
     @GetMapping("/{id}")
     public String index(@PathVariable Long id, Model model, Pageable pageable) {
-        var motos = motoService.findAllByPatioId(id, pageable);
-        model.addAttribute("motos", motos);
+        var motosPage = motoService.findAllByPatioId(id, pageable);
+        var motoDtos = motosPage.getContent().stream().map(moto -> {
+            String posicaoPatio = "-";
+            if (moto.getPosicaoPatio() != null) {
+                posicaoPatio = moto.getPosicaoPatio().getPosicaoHorizontal() + moto.getPosicaoPatio().getPosicaoVertical();
+            }
+            return new MotoDtoWeb(
+                moto.getId(),
+                moto.getTipoMoto(),
+                moto.getAno(),
+                moto.getPlaca(),
+                moto.getPrecoAluguel(),
+                moto.getStatusMoto(),
+                posicaoPatio
+            );
+        }).collect(Collectors.toList());
+        var motoDtosPage = new PageImpl<>(motoDtos, motosPage.getPageable(), motosPage.getTotalElements());
+        model.addAttribute("motos", motoDtosPage);
         model.addAttribute("patioId", id);
         return "motos";
     }
 }
-

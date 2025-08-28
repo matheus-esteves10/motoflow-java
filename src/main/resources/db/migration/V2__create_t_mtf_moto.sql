@@ -6,27 +6,26 @@ CREATE TABLE t_mtf_moto (
     nr_placa VARCHAR(7) NOT NULL UNIQUE,
     nr_preco_aluguel DECIMAL(8,2),
     fl_alugada CHAR(1) CHECK (fl_alugada IN ('S', 'N')) NOT NULL,
-    dt_aluguel TIMESTAMP,
     dt_alocacao TIMESTAMP
 );
 
 
-INSERT INTO t_mtf_moto (nm_tipo, nr_ano, nr_placa, nr_preco_aluguel, fl_alugada, dt_aluguel, dt_alocacao)
+INSERT INTO t_mtf_moto (nm_tipo, nr_ano, nr_placa, nr_preco_aluguel, fl_alugada, dt_alocacao)
 VALUES
-('MOTTU_POP', 2021, 'DEF5678', 150, 'S', '2025-05-01', NULL),
-('MOTTU_SPORT', 2023, 'GHI9012', 180, 'N', NULL, NULL),
-('MOTTU_SPORT', 2020, 'JKL3456', 200, 'S', '2025-05-05', NULL),
-('MOTTU_E', 2022, 'ABC7638', 150, 'N', NULL, NULL),
-('MOTTU_E', 2022, 'ABC7630', 150, 'S', '2025-05-19', NULL),
-('MOTTU_E', 2024, 'XYZ1237', 100, 'N', NULL, NULL),
-('MOTTU_SPORT', 2023, 'ABC9874', 180, 'N', NULL, NULL),
-('MOTTU_E', 2023, 'ABC1029', 120, 'N', '2025-05-14', NULL),
-('MOTTU_E', 2023, 'ABC1028', 120, 'N', '2025-05-14', NULL),
-('MOTTU_E', 2024, 'XYZ1234', 100, 'N', '2025-05-14', NULL),
-('MOTTU_E', 2024, 'XYZ1231', 100, 'N', '2025-05-14', NULL),
-('MOTTU_E', 2023, 'ABC9876', 150, 'S', '2025-05-15', NULL),
-('MOTTU_SPORT', 2023, 'ABC9871', 180, 'N', '2025-05-14', NULL),
-('MOTTU_E', 2024, 'XYZ1230', 100, 'N', NULL, NULL);
+('MOTTU_POP', 2021, 'DEF5678', 150, 'S', '2025-05-01'),
+('MOTTU_SPORT', 2023, 'GHI9012', 180, 'N', NULL),
+('MOTTU_SPORT', 2020, 'JKL3456', 200, 'S', '2025-05-05'),
+('MOTTU_E', 2022, 'ABC7638', 150, 'N', NULL),
+('MOTTU_E', 2022, 'ABC7630', 150, 'S', '2025-05-19'),
+('MOTTU_E', 2024, 'XYZ1237', 100, 'N', NULL),
+('MOTTU_SPORT', 2023, 'ABC9874', 180, 'N', NULL),
+('MOTTU_E', 2023, 'ABC1029', 120, 'N', '2025-05-14'),
+('MOTTU_E', 2023, 'ABC1028', 120, 'N', '2025-05-14'),
+('MOTTU_E', 2024, 'XYZ1234', 100, 'N', '2025-05-14'),
+('MOTTU_E', 2024, 'XYZ1231', 100, 'N', '2025-05-14'),
+('MOTTU_E', 2023, 'ABC9876', 150, 'S', '2025-05-15'),
+('MOTTU_SPORT', 2023, 'ABC9871', 180, 'N', '2025-05-14'),
+('MOTTU_E', 2024, 'XYZ1230', 100, 'N', NULL);
 
 -- Criação do índice único
 CREATE UNIQUE INDEX sys_c004910758 ON t_mtf_moto (cd_id_moto);

@@ -5,7 +5,6 @@ INSERT INTO t_mtf_posicao_patio (
 ) VALUES
 (1, 'A', 'S', 1, NULL),
 (2, 'B', 'N', 2, 2),
-(3, 'C', 'N', 3, 3),
 (4, 'D', 'N', 4, 4),
 (5, 'E', 'S', 5, NULL),
 ( 2, 'A', 'S', 1, NULL),

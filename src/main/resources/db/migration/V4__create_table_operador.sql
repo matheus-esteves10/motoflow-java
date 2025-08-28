@@ -9,18 +9,18 @@ CREATE TABLE t_mtf_operador
 );
 
 INSERT INTO t_mtf_operador (nm_operador, ds_senha, nm_role, cd_id_patio)
-VALUES ('João Silva', 'senha123', 'OPERADOR', 1),
-       ('Maria Oliveira', 'senha456', 'OPERADOR', 2),
-       ('Carlos Pereira', 'senha789', 'OPERADOR', 3),
-       ('Ana Costa', 'senha012', 'OPERADOR', 4),
-       ('Roberto Almeida', 'senha345', 'OPERADOR', 5),
-       ('Joao Almeida', '$2a$10$.tJzLbXrP2eG4gX9YTRWYum0iFICuDFbNUSAcuVjPbJP/bn07iWzm', 'OPERADOR', 1),
-       ('Joao Almeida', '$2a$10$iqaIYVvdub1r7DfrMfQoOOHcObpdeJCEe43pQpimwVZRd5nDn5GRe', 'OPERADOR', 1),
-       ('ADMIN GERAL', '$2a$12$mRbjg8fhhG6tgvD.CF4tMuk3HN/hUiMC26KMrKjmnIw9liPpZkvpi', 'ADMIN', 1),
-       ('Joao Carlos', '$2a$10$YG4BaBNUL.cc.79YxBW87OYxz5mw.Dzi3QNqKrEYKZbUmjcbX0g8S', 'OPERADOR', 1),
-       ('Joao Jota', '$2a$10$txXO30XHDRktKGdpsvV5veQbINpXjNtIZl2vxCBbIjuNHloNX.aOe', 'OPERADOR', 1),
-       ('Joao Almeida', '$2a$10$Wfd2Rl52VcDk/cA3ICUIrumBZDMPY8URB1JhhEt1FDf83W5I5s2rG', 'OPERADOR', 1),
-       ('Arthur Spedine', '12346', 'OPERADOR', 1);
+VALUES ('João Silva', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 1),
+       ('Maria Oliveira', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 2),
+       ('Carlos Pereira', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 3),
+       ('Ana Costa', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 4),
+       ('Roberto Almeida', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 5),
+       ('Joao Almeida', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 1),
+       ('Joao Almeida', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 1),
+       ('ADMIN GERAL', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'ADMIN', 1),
+       ('Joao Carlos', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 1),
+       ('Joao Jota', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 1),
+       ('Joao Almeida', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 1),
+       ('Arthur Spedine', '$2a$12$728xWF5x0WXEaXQgTD7rRuVhDfKdhfmecrCzwqtp6htBQLS0mtxKS', 'OPERADOR', 1);
 
 -- Constraint de chave estrangeira
 ALTER TABLE t_mtf_operador

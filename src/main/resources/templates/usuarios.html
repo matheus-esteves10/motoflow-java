@@ -26,6 +26,10 @@
                         <input type="hidden" name="_method" value="DELETE" />
                         <button type="submit" class="px-3 py-1 bg-red-700 text-white rounded-md hover:opacity-90">Deletar</button>
                     </form>
+                    <form th:if="${operador.role.name() != 'ADMIN'}" th:action="@{'/usuarios/' + ${patioId} + '/' + ${operador.id} + '/admin'}" method="post" class="inline ml-2">
+                        <input type="hidden" name="_method" value="PUT" />
+                        <button type="submit" class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:opacity-90">Tornar Admin</button>
+                    </form>
                 </td>
             </tr>
             </tbody>

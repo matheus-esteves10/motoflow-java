@@ -59,4 +59,12 @@ public class OperadorWebController {
         operadorService.excluirOperador(idOperador);
         return "redirect:/usuarios/" + idPatio;
     }
+
+    @PutMapping("/{idPatio}/{idOperador}/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    @CacheEvict(value = {"operadores", "operadoresPorPatioWeb"}, allEntries = true)
+    public String tornarOperadorAdmin(@PathVariable Long idPatio, @PathVariable Long idOperador) {
+        operadorService.tornarAdmin(idOperador);
+        return "redirect:/usuarios/" + idPatio;
+    }
 }

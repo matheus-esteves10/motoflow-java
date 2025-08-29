@@ -5,145 +5,257 @@
     <title>Motoflow - App</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="m-0 font-sans bg-gray-100">
+<body class="m-0 font-sans bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="flex h-[calc(100vh-60px)]">
     <!-- Sidebar -->
     <div th:replace="~{fragments/sidebar :: sidebar(${patioId})}"></div>
 
-    <!-- Conteúdo -->
-    <main id="mainContent" class="flex-1 p-6 overflow-auto">
-        <p class="text-gray-600 italic">Escolha uma opção no menu ao lado.</p>
+    <!-- Main Content -->
+    <main id="mainContent" class="flex-1 p-8 overflow-auto bg-white/50 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Bem-vindo ao Motoflow</h2>
+                    <p class="text-gray-600 italic">Escolha uma opção no menu ao lado para começar.</p>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
 
 <script>
-    function loadContent(url) {
-        const mainContent = document.getElementById('mainContent');
-        mainContent.innerHTML = '<div class="text-center text-gray-500 italic">Carregando...</div>';
+    // Utility functions
+    const Utils = {
+        showLoading: (element) => {
+            element.innerHTML = `
+                <div class="flex items-center justify-center py-12">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+                    <span class="ml-3 text-gray-600">Carregando...</span>
+                </div>
+            `;
+        },
 
-        fetch(url)
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const container = doc.querySelector('.container');
+        showError: (element, message) => {
+            element.innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Erro ao carregar conteúdo: ${message}</span>
+                    </div>
+                </div>
+            `;
+        },
 
-                if (container) {
-                    mainContent.innerHTML = container.outerHTML;
-                } else {
-                    mainContent.innerHTML = html;
-                }
+        extractContainer: (html) => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const container = doc.querySelector('.container');
+            return container ? container.outerHTML : html;
+        },
 
-                applyPageSpecificStyles();
-                applyUsuariosListeners();
-            })
-            .catch(error => {
-                mainContent.innerHTML = '<div class="text-red-600">Erro ao carregar conteúdo: ' + error.message + '</div>';
-            });
-    }
-
-    function applyPageSpecificStyles() {
-        const mainContent = document.getElementById('mainContent');
-
-        if (mainContent.querySelector('#patioChart')) {
-            const patioId = document.querySelector('.sidebar h2').textContent.match(/\d+/)[0];
-            loadDashboardData(patioId);
+        getPatioId: () => {
+            const sidebarTitle = document.querySelector('.sidebar h2');
+            return sidebarTitle ? sidebarTitle.textContent.match(/\d+/)?.[0] : null;
         }
-    }
+    };
 
-    function applyUsuariosListeners() {
-        const mainContent = document.getElementById('mainContent');
-        const formCadastro = mainContent.querySelector('form[method="post"]');
-        if (formCadastro) {
-            formCadastro.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const data = new FormData(formCadastro);
-                fetch(formCadastro.action, {
-                    method: 'POST',
-                    body: data
-                })
-                .then(response => response.redirected ? fetch(response.url) : response.text())
-                .then(res => res.text ? res.text() : res)
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const container = doc.querySelector('.container');
-                    if (container) {
-                        mainContent.innerHTML = container.outerHTML;
-                        applyUsuariosListeners();
-                    }
-                });
-            });
+    // Content Management
+    const ContentManager = {
+        load: async (url) => {
+            const mainContent = document.getElementById('mainContent');
+            Utils.showLoading(mainContent);
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const html = await response.text();
+                mainContent.innerHTML = Utils.extractContainer(html);
+
+                PageHandlers.applySpecificStyles();
+                FormHandlers.attachListeners();
+            } catch (error) {
+                console.error('Error loading content:', error);
+                Utils.showError(mainContent, error.message);
+            }
         }
-        // Listeners para exclusão
-        const deleteForms = mainContent.querySelectorAll('form.inline');
-        deleteForms.forEach(function(form) {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const data = new FormData(form);
-                fetch(form.action, {
-                    method: 'POST',
-                    body: data
-                })
-                .then(response => response.redirected ? fetch(response.url) : response.text())
-                .then(res => res.text ? res.text() : res)
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const container = doc.querySelector('.container');
-                    if (container) {
-                        mainContent.innerHTML = container.outerHTML;
-                        applyUsuariosListeners();
-                    }
-                });
-            });
-        });
-    }
+    };
 
-    function loadDashboardData(patioId) {
-        fetch(`/web/patio/${patioId}/stats`)
-            .then(response => response.json())
-            .then(data => createDashboardChart(data))
-            .catch(error => {
-                console.error('Erro ao carregar dados do pátio:', error);
-                createDashboardChart({ posicoesDisponiveis: 0, quantidadeAlugadas: 0 });
-            });
-    }
+    // Page-specific handlers
+    const PageHandlers = {
+        applySpecificStyles: () => {
+            const mainContent = document.getElementById('mainContent');
 
-    function createDashboardChart(data) {
-        const canvas = document.querySelector('#patioChart');
-        const ctx = canvas.getContext('2d');
-
-        if (canvas.chart) {
-            canvas.chart.destroy();
-        }
-
-        canvas.chart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Posições Disponíveis', 'Posições Alugadas'],
-                datasets: [{
-                    label: 'Ocupação do Pátio',
-                    data: [data.posicoesDisponiveis, data.quantidadeAlugadas],
-                    backgroundColor: ['#e0e0e0', '#0d7000'],
-                    borderColor: '#ffffff',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { font: { size: 14 } }
-                    }
+            if (mainContent.querySelector('#patioChart')) {
+                const patioId = Utils.getPatioId();
+                if (patioId) {
+                    DashboardChart.load(patioId);
                 }
             }
-        });
-    }
+        }
+    };
+
+    // Form handlers
+    const FormHandlers = {
+        attachListeners: () => {
+            const mainContent = document.getElementById('mainContent');
+
+            // Handle main forms
+            const mainForms = mainContent.querySelectorAll('form[method="post"]:not(.inline)');
+            mainForms.forEach(form => FormHandlers.attachMainFormListener(form));
+
+            // Handle delete forms
+            const deleteForms = mainContent.querySelectorAll('form.inline');
+            deleteForms.forEach(form => FormHandlers.attachDeleteFormListener(form));
+        },
+
+        attachMainFormListener: (form) => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await FormHandlers.submitForm(form);
+            });
+        },
+
+        attachDeleteFormListener: (form) => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Add confirmation for delete operations
+                const isConfirmed = confirm('Tem certeza que deseja realizar essa ação?');
+                if (isConfirmed) {
+                    await FormHandlers.submitForm(form);
+                }
+            });
+        },
+
+        submitForm: async (form) => {
+            try {
+                const formData = new FormData(form);
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                let html;
+                if (response.redirected) {
+                    const redirectResponse = await fetch(response.url);
+                    html = await redirectResponse.text();
+                } else {
+                    html = await response.text();
+                }
+
+                const mainContent = document.getElementById('mainContent');
+                mainContent.innerHTML = Utils.extractContainer(html);
+                FormHandlers.attachListeners();
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                const mainContent = document.getElementById('mainContent');
+                Utils.showError(mainContent, error.message);
+            }
+        }
+    };
+
+    // Dashboard Chart Management
+    const DashboardChart = {
+        load: async (patioId) => {
+            try {
+                const response = await fetch(`/web/patio/${patioId}/stats`);
+                const data = await response.json();
+                DashboardChart.create(data);
+            } catch (error) {
+                console.error('Erro ao carregar dados do pátio:', error);
+                DashboardChart.create({ posicoesDisponiveis: 0, quantidadeAlugadas: 0 });
+            }
+        },
+
+        create: (data) => {
+            const canvas = document.querySelector('#patioChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+
+            // Destroy existing chart
+            if (canvas.chart) {
+                canvas.chart.destroy();
+            }
+
+            // Create new chart with improved styling
+            canvas.chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Posições Disponíveis', 'Posições Alugadas'],
+                    datasets: [{
+                        label: 'Ocupação do Pátio',
+                        data: [data.posicoesDisponiveis, data.quantidadeAlugadas],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.1)',
+                            'rgba(34, 197, 94, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(34, 197, 94, 0.3)',
+                            'rgba(34, 197, 94, 1)'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 14, weight: '500' },
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            cornerRadius: 8,
+                            padding: 12
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
+    };
+
+    // Global function for sidebar navigation
+    window.loadContent = ContentManager.load;
 </script>
 </body>
 </html>

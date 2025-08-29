@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/patio")
-public class PatioController {
+public class PatioWebController {
 
     private final PatioService patioService;
 
-    public PatioController(PatioService patioService) {
+    public PatioWebController(PatioService patioService) {
         this.patioService = patioService;
     }
 

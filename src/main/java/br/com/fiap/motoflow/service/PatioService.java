@@ -1,10 +1,13 @@
 package br.com.fiap.motoflow.service;
 
 import br.com.fiap.motoflow.dto.responses.PatioQuantityResponse;
+import br.com.fiap.motoflow.dto.responses.PatioResponse;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
 import br.com.fiap.motoflow.model.Patio;
 import br.com.fiap.motoflow.repository.PatioRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PatioService {
@@ -31,6 +34,13 @@ public class PatioService {
     public Patio getPatioById(Long id) {
         return patioRepository.findById(id)
                 .orElseThrow(() -> new PatioNotFoundException("Pátio não encontrado."));
+    }
+
+    public List<PatioResponse> getAllPatios() {
+        List<Patio> patios = patioRepository.findAll();
+        return patios.stream()
+                .map(patio -> new PatioResponse(patio.getApelido(), patio.getId()))
+                .toList();
     }
 
 

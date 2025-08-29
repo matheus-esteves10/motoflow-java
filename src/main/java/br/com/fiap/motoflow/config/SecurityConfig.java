@@ -3,6 +3,7 @@ package br.com.fiap.motoflow.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -23,6 +24,7 @@ public class SecurityConfig {
     private AuthFilter authFilter;
 
     @Bean
+    @Order(1)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .securityMatcher("/api/**")
@@ -51,9 +53,10 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(2)
     public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/**")
+                .securityMatcher("/web/**")
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                             "/login",
@@ -69,13 +72,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+                        .loginPage("/web/login")
+                        .defaultSuccessUrl("/web/", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutUrl("/web/logout")
+                        .logoutSuccessUrl("/web/login?logout")
                         .permitAll()
                 )
                 .build();

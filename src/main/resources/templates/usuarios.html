@@ -1,7 +1,7 @@
 <!-- src/main/resources/templates/usuarios.html -->
 <div class="container w-full max-w-6xl mx-auto p-6">
     <h2 class="text-2xl font-bold text-green-900 mb-4 text-center" th:text="'Usuários do Pátio ' + ${patioId}"></h2>
-    <form th:if="${isAdmin}" th:action="@{'/usuarios/' + ${patioId}}" method="post" class="flex gap-3 mb-4">
+    <form th:if="${isAdmin}" th:action="@{'/web/usuarios/' + ${patioId}}" method="post" class="flex gap-3 mb-4">
         <input type="text" name="nome" placeholder="Nome do usuário" required class="p-2 border rounded-md flex-1" />
         <input type="password" name="senha" placeholder="Senha" required class="p-2 border rounded-md flex-1" />
         <button type="submit" class="px-4 py-2 bg-green-900 text-white rounded-md hover:opacity-90">Adicionar Usuário</button>
@@ -22,11 +22,11 @@
                 <td class="px-6 py-3" th:text="${operador.nome}"></td>
                 <td class="px-6 py-3" th:text="${operador.role}"></td>
                 <td th:if="${isAdmin}" class="px-6 py-3">
-                    <form th:action="@{'/usuarios/' + ${patioId} + '/' + ${operador.id}}" method="post" class="inline">
+                    <form th:action="@{'/web/usuarios/' + ${patioId} + '/' + ${operador.id}}" method="post" class="inline">
                         <input type="hidden" name="_method" value="DELETE" />
                         <button type="submit" class="px-3 py-1 bg-red-700 text-white rounded-md hover:opacity-90">Deletar</button>
                     </form>
-                    <form th:if="${operador.role.name() != 'ADMIN'}" th:action="@{'/usuarios/' + ${patioId} + '/' + ${operador.id} + '/admin'}" method="post" class="inline ml-2">
+                    <form th:if="${operador.role.name() != 'ADMIN'}" th:action="@{'/web/usuarios/' + ${patioId} + '/' + ${operador.id} + '/admin'}" method="post" class="inline ml-2">
                         <input type="hidden" name="_method" value="PUT" />
                         <button type="submit" class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:opacity-90">Tornar Admin</button>
                     </form>
@@ -37,11 +37,11 @@
     </div>
     <!-- Paginação -->
     <div class="flex justify-center gap-2 mt-4" th:if="${operadores.totalPages > 1}">
-        <a th:if="${operadores.hasPrevious()}" th:href="@{'/usuarios/' + ${patioId} + '?page=' + ${operadores.previousPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Anterior</a>
+        <a th:if="${operadores.hasPrevious()}" th:href="@{'/web/usuarios/' + ${patioId} + '?page=' + ${operadores.previousPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Anterior</a>
         <span th:each="i : ${#numbers.sequence(0, operadores.totalPages - 1)}">
-            <a th:if="${i != operadores.number}" th:href="@{'/usuarios/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white"></a>
-            <a th:if="${i == operadores.number}" th:href="@{'/usuarios/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded bg-green-900 text-white"></a>
+            <a th:if="${i != operadores.number}" th:href="@{'/web/usuarios/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white"></a>
+            <a th:if="${i == operadores.number}" th:href="@{'/web/usuarios/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded bg-green-900 text-white"></a>
         </span>
-        <a th:if="${operadores.hasNext()}" th:href="@{'/usuarios/' + ${patioId} + '?page=' + ${operadores.nextPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Próximo</a>
+        <a th:if="${operadores.hasNext()}" th:href="@{'/web/usuarios/' + ${patioId} + '?page=' + ${operadores.nextPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Próximo</a>
     </div>
 </div>

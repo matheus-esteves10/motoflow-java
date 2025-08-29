@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/web")
 public class IndexController {
 
     private final PatioRepository patioRepository;
@@ -20,7 +20,7 @@ public class IndexController {
         this.patioRepository = patioRepository;
     }
 
-    @GetMapping
+    @GetMapping({"", "/"})
     public String index(Model model) {
         List<Patio> patios = patioRepository.findAll();
         model.addAttribute("patios", patios);

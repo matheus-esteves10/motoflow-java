@@ -23,7 +23,7 @@
     const select = document.getElementById('patioSelect');
     const btn = document.getElementById('entrarBtn');
     select.addEventListener('change', () => { btn.disabled = !select.value; });
-    btn.addEventListener('click', () => { if (select.value) { window.location.href = '/app/patio/' + select.value; }});
+    btn.addEventListener('click', () => { if (select.value) { window.location.href = '/web/app/patio/' + select.value; }});
 </script>
 </body>
 </html>

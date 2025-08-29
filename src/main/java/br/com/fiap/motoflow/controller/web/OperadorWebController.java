@@ -17,7 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/usuarios")
+@RequestMapping("/web/usuarios")
 public class OperadorWebController {
 
     private final OperadorService operadorService;
@@ -41,6 +41,7 @@ public class OperadorWebController {
         model.addAttribute("patio", patio);
         model.addAttribute("patioId", idPatio);
         model.addAttribute("isAdmin", isAdmin);
+
         return "usuarios";
     }
 
@@ -49,7 +50,7 @@ public class OperadorWebController {
     @CacheEvict(value = {"operadores", "operadoresPorPatioWeb"}, allEntries = true)
     public String cadastrarUsuario(@PathVariable Long idPatio, @RequestParam String nome, @RequestParam String senha) {
         operadorService.salvarOperador(new OperadorDto(nome, senha, idPatio));
-        return "redirect:/usuarios/" + idPatio;
+        return "redirect:/web/usuarios/" + idPatio;
     }
 
     @DeleteMapping("/{idPatio}/{idOperador}")
@@ -57,7 +58,7 @@ public class OperadorWebController {
     @CacheEvict(value = {"operadores", "operadoresPorPatioWeb"}, allEntries = true)
     public String deletarUsuario(@PathVariable Long idPatio, @PathVariable Long idOperador) {
         operadorService.excluirOperador(idOperador);
-        return "redirect:/usuarios/" + idPatio;
+        return "redirect:/web/usuarios/" + idPatio;
     }
 
     @PutMapping("/{idPatio}/{idOperador}/admin")
@@ -65,6 +66,6 @@ public class OperadorWebController {
     @CacheEvict(value = {"operadores", "operadoresPorPatioWeb"}, allEntries = true)
     public String tornarOperadorAdmin(@PathVariable Long idPatio, @PathVariable Long idOperador) {
         operadorService.tornarAdmin(idOperador);
-        return "redirect:/usuarios/" + idPatio;
+        return "redirect:/web/usuarios/" + idPatio;
     }
 }

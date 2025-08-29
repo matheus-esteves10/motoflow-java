@@ -41,12 +41,12 @@
     </div>
     <!-- Paginação -->
     <div class="flex justify-center gap-2 mt-4" th:if="${motos.totalPages > 1}">
-        <a th:if="${motos.hasPrevious()}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${motos.previousPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Anterior</a>
+        <a th:if="${motos.hasPrevious()}" th:href="@{'/web/motos/' + ${patioId} + '?page=' + ${motos.previousPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Anterior</a>
         <span th:each="i : ${#numbers.sequence(0, motos.totalPages - 1)}">
-            <a th:if="${i != motos.number}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white"></a>
-            <a th:if="${i == motos.number}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded bg-green-900 text-white"></a>
+            <a th:if="${i != motos.number}" th:href="@{'/web/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white"></a>
+            <a th:if="${i == motos.number}" th:href="@{'/web/motos/' + ${patioId} + '?page=' + ${i}}" th:text="${i + 1}" class="px-3 py-1 border rounded bg-green-900 text-white"></a>
         </span>
-        <a th:if="${motos.hasNext()}" th:href="@{'/motos/' + ${patioId} + '?page=' + ${motos.nextPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Próximo</a>
+        <a th:if="${motos.hasNext()}" th:href="@{'/web/motos/' + ${patioId} + '?page=' + ${motos.nextPageable().pageNumber}}" class="px-3 py-1 border rounded text-green-900 border-green-900 hover:bg-green-900 hover:text-white">Próximo</a>
     </div>
 </div>
 </body>

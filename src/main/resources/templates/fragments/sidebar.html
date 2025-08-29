@@ -7,11 +7,11 @@
 <aside th:fragment="sidebar(patioId)" class="sidebar w-60 bg-green-900 text-white p-5">
     <h2 class="text-lg font-semibold">Pátio <span th:text="${patioId}"></span></h2>
     <nav class="flex flex-col gap-3 mt-5">
-        <a href="#" th:onclick="'loadContent(\'/usuarios/' + ${patioId} + '\')'"
+        <a href="#" th:onclick="'loadContent(\'/web/usuarios/' + ${patioId} + '\')'"
            class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Usuários</a>
-        <a href="#" th:onclick="'loadContent(\'/motos/' + ${patioId} + '\')'"
+        <a href="#" th:onclick="'loadContent(\'/web/motos/' + ${patioId} + '\')'"
            class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Motos</a>
-        <a href="#" th:onclick="'loadContent(\'/patio/' + ${patioId} + '\')'"
+        <a href="#" th:onclick="'loadContent(\'/web/app/patio/' + ${patioId} + '\')'"
            class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Dashboard</a>
     </nav>
 </aside>

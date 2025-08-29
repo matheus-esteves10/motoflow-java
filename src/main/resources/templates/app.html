@@ -104,7 +104,7 @@
     }
 
     function loadDashboardData(patioId) {
-        fetch(`/patio/${patioId}/stats`)
+        fetch(`/web/patio/${patioId}/stats`)
             .then(response => response.json())
             .then(data => createDashboardChart(data))
             .catch(error => {

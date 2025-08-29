@@ -84,15 +84,15 @@ public class MotoController {
     public ResponseEntity<ResponsePosicao> cadastrarEAlocar(@RequestBody CadastroMotoComPatioDto dto, @AuthenticationPrincipal Operador operador) {
 
         MotoDto motoDto = new MotoDto(
-                dto.tipoMoto(),
-                dto.ano(),
-                dto.placa(),
-                dto.precoAluguel(),
-                dto.statusMoto(),
-                dto.dataAlocacao()
+                dto.getTipoMoto(),
+                dto.getAno(),
+                dto.getPlaca(),
+                dto.getPrecoAluguel(),
+                dto.getStatusMoto(),
+                dto.getDataAlocacao()
         );
 
-        ResponsePosicao response = motoService.cadastrarMotoEAlocar(motoDto, dto.idPatio());
+        ResponsePosicao response = motoService.cadastrarMotoEAlocar(motoDto, dto.getIdPatio());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -103,11 +103,21 @@ public class MotoController {
         @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
     }
     )
-    public ResponseEntity<Moto> atualizarStatusAluguel(@PathVariable String placa, @RequestParam StatusMoto statusMoto,
+    public ResponseEntity<MotoDto> atualizarStatusAluguel(@PathVariable String placa, @RequestParam StatusMoto statusMoto,
                                                        @AuthenticationPrincipal Operador operador) {
 
         Moto motoAtualizada = motoService.atualizarStatusAluguel(placa, statusMoto);
-        return ResponseEntity.ok(motoAtualizada);
+
+        MotoDto motoDto = new MotoDto(
+                motoAtualizada.getTipoMoto(),
+                motoAtualizada.getAno(),
+                motoAtualizada.getPlaca(),
+                motoAtualizada.getPrecoAluguel(),
+                motoAtualizada.getStatusMoto(),
+                motoAtualizada.getDataAluguel()
+        );
+
+        return ResponseEntity.ok(motoDto);
     }
 
     @Operation(

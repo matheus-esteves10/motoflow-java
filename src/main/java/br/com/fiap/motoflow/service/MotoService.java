@@ -4,6 +4,7 @@ import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
 import br.com.fiap.motoflow.exceptions.MotoNotFoundException;
+import br.com.fiap.motoflow.exceptions.MotoNotAllocatedException;
 import br.com.fiap.motoflow.exceptions.PosicaoNotFoundException;
 import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.PosicaoPatio;
@@ -91,6 +92,8 @@ public class MotoService {
         if (statusMoto.equals(StatusMoto.ALUGADA)) {
             moto.setDataAluguel(LocalDate.now());
             posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
+        } else if (statusMoto.equals(StatusMoto.MANUTENCAO)) {
+            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
         }
 
         return motoRepository.save(moto);
@@ -99,10 +102,9 @@ public class MotoService {
     // --- CONSULTAS ---
 
     public PosicaoMotoResponse buscarPosicaoPorPlaca(String placa) {
+        Moto moto = buscarMotoOrException(placa);
         PosicaoPatio posicao = posicaoPatioRepository.findByMotoPlaca(placa)
-                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada no pátio"));
-
-        Moto moto = posicao.getMoto();
+                .orElseThrow(() -> new MotoNotAllocatedException(placa));
 
         return new PosicaoMotoResponse(
                 moto.getPlaca(),

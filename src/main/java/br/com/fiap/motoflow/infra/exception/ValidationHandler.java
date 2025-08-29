@@ -110,4 +110,13 @@ public class ValidationHandler {
 
         return errors;
     }
+
+    @ExceptionHandler(MotoNotAllocatedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> motoNaoAlocada(MotoNotAllocatedException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getClass().getSimpleName());
+        error.put("message", e.getMessage());
+        return error;
+    }
 }

@@ -1,19 +1,86 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<aside th:fragment="sidebar(patioId)" class="sidebar w-60 bg-green-900 text-white p-5">
-    <h2 class="text-lg font-semibold">Pátio <span th:text="${patioId}"></span></h2>
-    <nav class="flex flex-col gap-3 mt-5">
-        <a href="#" th:onclick="'loadContent(\'/web/usuarios/' + ${patioId} + '\')'"
-           class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Usuários</a>
-        <a href="#" th:onclick="'loadContent(\'/web/motos/' + ${patioId} + '\')'"
-           class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Motos</a>
-        <a href="#" th:onclick="'loadContent(\'/web/app/patio/' + ${patioId} + '\')'"
-           class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Dashboard</a>
+<aside th:fragment="sidebar(patioId)"
+       class="sidebar w-60 bg-green-900 text-white shadow-xl flex flex-col">
+
+    <!-- Sidebar Header -->
+    <div class="p-6 border-b border-white/10">
+        <div class="flex items-center space-x-3 mb-4">
+            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-lg font-semibold">Pátio <span th:text="${patioId}">1</span></h2>
+                <p class="text-sm text-white/70">Painel de Controle</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="flex-1 p-4">
+        <div class="space-y-2">
+            <!-- Dashboard -->
+            <a href="#"
+               th:onclick="'loadContent(\'/web/patio/' + ${patioId} + '\')'"
+               class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 group">
+                <svg class="w-5 h-5 text-white group-hover:text-green-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <span class="font-medium">Dashboard</span>
+                <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+
+            <!-- Usuários -->
+            <a href="#"
+               th:onclick="'loadContent(\'/web/usuarios/' + ${patioId} + '\')'"
+               class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 group">
+                <svg class="w-5 h-5 text-white group-hover:text-green-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                </svg>
+                <span class="font-medium">Usuários</span>
+                <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+
+            <!-- Motos -->
+            <a href="#"
+               th:onclick="'loadContent(\'/web/motos/' + ${patioId} + '\')'"
+               class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 group">
+                <svg class="w-5 h-5 text-white group-hover:text-green-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1V8a1 1 0 00-1-1h-3z"></path>
+                </svg>
+                <span class="font-medium">Motos</span>
+                <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        </div>
     </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="p-4 border-t border-white/10">
+        <div class="flex items-center justify-between text-sm text-white/70">
+            <span>Versão 1.0</span>
+            <button onclick="window.location.href='/web'"
+                    class="text-white/70 hover:text-white transition-colors"
+                    title="Voltar ao início">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
 </aside>
 </body>
 </html>

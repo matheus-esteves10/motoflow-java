@@ -3,16 +3,7 @@ package br.com.fiap.motoflow.model;
 import br.com.fiap.motoflow.infra.persistence.converter.BooleanSimNaoConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "t_mtf_posicao_patio")

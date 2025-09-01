@@ -36,7 +36,7 @@ public class PosicaoPatioService {
         for (int i = maiorExistente + 1; i <= dto.posicaoVerticalMax(); i++) {
             PosicaoPatio posicaoPatio = new PosicaoPatio();
             posicaoPatio.setPosicaoVertical(i);
-            posicaoPatio.setPosicaoHorizontal(dto.posicaoHorizontal());
+            posicaoPatio.setPosicaoHorizontal(dto.posicaoHorizontal().toUpperCase());
             posicaoPatio.setPosicaoLivre(true);
             posicaoPatio.setPatio(patio);
 

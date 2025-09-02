@@ -42,6 +42,7 @@ public class TokenService {
                 .withSubject(user.getId().toString())
                 .withClaim("nome", user.getNome())
                 .withClaim("role", user.getRole().toString())
+                .withClaim("patioId", user.getPatio().getId())
                 .withExpiresAt(Date.from(expiresAt))
                 .sign(algorithm);
     }

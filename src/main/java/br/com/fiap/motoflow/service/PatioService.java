@@ -24,9 +24,12 @@ public class PatioService {
 
         final int posicoesDisponiveis = patioRepository.countPosicoesDisponiveis(id);
 
+        final int posicoesOcupadas = patioRepository.countPosicoesOcupadas(id);
+
         return PatioQuantityResponse.builder()
                 .capacidadeMax(patio.getCapacidade())
                 .posicoesDisponiveis(posicoesDisponiveis)
+                .posicoesOcupadas(posicoesOcupadas)
                 .build();
     }
 

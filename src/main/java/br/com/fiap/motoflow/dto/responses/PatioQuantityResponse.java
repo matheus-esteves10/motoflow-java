@@ -10,5 +10,6 @@ public class PatioQuantityResponse {
     private Integer capacidadeMax;
 
     private int posicoesDisponiveis;
+    private int posicoesOcupadas;
 
 }

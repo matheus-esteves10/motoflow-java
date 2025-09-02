@@ -27,7 +27,6 @@ public class PatioService {
         return PatioQuantityResponse.builder()
                 .capacidadeMax(patio.getCapacidade())
                 .posicoesDisponiveis(posicoesDisponiveis)
-                .quantidadeAlugadas(patio.getCapacidade() - posicoesDisponiveis)
                 .build();
     }
 

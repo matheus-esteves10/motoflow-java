@@ -11,8 +11,4 @@ public class PatioQuantityResponse {
 
     private int posicoesDisponiveis;
 
-    private int quantidadeAlugadas;
-
-
-
 }

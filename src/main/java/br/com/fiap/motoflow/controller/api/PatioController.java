@@ -4,6 +4,7 @@ import br.com.fiap.motoflow.dto.responses.PatioQuantityResponse;
 import br.com.fiap.motoflow.dto.responses.PatioResponse;
 import br.com.fiap.motoflow.service.PatioService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/patio")
+@SecurityRequirement(name = "bearerAuth")
 public class PatioController {
 
     private final PatioService patioService;

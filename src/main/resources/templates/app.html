@@ -192,7 +192,7 @@
                 DashboardChart.create(data);
             } catch (error) {
                 console.error('Erro ao carregar dados do pátio:', error);
-                DashboardChart.create({ posicoesDisponiveis: 0, quantidadeAlugadas: 0 });
+                DashboardChart.create({ posicoesDisponiveis: 0, posicoesOcupadas: 0 });
             }
         },
 
@@ -211,10 +211,10 @@
             canvas.chart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Posições Disponíveis', 'Posições Alugadas'],
+                    labels: ['Posições Disponíveis', 'Posições Ocupadas'],
                     datasets: [{
                         label: 'Ocupação do Pátio',
-                        data: [data.posicoesDisponiveis, data.quantidadeAlugadas],
+                        data: [data.posicoesDisponiveis, data.posicoesOcupadas],
                         backgroundColor: [
                             'rgba(34, 197, 94, 0.1)',
                             'rgba(34, 197, 94, 0.8)'

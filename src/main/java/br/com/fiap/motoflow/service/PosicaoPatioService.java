@@ -3,6 +3,7 @@ package br.com.fiap.motoflow.service;
 import br.com.fiap.motoflow.dto.CadastroPosicaoDto;
 import br.com.fiap.motoflow.dto.responses.CadastroPosicaoResponseDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoPatioResponseDto;
+import br.com.fiap.motoflow.exceptions.ExceededSpaceException;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
 import br.com.fiap.motoflow.model.Patio;
 import br.com.fiap.motoflow.model.PosicaoPatio;
@@ -28,6 +29,11 @@ public class PosicaoPatioService {
     public CadastroPosicaoResponseDto cadastrarPosicao(final CadastroPosicaoDto dto) {
 
         final Patio patio = checkPatio(dto.idPatio());
+
+        if (maxPosicoesAtingido(patio.getId(), patio.getCapacidade()) || dto.posicaoVerticalMax() > patio.getCapacidade()) {
+            throw new ExceededSpaceException(patio.getApelido(), patio.getCapacidade());
+        }
+
         final int maiorExistente = maiorVerticalExistente(patio, dto.posicaoHorizontal());
 
         Set<PosicaoPatio> novasPosicoes = new LinkedHashSet<>();
@@ -68,4 +74,11 @@ public class PosicaoPatioService {
                 .orElseThrow(() -> new PatioNotFoundException(
                         "Pátio com id " + idPatio + " não encontrado"));
     }
+
+    private boolean maxPosicoesAtingido(Long patioId, int maxPosicoes) {
+        int posicoesAtuais = posicaoPatioRepository.countByPatioId(patioId);
+        return posicoesAtuais > maxPosicoes;
+    }
+
+
 }

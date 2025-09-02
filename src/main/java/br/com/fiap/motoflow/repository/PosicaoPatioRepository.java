@@ -29,6 +29,6 @@ public interface PosicaoPatioRepository extends JpaRepository<PosicaoPatio, Long
     int findMaxVerticalByPatioAndHorizontal(@Param("patio") Patio patio,
                                             @Param("horizontal") String horizontal);
 
-
-
+    @Query("SELECT COUNT(p) FROM PosicaoPatio p WHERE p.patio.id = :patioId")
+    int countByPatioId(@Param("patioId") Long patioId);
 }

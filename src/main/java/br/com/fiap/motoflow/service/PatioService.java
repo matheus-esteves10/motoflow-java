@@ -38,7 +38,10 @@ public class PatioService {
     public List<PatioResponse> getAllPatios() {
         List<Patio> patios = patioRepository.findAll();
         return patios.stream()
-                .map(patio -> new PatioResponse(patio.getApelido(), patio.getId()))
+                .map(patio -> new PatioResponse(patio.getId(), patio.getApelido(), patio.getCapacidade(), patio.getArea(),
+                        patio.getEndereco().getLogradouro(), patio.getEndereco().getCidade(),
+                        patio.getEndereco().getSiglaEstado(), patio.getEndereco().getCep(),
+                        patio.getEndereco().getNumero()))
                 .toList();
     }
 

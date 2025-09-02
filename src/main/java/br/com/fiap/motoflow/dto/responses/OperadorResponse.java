@@ -6,14 +6,14 @@ import br.com.fiap.motoflow.model.enums.Role;
 public record OperadorResponse(Long id,
                                String nome,
                                Role role,
-                               Long patio) {
+                               PatioResponse patio) {
 
     public OperadorResponse(Operador operador) {
         this(
                 operador.getId(),
                 operador.getNome(),
                 operador.getRole(),
-                operador.getPatio().getId());
+                operador.getPatio() == null ? null : new PatioResponse(operador.getPatio()));
     }
 
 }

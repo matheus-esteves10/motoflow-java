@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +41,15 @@ public class ValidationHandler {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Violação de integridade de dados");
         error.put("message", e.getLocalizedMessage());
+        return error;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, String> naoAutorizado(BadCredentialsException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getClass().getSimpleName());
+        error.put("message", e.getMessage());
         return error;
     }
 

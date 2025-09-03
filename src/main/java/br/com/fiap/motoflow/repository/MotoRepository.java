@@ -17,4 +17,5 @@ public interface MotoRepository extends JpaRepository<Moto, Long> {
             "WHERE p.patio.id = :patioId")
     Page<Moto> findByPatioId(@Param("patioId") Long patioId, Pageable pageable);
 
+
 }

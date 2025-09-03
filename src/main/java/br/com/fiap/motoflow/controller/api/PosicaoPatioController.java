@@ -2,6 +2,7 @@ package br.com.fiap.motoflow.controller.api;
 
 import br.com.fiap.motoflow.dto.CadastroPosicaoDto;
 import br.com.fiap.motoflow.dto.responses.CadastroPosicaoResponseDto;
+import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
 import br.com.fiap.motoflow.service.PosicaoPatioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,10 +11,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/posicoes")
@@ -37,5 +37,15 @@ public class PosicaoPatioController {
         final CadastroPosicaoResponseDto response = posicaoPatioService.cadastrarPosicao(dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Operation(summary = "Pegar todas as posições horizontais de um pátio")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Posições horizontais retornadas"),
+            @ApiResponse(responseCode = "404", description = "Pátio não encontrado")
+    })
+    @GetMapping("/{patioId}")
+    public ResponseEntity<List<PosicoesHorizontaisDto>> getPosicoesHorizontais(@PathVariable Long patioId) {
+        return ResponseEntity.ok(posicaoPatioService.posicoesHorizontais(patioId));
     }
 }

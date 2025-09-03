@@ -3,6 +3,7 @@ package br.com.fiap.motoflow.service;
 import br.com.fiap.motoflow.dto.CadastroPosicaoDto;
 import br.com.fiap.motoflow.dto.responses.CadastroPosicaoResponseDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoPatioResponseDto;
+import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
 import br.com.fiap.motoflow.exceptions.ExceededSpaceException;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
 import br.com.fiap.motoflow.model.Patio;
@@ -12,6 +13,7 @@ import br.com.fiap.motoflow.repository.PosicaoPatioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -63,6 +65,17 @@ public class PosicaoPatioService {
         return new CadastroPosicaoResponseDto(novasPosicoesDto, mensagem);
     }
 
+    public List<PosicoesHorizontaisDto> posicoesHorizontais(Long idPatio) {
+
+        List<String> posicoesHorizontais = posicaoPatioRepository.posicoesHorizontais(idPatio)
+                .orElseThrow(() -> new PatioNotFoundException("Pátio não encontrado com ID: " + idPatio));
+
+
+        return posicoesHorizontais.stream()
+                .map(PosicoesHorizontaisDto::new)
+                .collect(Collectors.toList());
+    }
+
 
     private int maiorVerticalExistente(Patio patio, String posicaoHorizontal) {
         return posicaoPatioRepository
@@ -79,6 +92,5 @@ public class PosicaoPatioService {
         int posicoesAtuais = posicaoPatioRepository.countByPatioId(patioId);
         return posicoesAtuais > maxPosicoes;
     }
-
 
 }

@@ -2,8 +2,10 @@ package br.com.fiap.motoflow.service;
 
 import br.com.fiap.motoflow.dto.CadastroPosicaoDto;
 import br.com.fiap.motoflow.dto.responses.CadastroPosicaoResponseDto;
+import br.com.fiap.motoflow.dto.responses.MotoResponseDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoPatioResponseDto;
 import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
+import br.com.fiap.motoflow.exceptions.EmptyPositionException;
 import br.com.fiap.motoflow.exceptions.ExceededSpaceException;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
 import br.com.fiap.motoflow.model.Patio;
@@ -73,6 +75,13 @@ public class PosicaoPatioService {
 
         return posicoesHorizontais.stream()
                 .map(PosicoesHorizontaisDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<MotoResponseDto> motosPorPosicaoHorizontal(Long patioId, String posicaoHorizontal) {
+        List<PosicaoPatio> posicoes = posicaoPatioRepository.findAllByPatioIdAndPosicaoHorizontal(patioId, posicaoHorizontal);
+        return posicoes.stream()
+                .map(posicao -> MotoResponseDto.from(posicao.getMoto()))
                 .collect(Collectors.toList());
     }
 

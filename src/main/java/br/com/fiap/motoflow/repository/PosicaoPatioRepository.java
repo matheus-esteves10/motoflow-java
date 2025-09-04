@@ -37,4 +37,8 @@ public interface PosicaoPatioRepository extends JpaRepository<PosicaoPatio, Long
 
     @Query("SELECT DISTINCT p.posicaoHorizontal FROM PosicaoPatio p WHERE p.patio.id = :patioId")
     Optional<List<String>> posicoesHorizontais(@Param("patioId") Long patioId);
+
+
+    @Query("SELECT p FROM PosicaoPatio p WHERE p.patio.id = :patioId AND p.posicaoHorizontal = :posicaoHorizontal AND p.moto IS NOT NULL")
+    List<PosicaoPatio> findAllByPatioIdAndPosicaoHorizontal(@Param("patioId") Long patioId, @Param("posicaoHorizontal") String posicaoHorizontal);
 }

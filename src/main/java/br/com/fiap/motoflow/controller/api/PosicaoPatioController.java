@@ -2,6 +2,7 @@ package br.com.fiap.motoflow.controller.api;
 
 import br.com.fiap.motoflow.dto.CadastroPosicaoDto;
 import br.com.fiap.motoflow.dto.responses.CadastroPosicaoResponseDto;
+import br.com.fiap.motoflow.dto.responses.MotoResponseDto;
 import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
 import br.com.fiap.motoflow.service.PosicaoPatioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,5 +48,16 @@ public class PosicaoPatioController {
     @GetMapping("/{patioId}")
     public ResponseEntity<List<PosicoesHorizontaisDto>> getPosicoesHorizontais(@PathVariable Long patioId) {
         return ResponseEntity.ok(posicaoPatioService.posicoesHorizontais(patioId));
+    }
+
+    @Operation(summary = "Pegar todas as motos de uma posição horizontal de um pátio")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Motos retornadas"),
+            @ApiResponse(responseCode = "404", description = "Pátio ou posição não encontrado")
+    })
+    @GetMapping("/{patioId}/{posicaoHorizontal}")
+    public ResponseEntity<List<MotoResponseDto>> getMotosPorPosicaoHorizontal(@PathVariable Long patioId, @PathVariable String posicaoHorizontal) {
+        List<MotoResponseDto> motos = posicaoPatioService.motosPorPosicaoHorizontal(patioId, posicaoHorizontal);
+        return ResponseEntity.ok(motos);
     }
 }

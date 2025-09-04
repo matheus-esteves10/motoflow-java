@@ -5,7 +5,6 @@ import br.com.fiap.motoflow.dto.responses.CadastroPosicaoResponseDto;
 import br.com.fiap.motoflow.dto.responses.MotoResponseDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoPatioResponseDto;
 import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
-import br.com.fiap.motoflow.exceptions.EmptyPositionException;
 import br.com.fiap.motoflow.exceptions.ExceededSpaceException;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
 import br.com.fiap.motoflow.model.Patio;
@@ -34,11 +33,18 @@ public class PosicaoPatioService {
 
         final Patio patio = checkPatio(dto.idPatio());
 
-        if (maxPosicoesAtingido(patio.getId(), patio.getCapacidade()) || dto.posicaoVerticalMax() > patio.getCapacidade()) {
+        final int maiorExistente = maiorVerticalExistente(patio, dto.posicaoHorizontal());
+
+        // quantidade de novas posições que serão criadas
+        int novasQtd = Math.max(0, dto.posicaoVerticalMax() - maiorExistente);
+
+        // quantas posições já existem no pátio
+        int posicoesAtuais = posicaoPatioRepository.countByPatioId(patio.getId());
+
+        // valida se a soma vai estourar a capacidade do pátio
+        if (posicoesAtuais + novasQtd > patio.getCapacidade()) {
             throw new ExceededSpaceException(patio.getApelido(), patio.getCapacidade());
         }
-
-        final int maiorExistente = maiorVerticalExistente(patio, dto.posicaoHorizontal());
 
         Set<PosicaoPatio> novasPosicoes = new LinkedHashSet<>();
         String mensagem = null;
@@ -95,11 +101,6 @@ public class PosicaoPatioService {
         return patioRepository.findById(idPatio)
                 .orElseThrow(() -> new PatioNotFoundException(
                         "Pátio com id " + idPatio + " não encontrado"));
-    }
-
-    private boolean maxPosicoesAtingido(Long patioId, int maxPosicoes) {
-        int posicoesAtuais = posicaoPatioRepository.countByPatioId(patioId);
-        return posicoesAtuais > maxPosicoes;
     }
 
 }

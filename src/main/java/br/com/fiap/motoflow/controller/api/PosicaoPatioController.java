@@ -2,7 +2,7 @@ package br.com.fiap.motoflow.controller.api;
 
 import br.com.fiap.motoflow.dto.CadastroPosicaoDto;
 import br.com.fiap.motoflow.dto.responses.CadastroPosicaoResponseDto;
-import br.com.fiap.motoflow.dto.responses.MotoResponseDto;
+import br.com.fiap.motoflow.dto.responses.MotoHorizontalDto;
 import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
 import br.com.fiap.motoflow.service.PosicaoPatioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -56,8 +57,9 @@ public class PosicaoPatioController {
             @ApiResponse(responseCode = "404", description = "Pátio ou posição não encontrado")
     })
     @GetMapping("/{patioId}/{posicaoHorizontal}")
-    public ResponseEntity<List<MotoResponseDto>> getMotosPorPosicaoHorizontal(@PathVariable Long patioId, @PathVariable String posicaoHorizontal) {
-        List<MotoResponseDto> motos = posicaoPatioService.motosPorPosicaoHorizontal(patioId, posicaoHorizontal);
+    public ResponseEntity<MotoHorizontalDto> getMotosPorPosicaoHorizontal(@PathVariable Long patioId, @PathVariable String posicaoHorizontal) {
+
+        MotoHorizontalDto motos = posicaoPatioService.motosPorPosicaoHorizontal(patioId, posicaoHorizontal);
         return ResponseEntity.ok(motos);
     }
 }

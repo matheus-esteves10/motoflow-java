@@ -1,6 +1,5 @@
 package br.com.fiap.motoflow.repository;
 
-import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
 import br.com.fiap.motoflow.model.Patio;
 import br.com.fiap.motoflow.model.PosicaoPatio;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface PosicaoPatioRepository extends JpaRepository<PosicaoPatio, Long> {
 
@@ -41,4 +39,7 @@ public interface PosicaoPatioRepository extends JpaRepository<PosicaoPatio, Long
 
     @Query("SELECT p FROM PosicaoPatio p WHERE p.patio.id = :patioId AND p.posicaoHorizontal = :posicaoHorizontal AND p.moto IS NOT NULL")
     List<PosicaoPatio> findAllByPatioIdAndPosicaoHorizontal(@Param("patioId") Long patioId, @Param("posicaoHorizontal") String posicaoHorizontal);
+
+    @Query("SELECT COUNT(p) FROM PosicaoPatio p WHERE p.patio.id = :patioId AND p.posicaoHorizontal = :horizontal")
+    int countByPatioIdAndHorizontal(@Param("patioId") Long patioId, @Param("horizontal") String horizontal);
 }

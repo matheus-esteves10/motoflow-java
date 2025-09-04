@@ -2,6 +2,7 @@ package br.com.fiap.motoflow.service;
 
 import br.com.fiap.motoflow.dto.CadastroPosicaoDto;
 import br.com.fiap.motoflow.dto.responses.CadastroPosicaoResponseDto;
+import br.com.fiap.motoflow.dto.responses.MotoHorizontalDto;
 import br.com.fiap.motoflow.dto.responses.MotoResponseDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoPatioResponseDto;
 import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
@@ -13,6 +14,7 @@ import br.com.fiap.motoflow.repository.PatioRepository;
 import br.com.fiap.motoflow.repository.PosicaoPatioRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,10 +38,10 @@ public class PosicaoPatioService {
         final int maiorExistente = maiorVerticalExistente(patio, dto.posicaoHorizontal());
 
         // quantidade de novas posições que serão criadas
-        int novasQtd = Math.max(0, dto.posicaoVerticalMax() - maiorExistente);
+        final int novasQtd = Math.max(0, dto.posicaoVerticalMax() - maiorExistente);
 
         // quantas posições já existem no pátio
-        int posicoesAtuais = posicaoPatioRepository.countByPatioId(patio.getId());
+        final int posicoesAtuais = posicaoPatioRepository.countByPatioId(patio.getId());
 
         // valida se a soma vai estourar a capacidade do pátio
         if (posicoesAtuais + novasQtd > patio.getCapacidade()) {
@@ -73,7 +75,7 @@ public class PosicaoPatioService {
         return new CadastroPosicaoResponseDto(novasPosicoesDto, mensagem);
     }
 
-    public List<PosicoesHorizontaisDto> posicoesHorizontais(Long idPatio) {
+    public List<PosicoesHorizontaisDto> posicoesHorizontais(final Long idPatio) {
 
         List<String> posicoesHorizontais = posicaoPatioRepository.posicoesHorizontais(idPatio)
                 .orElseThrow(() -> new PatioNotFoundException("Pátio não encontrado com ID: " + idPatio));
@@ -84,20 +86,34 @@ public class PosicaoPatioService {
                 .collect(Collectors.toList());
     }
 
-    public List<MotoResponseDto> motosPorPosicaoHorizontal(Long patioId, String posicaoHorizontal) {
-        List<PosicaoPatio> posicoes = posicaoPatioRepository.findAllByPatioIdAndPosicaoHorizontal(patioId, posicaoHorizontal);
-        return posicoes.stream()
-                .map(posicao -> MotoResponseDto.from(posicao.getMoto()))
-                .collect(Collectors.toList());
+    public MotoHorizontalDto motosPorPosicaoHorizontal(final Long patioId, final String posicaoHorizontal) {
+        final List<PosicaoPatio> posicoes = posicaoPatioRepository.findAllByPatioIdAndPosicaoHorizontal(patioId, posicaoHorizontal);
+
+        final int vagasTotais = posicaoPatioRepository.countByPatioIdAndHorizontal(patioId, posicaoHorizontal);
+
+        List<MotoResponseDto> motos = posicoes.stream()
+                .filter(posicao -> posicao.getMoto() != null)
+                .sorted(Comparator.comparingInt(PosicaoPatio::getPosicaoVertical))
+                .map(posicao -> new MotoResponseDto(
+                        posicao.getMoto().getId(),
+                        posicao.getMoto().getPlaca(),
+                        posicao.getMoto().getTipoMoto(),
+                        posicao.getMoto().getAno(),
+                        posicao.getMoto().getStatusMoto(),
+                        posicao.getPosicaoVertical()
+                ))
+                .toList();
+
+        return new MotoHorizontalDto(posicaoHorizontal, vagasTotais, motos);
     }
 
 
-    private int maiorVerticalExistente(Patio patio, String posicaoHorizontal) {
+    private int maiorVerticalExistente(final Patio patio, final String posicaoHorizontal) {
         return posicaoPatioRepository
                 .findMaxVerticalByPatioAndHorizontal(patio, posicaoHorizontal);
     }
 
-    private Patio checkPatio(Long idPatio) {
+    private Patio checkPatio(final Long idPatio) {
         return patioRepository.findById(idPatio)
                 .orElseThrow(() -> new PatioNotFoundException(
                         "Pátio com id " + idPatio + " não encontrado"));

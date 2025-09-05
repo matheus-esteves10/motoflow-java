@@ -30,7 +30,6 @@ public class MotoService {
     @Autowired
     private PosicaoPatioRepository posicaoPatioRepository;
 
-
     public Page<Moto> findAllByPatioId(Long patioId, Pageable pageable) {
         return motoRepository.findByPatioId(patioId, pageable);
     }
@@ -62,49 +61,49 @@ public class MotoService {
     }
 
     @Transactional
-    public ResponsePosicao alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical) {
+    public ResponsePosicao alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical, Long idPatio) {
         Moto moto = buscarMotoOrException(placa);
 
         posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
 
         PosicaoPatio novaPosicao = posicaoPatioRepository
                 .findByPosicaoHorizontalAndPosicaoVerticalAndPatioIdAndIsPosicaoLivreTrue(
-                        posicaoHorizontal, posicaoVertical, moto.getPosicaoPatio().getPatio().getId())
+                        posicaoHorizontal, posicaoVertical, idPatio)
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição " + posicaoHorizontal + posicaoVertical + " não encontrada ou já ocupada"));
 
         alocarMoto(novaPosicao, moto);
         return new ResponsePosicao(
-            moto.getPlaca(),
-            novaPosicao.getPosicaoHorizontal(),
-            novaPosicao.getPosicaoVertical(),
-            novaPosicao.getPatio().getId()
+                moto.getPlaca(),
+                novaPosicao.getPosicaoHorizontal(),
+                novaPosicao.getPosicaoVertical(),
+                novaPosicao.getPatio().getId()
         );
     }
 
     @Transactional
     public ResponsePosicao cadastrarMotoEAlocarEmPosicao(CadastroMotoComPatioDto dto, Long idPatio) {
         Moto moto = save(new MotoDto(
-            dto.getTipoMoto(),
-            dto.getAno(),
-            dto.getPlaca(),
-            dto.getPrecoAluguel(),
-            dto.getStatusMoto(),
-            null
+                dto.getTipoMoto(),
+                dto.getAno(),
+                dto.getPlaca(),
+                dto.getPrecoAluguel(),
+                dto.getStatusMoto(),
+                null
         ));
 
         PosicaoPatio posicao = posicaoPatioRepository
-            .findByPosicaoHorizontalAndPosicaoVerticalAndPatioIdAndIsPosicaoLivreTrue(
-                dto.getPosicaoHorizontal(),
-                dto.getPosicaoVertical(),
-                idPatio
-            )
-            .orElseThrow(() -> new PosicaoNotFoundException("Posição " + dto.getPosicaoHorizontal() + dto.getPosicaoVertical() + " não encontrada ou já ocupada no pátio " + idPatio));
+                .findByPosicaoHorizontalAndPosicaoVerticalAndPatioIdAndIsPosicaoLivreTrue(
+                        dto.getPosicaoHorizontal(),
+                        dto.getPosicaoVertical(),
+                        idPatio
+                )
+                .orElseThrow(() -> new PosicaoNotFoundException("Posição " + dto.getPosicaoHorizontal() + dto.getPosicaoVertical() + " não encontrada ou já ocupada no pátio " + idPatio));
         alocarMoto(posicao, moto);
         return new ResponsePosicao(
-            moto.getPlaca(),
-            posicao.getPosicaoHorizontal(),
-            posicao.getPosicaoVertical(),
-            posicao.getPatio().getId()
+                moto.getPlaca(),
+                posicao.getPosicaoHorizontal(),
+                posicao.getPosicaoVertical(),
+                posicao.getPatio().getId()
         );
     }
 
@@ -118,8 +117,12 @@ public class MotoService {
         if (statusMoto.equals(StatusMoto.ALUGADA)) {
             moto.setDataAluguel(LocalDate.now());
             posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
+            // Remove a referência da posição na moto
+            moto.setPosicaoPatio(null);
         } else if (statusMoto.equals(StatusMoto.MANUTENCAO)) {
             posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
+            // Remove a referência da posição na moto
+            moto.setPosicaoPatio(null);
         }
 
         return motoRepository.save(moto);
@@ -177,8 +180,10 @@ public class MotoService {
     private void alocarMoto(PosicaoPatio posicao, Moto moto) {
         posicao.setMoto(moto);
         posicao.setPosicaoLivre(false);
-        moto.setDataAluguel(null);;
+        moto.setPosicaoPatio(posicao);
+        moto.setDataAluguel(null);
         posicaoPatioRepository.save(posicao);
+        motoRepository.save(moto);
     }
 
     @Transactional
@@ -187,3 +192,4 @@ public class MotoService {
     }
 
 }
+

@@ -51,7 +51,7 @@ public class MotoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/alocacao")
+    @PutMapping("/alocacao/{idPatio}")
     @Operation(summary = "Alterar moto para uma posição específica",
             description = "Esse método funciona para alterar a posição de uma moto no sistema.",
             responses = {
@@ -59,9 +59,12 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto ou Posição nao encontrada", content = @Content)
             }
     )
-    public ResponseEntity<ResponsePosicao> alocarMoto(@RequestBody AlocarMotoDto dto, @AuthenticationPrincipal Operador operador) {
+    public ResponseEntity<ResponsePosicao> alocarMoto(
+            @PathVariable Long idPatio,
+            @RequestBody AlocarMotoDto dto,
+            @AuthenticationPrincipal Operador operador) {
 
-        ResponsePosicao response = motoService.alocarMotoNaPosicao(dto.placa(), dto.posicaoHorizontal(), dto.posicaoVertical());
+        ResponsePosicao response = motoService.alocarMotoNaPosicao(dto.placa(), dto.posicaoHorizontal(), dto.posicaoVertical(), idPatio);
         return ResponseEntity.ok(response);
     }
 

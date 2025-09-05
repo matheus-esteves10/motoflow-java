@@ -65,9 +65,12 @@ public class MotoService {
     public ResponsePosicao alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical) {
         Moto moto = buscarMotoOrException(placa);
 
+        posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
+
         PosicaoPatio novaPosicao = posicaoPatioRepository
-            .findByPosicaoHorizontalAndPosicaoVerticalAndIsPosicaoLivreTrue(posicaoHorizontal, posicaoVertical)
-            .orElseThrow(() -> new PosicaoNotFoundException("Posição " + posicaoHorizontal + posicaoVertical + " não encontrada ou já ocupada"));
+                .findByPosicaoHorizontalAndPosicaoVerticalAndPatioIdAndIsPosicaoLivreTrue(
+                        posicaoHorizontal, posicaoVertical, moto.getPosicaoPatio().getPatio().getId())
+                .orElseThrow(() -> new PosicaoNotFoundException("Posição " + posicaoHorizontal + posicaoVertical + " não encontrada ou já ocupada"));
 
         alocarMoto(novaPosicao, moto);
         return new ResponsePosicao(
@@ -148,12 +151,6 @@ public class MotoService {
     private Moto buscarMotoOrException(String placa) {
         return motoRepository.findByPlaca(placa)
                 .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
-    }
-
-    private PosicaoPatio buscarPosicaoLivreOrException(String horizontal, int vertical) {
-        return posicaoPatioRepository
-                .findByPosicaoHorizontalAndPosicaoVerticalAndIsPosicaoLivreTrue(horizontal, vertical)
-                .orElseThrow(() -> new MotoNotFoundException("Posição " + horizontal + vertical + " não encontrada ou já ocupada"));
     }
 
     private ResponsePosicao alocarMotoEmPosicaoLivre(Moto moto, Long idPatio) {

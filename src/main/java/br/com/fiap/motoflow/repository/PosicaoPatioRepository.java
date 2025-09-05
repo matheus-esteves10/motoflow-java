@@ -22,6 +22,8 @@ public interface PosicaoPatioRepository extends JpaRepository<PosicaoPatio, Long
             String posicaoHorizontal, int posicaoVertical
     );
 
+    Optional<PosicaoPatio> findByPosicaoHorizontalAndPosicaoVerticalAndPatioIdAndIsPosicaoLivreTrue(String posicaoHorizontal, int posicaoVertical, Long patioId);
+
     Optional<PosicaoPatio> findFirstByIsPosicaoLivreTrueAndPatioIdOrderByPosicaoHorizontalAscPosicaoVerticalAsc(Long patioId);
 
     @Query("SELECT COALESCE(MAX(p.posicaoVertical), 0) " +

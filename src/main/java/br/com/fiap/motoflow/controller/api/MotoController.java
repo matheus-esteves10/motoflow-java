@@ -29,13 +29,6 @@ public class MotoController {
     @Autowired
     private MotoService motoService;
 
-    @Operation(summary = "Cadastrar uma nova moto", description = "Salva uma nova moto no sistema")
-    @PostMapping
-    public ResponseEntity<Moto> salvarMoto(@RequestBody MotoDto dto, @AuthenticationPrincipal Operador operador) {
-        Moto novaMoto = motoService.save(dto);
-        return ResponseEntity.ok(novaMoto);
-    }
-
     @GetMapping("/posicao")
     @Operation(
             summary = "Buscar posição da moto",
@@ -59,8 +52,8 @@ public class MotoController {
     }
 
     @PutMapping("/alocacao")
-    @Operation(summary = "Alocar moto na posição",
-            description = "Esse método funciona para uma moto já existente no sistema ser alocada em uma posição especifica do patio.",
+    @Operation(summary = "Alterar moto para uma posição específica",
+            description = "Esse método funciona para alterar a posição de uma moto no sistema.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Posição alocada com sucesso", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "404", description = "Moto ou Posição nao encontrada", content = @Content)
@@ -135,5 +128,18 @@ public class MotoController {
         ResponsePosicao response = motoService.alocarMotoExistente(placa, idPatio);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-}
 
+    @PostMapping("/{idPatio}")
+    @Operation(
+        summary = "Cadastrar nova moto e alocar em posição específica",
+        description = "Cadastra uma nova moto e aloca na posição vertical/horizontal informada para o pátio especificado.",
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Moto cadastrada e alocada com sucesso", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Moto, posição ou pátio não encontrado", content = @Content)
+        }
+    )
+    public ResponseEntity<ResponsePosicao> cadastrarEAlocarEmPosicao(@PathVariable Long idPatio, @RequestBody CadastroMotoComPatioDto dto, @AuthenticationPrincipal Operador operador) {
+        ResponsePosicao response = motoService.cadastrarMotoEAlocarEmPosicao(dto, idPatio);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+}

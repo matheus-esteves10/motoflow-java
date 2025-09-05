@@ -1,5 +1,6 @@
 package br.com.fiap.motoflow.service;
 
+import br.com.fiap.motoflow.dto.CadastroMotoComPatioDto;
 import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
@@ -10,6 +11,7 @@ import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.PosicaoPatio;
 import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.repository.MotoRepository;
+import br.com.fiap.motoflow.repository.PatioRepository;
 import br.com.fiap.motoflow.repository.PosicaoPatioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +31,6 @@ public class MotoService {
     private PosicaoPatioRepository posicaoPatioRepository;
 
 
-    @Transactional
-    public Moto save(MotoDto motoDto) {
-        return motoRepository.save(Moto.from(motoDto));
-    }
-
     public Page<Moto> findAllByPatioId(Long patioId, Pageable pageable) {
         return motoRepository.findByPatioId(patioId, pageable);
     }
@@ -41,11 +38,9 @@ public class MotoService {
     @Transactional
     public void excluirMotoPorPlaca(String placa) {
         Moto moto = buscarMotoOrException(placa);
-
         if (!moto.getStatusMoto().equals(StatusMoto.ALUGADA)) {
             posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
         }
-
         motoRepository.delete(moto);
     }
 
@@ -70,15 +65,43 @@ public class MotoService {
     public ResponsePosicao alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical) {
         Moto moto = buscarMotoOrException(placa);
 
-        PosicaoPatio posicao = buscarPosicaoLivreOrException(posicaoHorizontal, posicaoVertical);
+        PosicaoPatio novaPosicao = posicaoPatioRepository
+            .findByPosicaoHorizontalAndPosicaoVerticalAndIsPosicaoLivreTrue(posicaoHorizontal, posicaoVertical)
+            .orElseThrow(() -> new PosicaoNotFoundException("Posição " + posicaoHorizontal + posicaoVertical + " não encontrada ou já ocupada"));
 
-        alocarMoto(posicao, moto);
-
+        alocarMoto(novaPosicao, moto);
         return new ResponsePosicao(
-                moto.getPlaca(),
-                posicao.getPosicaoHorizontal(),
-                posicao.getPosicaoVertical(),
-                posicao.getPatio().getId()
+            moto.getPlaca(),
+            novaPosicao.getPosicaoHorizontal(),
+            novaPosicao.getPosicaoVertical(),
+            novaPosicao.getPatio().getId()
+        );
+    }
+
+    @Transactional
+    public ResponsePosicao cadastrarMotoEAlocarEmPosicao(CadastroMotoComPatioDto dto, Long idPatio) {
+        Moto moto = save(new MotoDto(
+            dto.getTipoMoto(),
+            dto.getAno(),
+            dto.getPlaca(),
+            dto.getPrecoAluguel(),
+            dto.getStatusMoto(),
+            null
+        ));
+
+        PosicaoPatio posicao = posicaoPatioRepository
+            .findByPosicaoHorizontalAndPosicaoVerticalAndPatioIdAndIsPosicaoLivreTrue(
+                dto.getPosicaoHorizontal(),
+                dto.getPosicaoVertical(),
+                idPatio
+            )
+            .orElseThrow(() -> new PosicaoNotFoundException("Posição " + dto.getPosicaoHorizontal() + dto.getPosicaoVertical() + " não encontrada ou já ocupada no pátio " + idPatio));
+        alocarMoto(posicao, moto);
+        return new ResponsePosicao(
+            moto.getPlaca(),
+            posicao.getPosicaoHorizontal(),
+            posicao.getPosicaoVertical(),
+            posicao.getPatio().getId()
         );
     }
 
@@ -159,6 +182,11 @@ public class MotoService {
         posicao.setPosicaoLivre(false);
         moto.setDataAluguel(null);;
         posicaoPatioRepository.save(posicao);
+    }
+
+    @Transactional
+    private Moto save(MotoDto motoDto) {
+        return motoRepository.save(Moto.from(motoDto));
     }
 
 }

@@ -20,4 +20,6 @@ public class CadastroMotoComPatioDto {
     private StatusMoto statusMoto = StatusMoto.DISPONIVEL;
     private LocalDate dataAlocacao;
     private Long idPatio;
+    private String posicaoHorizontal;
+    private int posicaoVertical;
 }

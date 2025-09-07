@@ -1,21 +1,20 @@
 package br.com.fiap.motoflow.controller.api;
 
 import br.com.fiap.motoflow.dto.CadastroMotoComPatioDto;
+import br.com.fiap.motoflow.dto.EditarStatusMotoDto;
 import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.dto.responses.AlocarMotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
 import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.Operador;
-import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -92,17 +91,15 @@ public class MotoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{placa}/aluguel")
-    @Operation(summary = "Atualiza status de aluguel da moto e remove do pátio se alugada",
+    @PatchMapping("/{placa}")
+    @Operation(summary = "Atualiza status da moto e remove da posicão se necessário",
     responses = {
-        @ApiResponse(responseCode = "200", description = "Status de aluguel atualizado com sucesso", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "200", description = "Status da moto atualizada com sucesso", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
     }
     )
-    public ResponseEntity<MotoDto> atualizarStatusAluguel(@PathVariable String placa, @RequestParam StatusMoto statusMoto,
-                                                       @AuthenticationPrincipal Operador operador) {
-
-        Moto motoAtualizada = motoService.atualizarStatusAluguel(placa, statusMoto);
+    public ResponseEntity<MotoDto> atualizarStatusAluguel(@PathVariable String placa, @RequestBody @Valid EditarStatusMotoDto dto) {
+        Moto motoAtualizada = motoService.atualizarStatus(placa, dto.status());
 
         MotoDto motoDto = new MotoDto(
                 motoAtualizada.getTipoMoto(),

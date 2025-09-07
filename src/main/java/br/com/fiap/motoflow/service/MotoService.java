@@ -5,7 +5,6 @@ import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
 import br.com.fiap.motoflow.exceptions.MotoNotFoundException;
-import br.com.fiap.motoflow.exceptions.MotoNotAllocatedException;
 import br.com.fiap.motoflow.exceptions.PosicaoNotFoundException;
 import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.PosicaoPatio;
@@ -109,7 +108,7 @@ public class MotoService {
     // --- ATUALIZAÇÃO DE STATUS ---
 
     @Transactional
-    public Moto atualizarStatusAluguel(String placa, StatusMoto statusMoto) {
+    public Moto atualizarStatus(String placa, StatusMoto statusMoto) {
         Moto moto = buscarMotoOrException(placa);
         moto.setStatusMoto(statusMoto);
 
@@ -131,20 +130,20 @@ public class MotoService {
 
     public PosicaoMotoResponse buscarPosicaoPorPlaca(String placa) {
         Moto moto = buscarMotoOrException(placa);
-        PosicaoPatio posicao = posicaoPatioRepository.findByMotoPlaca(placa)
-                .orElseThrow(() -> new MotoNotAllocatedException(placa));
+        PosicaoPatio posicao = posicaoPatioRepository.findByMotoPlaca(placa).orElse(null);
 
         return new PosicaoMotoResponse(
                 moto.getPlaca(),
                 moto.getTipoMoto(),
+                moto.getStatusMoto(),
                 moto.getAno(),
                 moto.getPrecoAluguel(),
-                posicao.getPatio().getId(),
-                posicao.getPatio().getApelido(),
-                posicao.getPatio().getEndereco(),
-                posicao.getPosicaoVertical(),
-                posicao.getPosicaoHorizontal(),
-                posicao.isPosicaoLivre()
+                posicao == null ? null : posicao.getPatio().getId(),
+                posicao == null ? null : posicao.getPatio().getApelido(),
+                posicao == null ? null : posicao.getPatio().getEndereco(),
+                posicao == null ? 0 : posicao.getPosicaoVertical(),
+                posicao == null ? null : posicao.getPosicaoHorizontal(),
+                posicao != null && posicao.isPosicaoLivre()
         );
     }
 
@@ -181,6 +180,7 @@ public class MotoService {
         posicao.setPosicaoLivre(false);
         moto.setPosicaoPatio(posicao);
         moto.setDataAluguel(null);
+        moto.setStatusMoto(StatusMoto.DISPONIVEL);
         posicaoPatioRepository.save(posicao);
         motoRepository.save(moto);
     }

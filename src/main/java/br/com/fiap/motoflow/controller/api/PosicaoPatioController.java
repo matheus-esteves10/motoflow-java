@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -30,7 +29,7 @@ public class PosicaoPatioController {
 
     @Operation(summary = "Cadastrar posições de um pátio")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Posições cadastradas com sucesso"),
+            @ApiResponse(responseCode = "201", description = "Posições cadastradas com sucesso"),
             @ApiResponse(responseCode = "404", description = "Pátio não encontrado")
     })
     @PostMapping
@@ -38,7 +37,7 @@ public class PosicaoPatioController {
 
         final CadastroPosicaoResponseDto response = posicaoPatioService.cadastrarPosicao(dto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Pegar todas as posições horizontais de um pátio")

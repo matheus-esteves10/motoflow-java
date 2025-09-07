@@ -11,7 +11,6 @@ import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.PosicaoPatio;
 import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.repository.MotoRepository;
-import br.com.fiap.motoflow.repository.PatioRepository;
 import br.com.fiap.motoflow.repository.PosicaoPatioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,7 +185,6 @@ public class MotoService {
         motoRepository.save(moto);
     }
 
-    @Transactional
     private Moto save(MotoDto motoDto) {
         return motoRepository.save(Moto.from(motoDto));
     }

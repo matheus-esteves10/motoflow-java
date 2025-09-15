@@ -1,4 +1,4 @@
-package br.com.fiap.motoflow.dto.refactor;
+package br.com.fiap.motoflow.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

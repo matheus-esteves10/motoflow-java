@@ -25,7 +25,7 @@ public class PatioService {
     }
 
     public PatioQuantityResponse getPatioInfos(final Long id){
-        final Patio patio = patioRepository.findById(id).orElseThrow(() -> new PatioNotFoundException(id));
+        final Patio patio = patioExiste(id);
 
         final List<SetorPatio> setores = setorPatioRepository.findAllByPatioId(id);
 
@@ -65,5 +65,9 @@ public class PatioService {
                 .toList();
     }
 
+
+    private Patio patioExiste(final Long patioId) {
+        return patioRepository.findById(patioId).orElseThrow(() -> new PatioNotFoundException(patioId));
+    }
 
 }

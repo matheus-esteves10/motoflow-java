@@ -30,4 +30,7 @@ public interface SetorPatioRepository extends JpaRepository<SetorPatio, Long> {
     Optional<SetorPatio> findByMotoPlaca(@Param("placa") String placa);
 
     List<SetorPatio> findAllByPatioId(Long patioId);
+
+    @Query("SELECT DISTINCT p.setor FROM SetorPatio p WHERE p.patio.id = :patioId")
+    Optional<List<String>> posicoesHorizontais(@Param("patioId") Long patioId);
 }

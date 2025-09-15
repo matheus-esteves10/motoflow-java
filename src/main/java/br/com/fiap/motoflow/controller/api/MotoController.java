@@ -1,6 +1,8 @@
 package br.com.fiap.motoflow.controller.api;
 
-import br.com.fiap.motoflow.dto.refactor.*;
+import br.com.fiap.motoflow.dto.*;
+import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
+import br.com.fiap.motoflow.dto.responses.ResponseMovimentacao;
 import br.com.fiap.motoflow.model.Operador;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;

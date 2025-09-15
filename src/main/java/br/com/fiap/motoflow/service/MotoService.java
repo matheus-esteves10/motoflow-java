@@ -1,10 +1,10 @@
 package br.com.fiap.motoflow.service;
 
-import br.com.fiap.motoflow.dto.refactor.EditarStatusMotoDto;
-import br.com.fiap.motoflow.dto.refactor.CadastroMotoDto;
-import br.com.fiap.motoflow.dto.refactor.ResponseMovimentacao;
-import br.com.fiap.motoflow.dto.refactor.PosicaoMotoResponse;
-import br.com.fiap.motoflow.dto.refactor.SetorMotoDto;
+import br.com.fiap.motoflow.dto.EditarStatusMotoDto;
+import br.com.fiap.motoflow.dto.CadastroMotoDto;
+import br.com.fiap.motoflow.dto.responses.ResponseMovimentacao;
+import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
+import br.com.fiap.motoflow.dto.SetorMotoDto;
 import br.com.fiap.motoflow.exceptions.*;
 import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.model.SetorPatio;

@@ -1,4 +1,4 @@
-package br.com.fiap.motoflow.dto.refactor;
+package br.com.fiap.motoflow.dto;
 
 import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.model.enums.TipoMoto;

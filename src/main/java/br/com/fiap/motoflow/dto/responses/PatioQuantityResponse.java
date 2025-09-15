@@ -5,6 +5,8 @@ import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Set;
+
 @Builder
 @Getter
 public class PatioQuantityResponse {
@@ -12,9 +14,8 @@ public class PatioQuantityResponse {
     private String apelido;
     private Integer area;
     private Integer capacidadeMax;
-    private int posicoesDisponiveis;
-    private int posicoesOcupadas;
     private Endereco endereco;
-
+    private Set<String> setoresComPosicoesDisponiveis;
+    private Set<String> setoresCheios;
 
 }

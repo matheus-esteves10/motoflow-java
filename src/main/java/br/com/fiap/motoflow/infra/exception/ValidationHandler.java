@@ -89,15 +89,6 @@ public class ValidationHandler {
         return error;
     }
 
-    @ExceptionHandler(PosicaoNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> posicaoNotFound(PosicaoNotFoundException e) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", "Posição informada não foi encontrada");
-        error.put("message", e.getMessage());
-        return error;
-    }
-
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Map<String, String> acessoNegado(AccessDeniedException e) {
@@ -133,6 +124,33 @@ public class ValidationHandler {
     @ExceptionHandler(ExceededSpaceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> espacoEsgotado(ExceededSpaceException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getClass().getSimpleName());
+        error.put("message", e.getMessage());
+        return error;
+    }
+
+    @ExceptionHandler(MotoIndisponivelException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> motoIndisponivel(MotoIndisponivelException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getClass().getSimpleName());
+        error.put("message", e.getMessage());
+        return error;
+    }
+
+    @ExceptionHandler(SetorCheioException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> setorCheio(SetorCheioException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getClass().getSimpleName());
+        error.put("message", e.getMessage());
+        return error;
+    }
+
+    @ExceptionHandler(SetorNaoExisteException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> setorNaoExiste(SetorNaoExisteException e) {
         Map<String, String> error = new HashMap<>();
         error.put("error", e.getClass().getSimpleName());
         error.put("message", e.getMessage());

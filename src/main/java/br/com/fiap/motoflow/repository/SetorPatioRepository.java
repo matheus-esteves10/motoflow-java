@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SetorPatioRepository extends JpaRepository<SetorPatio, Long> {
@@ -27,4 +28,6 @@ public interface SetorPatioRepository extends JpaRepository<SetorPatio, Long> {
         WHERE m.placa = :placa
     """)
     Optional<SetorPatio> findByMotoPlaca(@Param("placa") String placa);
+
+    List<SetorPatio> findAllByPatioId(Long patioId);
 }

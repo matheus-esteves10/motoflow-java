@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 @Table(name = "t_mtf_moto")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Moto {
 
     @Id
@@ -58,9 +60,6 @@ public class Moto {
     @ManyToOne
     @JoinColumn(name = "cd_id_setor")
     private SetorPatio setorPatio;
-
-    public Moto() {
-    }
 
     public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, StatusMoto statusMoto, LocalDate dataAluguel, Integer codRastreador, LocalDateTime dataEntrada) {
         this.tipoMoto = tipoMoto;

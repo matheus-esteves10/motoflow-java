@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Objects;
 
 @Service
 public class OperadorService {
@@ -39,7 +38,7 @@ public class OperadorService {
         Optional<Patio> patioExistente = patioRepository.findById(patioId);
 
         if (patioExistente.isEmpty()) {
-            throw new PatioNotFoundException("Patio não encontrado.");
+            throw new PatioNotFoundException(patioId);
         }
 
         Operador operador = new Operador();
@@ -58,7 +57,7 @@ public class OperadorService {
         Optional<Patio> patioExistente = patioRepository.findById(patioId);
 
         if (patioExistente.isEmpty()) {
-            throw new PatioNotFoundException("Patio não encontrado.");
+            throw new PatioNotFoundException(patioId);
         }
 
         operador.setNome(operadorDto.nome());

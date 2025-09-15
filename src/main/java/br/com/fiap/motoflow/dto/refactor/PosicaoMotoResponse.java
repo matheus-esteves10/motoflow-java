@@ -1,4 +1,4 @@
-package br.com.fiap.motoflow.dto.responses;
+package br.com.fiap.motoflow.dto.refactor;
 
 import br.com.fiap.motoflow.model.Endereco;
 import br.com.fiap.motoflow.model.enums.StatusMoto;
@@ -15,9 +15,7 @@ public record PosicaoMotoResponse(
         Long idPatio,
         String apelidoPatio,
         Endereco endereco,
-        int posicaoVertical,
-        String posicaoHorizontal,
-        boolean posicaoLivre
+        String setor
 ) {
 }
 

@@ -1,7 +1,6 @@
 package br.com.fiap.motoflow.repository;
 
-import br.com.fiap.motoflow.model.Patio;
-import br.com.fiap.motoflow.model.PosicaoPatio;
+import br.com.fiap.motoflow.model.SetorPatio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,36 +8,27 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface PosicaoPatioRepository extends JpaRepository<PosicaoPatio, Long> {
+public interface PosicaoPatioRepository extends JpaRepository<SetorPatio, Long> {
 
-    @Query("""
-        SELECT p FROM PosicaoPatio p
-        JOIN p.moto m
-        WHERE m.placa = :placa
-    """)
-    Optional<PosicaoPatio> findByMotoPlaca(@Param("placa") String placa);
 
-    Optional<PosicaoPatio> findByPosicaoHorizontalAndPosicaoVerticalAndPatioIdAndIsPosicaoLivreTrue(
-            String posicaoHorizontal, int posicaoVertical, Long patioId);
 
-    Optional<PosicaoPatio> findFirstByIsPosicaoLivreTrueAndPatioIdOrderByPosicaoHorizontalAscPosicaoVerticalAsc(Long patioId);
-
-    @Query("SELECT COALESCE(MAX(p.posicaoVertical), 0) " +
-            "FROM PosicaoPatio p " +
-            "WHERE p.patio = :patio AND p.posicaoHorizontal = :horizontal")
-    int findMaxVerticalByPatioAndHorizontal(@Param("patio") Patio patio,
-                                            @Param("horizontal") String horizontal);
-
-    @Query("SELECT COUNT(p) FROM PosicaoPatio p WHERE p.patio.id = :patioId")
+    @Query("SELECT COUNT(p) FROM SetorPatio p WHERE p.patio.id = :patioId")
     int countByPatioId(@Param("patioId") Long patioId);
 
-    @Query("SELECT DISTINCT p.posicaoHorizontal FROM PosicaoPatio p WHERE p.patio.id = :patioId")
+    @Query("SELECT DISTINCT p.setor FROM SetorPatio p WHERE p.patio.id = :patioId")
     Optional<List<String>> posicoesHorizontais(@Param("patioId") Long patioId);
 
 
-    @Query("SELECT p FROM PosicaoPatio p WHERE p.patio.id = :patioId AND p.posicaoHorizontal = :posicaoHorizontal AND p.moto IS NOT NULL")
-    List<PosicaoPatio> findAllByPatioIdAndPosicaoHorizontal(@Param("patioId") Long patioId, @Param("posicaoHorizontal") String posicaoHorizontal);
+    @Query("SELECT p FROM SetorPatio p WHERE p.patio.id = :patioId AND p.setor = :posicaoHorizontal AND p.moto IS NOT NULL")
+    List<SetorPatio> findAllByPatioIdAndPosicaoHorizontal(@Param("patioId") Long patioId, @Param("posicaoHorizontal") String posicaoHorizontal);
 
-    @Query("SELECT COUNT(p) FROM PosicaoPatio p WHERE p.patio.id = :patioId AND p.posicaoHorizontal = :horizontal")
-    int countByPatioIdAndHorizontal(@Param("patioId") Long patioId, @Param("horizontal") String horizontal);
+    @Query("SELECT COUNT(p) FROM SetorPatio p WHERE p.patio.id = :patioId AND p.setor = :setor")
+    int countByPatioIdAndHorizontal(@Param("patioId") Long patioId, @Param("setor") String setor);
+
+    @Query("""
+        SELECT CASE WHEN COUNT(p) >= MAX(p.capacidadeSetor) THEN true ELSE false END
+        FROM SetorPatio p
+        WHERE p.patio.id = :patioId AND p.setor = :setor AND p.moto IS NOT NULL
+    """)
+    boolean setorComCapacidadeExcedida(@Param("patioId") Long patioId, @Param("setor") String setor);
 }

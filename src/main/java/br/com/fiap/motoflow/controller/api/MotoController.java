@@ -1,12 +1,6 @@
 package br.com.fiap.motoflow.controller.api;
 
-import br.com.fiap.motoflow.dto.CadastroMotoComPatioDto;
-import br.com.fiap.motoflow.dto.EditarStatusMotoDto;
-import br.com.fiap.motoflow.dto.MotoDto;
-import br.com.fiap.motoflow.dto.responses.AlocarMotoDto;
-import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
-import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
-import br.com.fiap.motoflow.model.Moto;
+import br.com.fiap.motoflow.dto.refactor.*;
 import br.com.fiap.motoflow.model.Operador;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,9 +8,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,121 +19,79 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "bearerAuth")
 public class MotoController {
 
-    @Autowired
-    private MotoService motoService;
+    private final MotoService motoService;
+
+    public MotoController(MotoService motoService) {
+        this.motoService = motoService;
+    }
+
+    @PostMapping("/{idPatio}")
+    @Operation(
+            summary = "Cadastrar nova moto e alocar setor",
+            description = "Cadastra uma nova moto e aloca no setor informado na reaquisição",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Moto cadastrada e alocada com sucesso", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "Setor Cheio", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "Patio não encontrado", content = @Content)
+            }
+    )
+    public ResponseEntity<ResponseMovimentacao> alocarMoto(@Valid @RequestBody CadastroMotoDto dto,
+                                                           @PathVariable Long idPatio, @AuthenticationPrincipal Operador operador) {
+        return new ResponseEntity<>(motoService.alocarMoto(dto, idPatio), HttpStatus.CREATED);
+    }
 
     @GetMapping("/posicao")
     @Operation(
             summary = "Buscar posição da moto",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Moto encontrada no patio", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content)
+                    @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content),
+                    @ApiResponse(responseCode = "40", description = "Moto não alocada em nenhum setor", content = @Content)
             }
     )
     public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorPlaca(@RequestParam String placa, @AuthenticationPrincipal Operador operador) {
-
-        PosicaoMotoResponse response = motoService.buscarPosicaoPorPlaca(placa);
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/{placa}")
-    @Operation(summary = "Excluir moto por placa", description = "Exclui a moto pela placa. Remove o vínculo com a posição se não estiver alugada.")
-    public ResponseEntity<Void> excluirMotoPorPlaca(@PathVariable String placa, @AuthenticationPrincipal Operador operador) {
-
-        motoService.excluirMotoPorPlaca(placa);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(motoService.buscarSetorPorPlaca(placa));
     }
 
     @PutMapping("/alocacao/{idPatio}")
-    @Operation(summary = "Alterar moto para uma posição específica",
-            description = "Esse método funciona para alterar a posição de uma moto no sistema.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Posição alocada com sucesso", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404", description = "Moto ou Posição nao encontrada", content = @Content)
-            }
-    )
-    public ResponseEntity<ResponsePosicao> alocarMoto(
-            @PathVariable Long idPatio,
-            @RequestBody AlocarMotoDto dto,
-            @AuthenticationPrincipal Operador operador) {
-
-        ResponsePosicao response = motoService.alocarMotoNaPosicao(dto.placa(), dto.posicaoHorizontal(), dto.posicaoVertical(), idPatio);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/cadastro-e-alocacao")
     @Operation(
-            summary = "Cadastrar nova moto e alocar automaticamente",
-            description = "Cadastra uma nova moto e aloca na primeira posição livre no pátio informado, seguindo ordem A1, A2, B1...",
+            summary = "Alterar setor da moto",
+            description = "Altera o setor da moto, caso a moto esteja disponível",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Moto cadastrada e alocada com sucesso", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404", description = "Moto ou patio nao encontrado", content = @Content)
+                    @ApiResponse(responseCode = "200", description = "Setor alterado com sucesso", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "Moto Indisponível", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "Moto, Setor ou Pátio não encontrados", content = @Content)
             }
     )
-    public ResponseEntity<ResponsePosicao> cadastrarEAlocar(@RequestBody CadastroMotoComPatioDto dto, @AuthenticationPrincipal Operador operador) {
-
-        MotoDto motoDto = new MotoDto(
-                dto.getTipoMoto(),
-                dto.getAno(),
-                dto.getPlaca(),
-                dto.getPrecoAluguel(),
-                dto.getStatusMoto(),
-                dto.getDataAlocacao()
-        );
-
-        ResponsePosicao response = motoService.cadastrarMotoEAlocar(motoDto, dto.getIdPatio());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<ResponseMovimentacao> alterarSetorMoto(@Valid @RequestBody SetorMotoDto dto,
+                                                                 @PathVariable Long idPatio, @AuthenticationPrincipal Operador operador) {
+        return ResponseEntity.ok(motoService.alterarSetor(dto, idPatio));
     }
 
     @PatchMapping("/{placa}")
     @Operation(summary = "Atualiza status da moto e remove da posicão se necessário",
-    responses = {
-        @ApiResponse(responseCode = "200", description = "Status da moto atualizada com sucesso", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
-    }
-    )
-    public ResponseEntity<MotoDto> atualizarStatusAluguel(@PathVariable String placa, @RequestBody @Valid EditarStatusMotoDto dto) {
-        Moto motoAtualizada = motoService.atualizarStatus(placa, dto.status());
-
-        MotoDto motoDto = new MotoDto(
-                motoAtualizada.getTipoMoto(),
-                motoAtualizada.getAno(),
-                motoAtualizada.getPlaca(),
-                motoAtualizada.getPrecoAluguel(),
-                motoAtualizada.getStatusMoto(),
-                motoAtualizada.getDataAluguel()
-        );
-
-        return ResponseEntity.ok(motoDto);
-    }
-
-    @Operation(
-            summary = "Alocar moto existente em posição livre",
-            description = "Aloca uma moto já cadastrada no sistema em uma posição livre e sequencial no pátio especificado.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Moto alocada com sucesso", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404", description = "Moto ou posição não encontrada", content = @Content)
+                    @ApiResponse(responseCode = "200", description = "Status da moto atualizada com sucesso", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
             }
     )
-    @PostMapping("/{placa}/alocacao/{idPatio}")
-    public ResponseEntity<ResponsePosicao> alocarMotoExistente(
-            @PathVariable String placa, @PathVariable Long idPatio, @AuthenticationPrincipal Operador operador) {
-
-        ResponsePosicao response = motoService.alocarMotoExistente(placa, idPatio);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<ResponseMovimentacao> alterarStatusMoto(@PathVariable String placa, @Valid @RequestBody EditarStatusMotoDto dto,
+                                                                 @AuthenticationPrincipal Operador operador) {
+        return ResponseEntity.ok(motoService.alterarStatusMoto(dto, placa));
     }
 
-    @PostMapping("/{idPatio}")
-    @Operation(
-        summary = "Cadastrar nova moto e alocar em posição específica",
-        description = "Cadastra uma nova moto e aloca na posição vertical/horizontal informada para o pátio especificado.",
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Moto cadastrada e alocada com sucesso", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "Moto, posição ou pátio não encontrado", content = @Content)
-        }
+    @DeleteMapping("/{placa}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Remover moto do sistema",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Moto removida com sucesso", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
+            }
     )
-    public ResponseEntity<ResponsePosicao> cadastrarEAlocarEmPosicao(@PathVariable Long idPatio, @RequestBody CadastroMotoComPatioDto dto, @AuthenticationPrincipal Operador operador) {
-        ResponsePosicao response = motoService.cadastrarMotoEAlocarEmPosicao(dto, idPatio);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Void> removerMoto(@PathVariable String placa, @AuthenticationPrincipal Operador operador) {
+        motoService.deletarMoto(placa);
+        return ResponseEntity.noContent().build();
     }
+
+
 }

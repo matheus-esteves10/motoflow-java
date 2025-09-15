@@ -1,6 +1,5 @@
 package br.com.fiap.motoflow.dto.responses;
 
-import br.com.fiap.motoflow.model.PosicaoPatio;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Set;

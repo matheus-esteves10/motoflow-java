@@ -1,16 +1,7 @@
 package br.com.fiap.motoflow.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
 
 import java.util.List;
 
@@ -38,12 +29,12 @@ public class Patio {
     private Endereco endereco;
 
     @OneToMany(mappedBy = "patio", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PosicaoPatio> posicoes;
+    private List<SetorPatio> posicoes;
 
     public Patio() {
     }
 
-    public Patio(Long id, String apelido, Integer capacidade, Integer area, Endereco endereco, List<PosicaoPatio> posicoes) {
+    public Patio(Long id, String apelido, Integer capacidade, Integer area, Endereco endereco, List<SetorPatio> posicoes) {
         this.id = id;
         this.apelido = apelido;
         this.capacidade = capacidade;

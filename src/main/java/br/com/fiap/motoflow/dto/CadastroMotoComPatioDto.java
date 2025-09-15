@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -21,5 +22,7 @@ public class CadastroMotoComPatioDto {
     private LocalDate dataAlocacao;
     private Long idPatio;
     private String posicaoHorizontal;
-    private int posicaoVertical;
+    private int capacidadeSetor;
+    private int codRastreador;
+    private LocalDateTime dataEntrada = LocalDateTime.now();
 }

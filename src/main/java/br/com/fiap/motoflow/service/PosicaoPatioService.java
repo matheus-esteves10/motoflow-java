@@ -9,7 +9,7 @@ import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
 import br.com.fiap.motoflow.exceptions.ExceededSpaceException;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
 import br.com.fiap.motoflow.model.Patio;
-import br.com.fiap.motoflow.model.PosicaoPatio;
+import br.com.fiap.motoflow.model.SetorPatio;
 import br.com.fiap.motoflow.repository.PatioRepository;
 import br.com.fiap.motoflow.repository.PosicaoPatioRepository;
 import org.springframework.stereotype.Service;
@@ -48,17 +48,17 @@ public class PosicaoPatioService {
             throw new ExceededSpaceException(patio.getApelido(), patio.getCapacidade());
         }
 
-        Set<PosicaoPatio> novasPosicoes = new LinkedHashSet<>();
+        Set<SetorPatio> novasPosicoes = new LinkedHashSet<>();
         String mensagem = null;
 
         for (int i = maiorExistente + 1; i <= dto.posicaoVerticalMax(); i++) {
-            PosicaoPatio posicaoPatio = new PosicaoPatio();
-            posicaoPatio.setPosicaoVertical(i);
-            posicaoPatio.setPosicaoHorizontal(dto.posicaoHorizontal().toUpperCase());
-            posicaoPatio.setPosicaoLivre(true);
-            posicaoPatio.setPatio(patio);
+            SetorPatio setorPatio = new SetorPatio();
+            setorPatio.setPosicaoVertical(i);
+            setorPatio.setPosicaoHorizontal(dto.posicaoHorizontal().toUpperCase());
+            setorPatio.setPosicaoLivre(true);
+            setorPatio.setPatio(patio);
 
-            novasPosicoes.add(posicaoPatioRepository.save(posicaoPatio));
+            novasPosicoes.add(posicaoPatioRepository.save(setorPatio));
         }
 
         if (maiorExistente >= dto.posicaoVerticalMax()) {
@@ -87,13 +87,13 @@ public class PosicaoPatioService {
     }
 
     public MotoHorizontalDto motosPorPosicaoHorizontal(final Long patioId, final String posicaoHorizontal) {
-        final List<PosicaoPatio> posicoes = posicaoPatioRepository.findAllByPatioIdAndPosicaoHorizontal(patioId, posicaoHorizontal);
+        final List<SetorPatio> posicoes = posicaoPatioRepository.findAllByPatioIdAndPosicaoHorizontal(patioId, posicaoHorizontal);
 
         final int vagasTotais = posicaoPatioRepository.countByPatioIdAndHorizontal(patioId, posicaoHorizontal);
 
         List<MotoResponseDto> motos = posicoes.stream()
                 .filter(posicao -> posicao.getMoto() != null)
-                .sorted(Comparator.comparingInt(PosicaoPatio::getPosicaoVertical))
+                .sorted(Comparator.comparingInt(SetorPatio::getPosicaoVertical))
                 .map(posicao -> new MotoResponseDto(
                         posicao.getMoto().getId(),
                         posicao.getMoto().getPlaca(),

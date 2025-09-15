@@ -1,7 +1,7 @@
 package br.com.fiap.motoflow.service;
 
 import br.com.fiap.motoflow.dto.CriarSetorDto;
-import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
+import br.com.fiap.motoflow.dto.responses.SetoresDto;
 import br.com.fiap.motoflow.dto.responses.SetorDto;
 import br.com.fiap.motoflow.dto.responses.MotoResponseDto;
 import br.com.fiap.motoflow.exceptions.ExceededSpaceException;
@@ -28,14 +28,14 @@ public class SetorPatioService {
 
     }
 
-    public List<PosicoesHorizontaisDto> getSetores(final Long idPatio) {
+    public List<SetoresDto> getSetores(final Long idPatio) {
 
         final List<String> posicoesHorizontais = setorPatioRepository.posicoesHorizontais(idPatio)
                 .orElseThrow(() -> new PatioNotFoundException(idPatio));
 
 
         return posicoesHorizontais.stream()
-                .map(PosicoesHorizontaisDto::new)
+                .map(SetoresDto::new)
                 .collect(Collectors.toList());
     }
 

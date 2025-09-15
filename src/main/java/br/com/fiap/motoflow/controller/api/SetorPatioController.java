@@ -1,7 +1,7 @@
 package br.com.fiap.motoflow.controller.api;
 
 import br.com.fiap.motoflow.dto.CriarSetorDto;
-import br.com.fiap.motoflow.dto.responses.PosicoesHorizontaisDto;
+import br.com.fiap.motoflow.dto.responses.SetoresDto;
 import br.com.fiap.motoflow.dto.responses.SetorDto;
 import br.com.fiap.motoflow.service.SetorPatioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,7 +43,7 @@ public class SetorPatioController {
             @ApiResponse(responseCode = "404", description = "Pátio não encontrado")
     })
     @GetMapping("/{patioId}")
-    public ResponseEntity<List<PosicoesHorizontaisDto>> getSetores(@PathVariable Long patioId) {
+    public ResponseEntity<List<SetoresDto>> getSetores(@PathVariable Long patioId) {
         return ResponseEntity.ok(setorPatioService.getSetores(patioId));
     }
 
@@ -53,7 +53,7 @@ public class SetorPatioController {
             @ApiResponse(responseCode = "404", description = "Pátio ou posição não encontrado")
     })
     @GetMapping("/{patioId}/{setor}")
-    public ResponseEntity<SetorDto> getMotosPorPosicaoHorizontal(@PathVariable Long patioId, @PathVariable String setor) {
+    public ResponseEntity<SetorDto> getMotosPorSetor(@PathVariable Long patioId, @PathVariable String setor) {
         return ResponseEntity.ok(setorPatioService.motosPorSetor(patioId, setor));
     }
 }

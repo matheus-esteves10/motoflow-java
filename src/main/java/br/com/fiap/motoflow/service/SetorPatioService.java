@@ -12,6 +12,7 @@ import br.com.fiap.motoflow.model.SetorPatio;
 import br.com.fiap.motoflow.repository.PatioRepository;
 import br.com.fiap.motoflow.repository.SetorPatioRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,6 +67,7 @@ public class SetorPatioService {
         );
     }
 
+    @Transactional
     public SetorDto criarSetorNoPatio(final Long patioId, final CriarSetorDto dto) {
         final Patio patio = patioExiste(patioId);
 

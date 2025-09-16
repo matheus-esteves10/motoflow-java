@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "t_mtf_posicao_patio")
+@Table(name = "t_mtf_setor_patio")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,11 +19,11 @@ public class SetorPatio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cd_id_posicao")
+    @Column(name = "cd_id_setor")
     private Long id;
 
     @NotNull
-    @Column(name = "nr_posicao_horizontal", nullable = false, length = 5)
+    @Column(name = "nr_setor", nullable = false, length = 5)
     private String setor;
 
     @NotNull

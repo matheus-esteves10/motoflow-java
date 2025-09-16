@@ -1,24 +1,27 @@
 type: collection.insomnia.rest/5.0
-name: Scratch Pad
+name: Challenge
 meta:
-  id: wrk_scratchpad
-  created: 1748554600290
-  modified: 1748554600290
+  id: wrk_36455fa2acce4678bf4eabdf5c80ab51
+  created: 1747105768492
+  modified: 1747105768492
+  description: ""
 collection:
   - name: OPERADOR
     meta:
-      id: fld_16e138b785494c0a8c7c30160fd2d64d
+      id: fld_70298f59687a4074863a99fb2171cf0f
       created: 1747105807104
       modified: 1747105807104
       sortKey: -1747105807104
+      description: ""
     children:
       - url: http://localhost:8080/api/operador?sort=nome,asc
         name: Listar todos
         meta:
-          id: req_cea81fde1f7d4f9ebd81731e5d7a85aa
+          id: req_2b2b7e89a4bb4b32bf7424b9baf90dfe
           created: 1747105774107
           modified: 1756134923603
           isPrivate: false
+          description: ""
           sortKey: -1747105815094
         method: GET
         headers:
@@ -35,10 +38,11 @@ collection:
       - url: http://localhost:8080/api/operador/me
         name: Listar por id
         meta:
-          id: req_3809e8dd5521464197fba591a4f43b1c
+          id: req_e4fedbdacb5d47528df8c9b6d5d39077
           created: 1747105842292
           modified: 1756429781621
           isPrivate: false
+          description: ""
           sortKey: -1746009656227
         method: GET
         headers:
@@ -59,10 +63,11 @@ collection:
       - url: http://localhost:8080/api/operador
         name: Criar operador
         meta:
-          id: req_54b539f68c3047db841229948c0af63f
+          id: req_8c8c3cfe3a9644cea600f55508462a9b
           created: 1747105856231
           modified: 1756429749051
           isPrivate: false
+          description: ""
           sortKey: -1745461576793.5
         method: POST
         body:
@@ -93,10 +98,11 @@ collection:
       - url: http://localhost:8080/api/operador/me
         name: Editar operador
         meta:
-          id: req_53865b72dd7c44c3899aa7efc8d20145
+          id: req_9bc01d2e46b449518e9336816b4286fa
           created: 1747105863404
           modified: 1756429832605
           isPrivate: false
+          description: ""
           sortKey: -1745187537076.75
         method: PUT
         body:
@@ -127,10 +133,11 @@ collection:
       - url: http://localhost:8080/api/operador/15
         name: Deletar operador
         meta:
-          id: req_e46e6aa905e9465d981a54db87625d09
+          id: req_c4b425b516c84dfd941ffe068ef4bdcd
           created: 1747105871518
           modified: 1756429771810
           isPrivate: false
+          description: ""
           sortKey: -1745050517218.375
         method: DELETE
         headers:
@@ -151,10 +158,11 @@ collection:
       - url: http://localhost:8080/api/login
         name: Login
         meta:
-          id: req_bdbd36b9b2c64b3cacee0001a332a99c
+          id: req_86ba4b07b2c74ec9bf849a6bfc924a0d
           created: 1749491761597
           modified: 1756428678798
           isPrivate: false
+          description: ""
           sortKey: -1749491761597
         method: POST
         body:
@@ -180,10 +188,11 @@ collection:
       - url: http://localhost:8080/api/operador/4/admin
         name: Tornar Adm
         meta:
-          id: req_59e58de927db420d9c74bfa688320537
+          id: req_af4571d36655467cb11f471cebabac5c
           created: 1755099516459
           modified: 1756429816227
           isPrivate: false
+          description: ""
           sortKey: -1755099516459
         method: PUT
         headers:
@@ -203,18 +212,20 @@ collection:
           rebuildPath: true
   - name: Moto
     meta:
-      id: fld_27c210367cf7449491c40ce40e848e78
+      id: fld_cd4d837b2cfa4e01b588a652a4fd69d0
       created: 1747248763848
       modified: 1747248763848
       sortKey: -1747248763848
+      description: ""
     children:
-      - url: http://localhost:8080/api/motos/posicao?placa=XYZ9352
+      - url: http://localhost:8080/api/motos/posicao?placa=ABC1231
         name: Pegar posicao por placa
         meta:
-          id: req_8fab9d831065450cbabca7b162247000
+          id: req_7a8c912a86ae4d138a8645b281f4becc
           created: 1747248767822
-          modified: 1756431978766
+          modified: 1757990364300
           isPrivate: false
+          description: ""
           sortKey: -1747248767822
         method: GET
         headers:
@@ -222,7 +233,7 @@ collection:
             value: insomnia/11.1.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwiZXhwIjoxNzU3MDM0NTQwfQ.Oso8J9MdOVIrbaLlc1cZ4uRcmz6eNl8ei7XGe_hOsZ8
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -232,26 +243,28 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/motos/1
+      - url: http://localhost:8080/api/motos/2
         name: Adicionar Moto
         meta:
-          id: req_493a4907af3f4c9ea52b4c383bfb7505
+          id: req_7eca6328aa294a89add125f0e2ee2e6f
           created: 1747279100528
-          modified: 1757114312657
+          modified: 1757991258578
           isPrivate: false
+          description: ""
           sortKey: -1747177291458
         method: POST
         body:
           mimeType: application/json
           text: |-
             {
-              "tipoMoto": "MOTTU_E",
-              "ano": 2023,
-              "placa": "ABC7654",
-              "precoAluguel": 120.50,
+              "tipoMoto": "MOTTU_POP",
+              "ano": 2022,
+              "placa": "ABC1231",
+              "precoAluguel": 150.00,
               "statusMoto": "DISPONIVEL",
-              "posicaoHorizontal": "A",
-              "posicaoVertical": 1
+              "setor": "A",
+              "codRastreador": 98762,
+              "dataEntrada": "2025-09-14T22:30:00"
             }
         headers:
           - name: Content-Type
@@ -260,7 +273,7 @@ collection:
             value: insomnia/11.1.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU3NzE5MDY2fQ.GPKFAT6KC5qQW0rbAKOgMCrgN9XZUGm2TvzhAQTJCao
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -270,13 +283,14 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/motos/XYZ1247
+      - url: http://localhost:8080/api/motos/ABC1231
         name: Remover Moto
         meta:
-          id: req_90c172f1832d4f969102a06083c0b4e6
+          id: req_d4a415338f554be8ad34a87ebf13a181
           created: 1747279115292
-          modified: 1756431517811
+          modified: 1757991433874
           isPrivate: false
+          description: ""
           sortKey: -1747279115292
         method: DELETE
         headers:
@@ -284,7 +298,7 @@ collection:
             value: insomnia/11.1.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwiZXhwIjoxNzU3MDM0NTQwfQ.Oso8J9MdOVIrbaLlc1cZ4uRcmz6eNl8ei7XGe_hOsZ8
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -297,19 +311,19 @@ collection:
       - url: http://localhost:8080/api/motos/alocacao/1
         name: Editar Posicao da Moto
         meta:
-          id: req_625549c2419543919ea6a6aa69da87b4
+          id: req_d930501da1a44304a1667cc301eef315
           created: 1747279193501
-          modified: 1757116215155
+          modified: 1757990595639
           isPrivate: false
+          description: ""
           sortKey: -1747279115392
         method: PUT
         body:
           mimeType: application/json
           text: |-
             {
-              "placa": "XYZ9370",
-              "posicaoVertical": 4,
-              "posicaoHorizontal": "A"
+              "placa": "ABC1231",
+              "setor": "A"
             }
         headers:
           - name: Content-Type
@@ -318,7 +332,7 @@ collection:
             value: insomnia/11.1.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU3NzE5MDY2fQ.GPKFAT6KC5qQW0rbAKOgMCrgN9XZUGm2TvzhAQTJCao
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -328,24 +342,21 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/motos/cadastro-e-alocacao
-        name: Cadastrar e Alocar
+      - url: http://localhost:8080/api/motos/ABC1231
+        name: Alterar para moto alugada
         meta:
-          id: req_a46b37eb01ff431eb0ebbbc964dd69a9
-          created: 1747313783152
-          modified: 1757116199686
+          id: req_7e4c54d6e3a64da4ae695307a0f47299
+          created: 1747329416638
+          modified: 1757990523391
           isPrivate: false
-          sortKey: -1747313783152
-        method: POST
+          description: ""
+          sortKey: -1747329416638
+        method: PATCH
         body:
           mimeType: application/json
           text: |-
             {
-              "tipoMoto": "MOTTU_E",
-              "ano": 2024,
-              "placa": "XYZ9370",
-              "precoAluguel": 100.0,
-              "idPatio": 1
+            	"status": "DISPONIVEL"
             }
         headers:
           - name: Content-Type
@@ -354,55 +365,7 @@ collection:
             value: insomnia/11.1.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU3NzE5MDY2fQ.GPKFAT6KC5qQW0rbAKOgMCrgN9XZUGm2TvzhAQTJCao
-          prefix: Bearer
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-      - url: http://localhost:8080/api/motos/XYZ9370/aluguel?statusMoto=DISPONIVEL
-        name: Alterar para moto alugada
-        meta:
-          id: req_936189ac85294f7b8c283ee5ac27c9d6
-          created: 1747329416638
-          modified: 1757116246424
-          isPrivate: false
-          sortKey: -1747329416638
-        method: PUT
-        headers:
-          - name: User-Agent
-            value: insomnia/11.1.0
-        authentication:
-          type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU3NzE5MDY2fQ.GPKFAT6KC5qQW0rbAKOgMCrgN9XZUGm2TvzhAQTJCao
-          prefix: Bearer
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-      - url: http://localhost:8080/api/motos/ABC9342/alocacao/1
-        name: Moto existente em posição aleatória
-        meta:
-          id: req_6dbabe98ac404d428fa8e2fc616c2d64
-          created: 1747666173330
-          modified: 1756431628589
-          isPrivate: false
-          sortKey: -1747666173330
-        method: POST
-        headers:
-          - name: User-Agent
-            value: insomnia/11.1.0
-        authentication:
-          type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwiZXhwIjoxNzU3MDM0NTQwfQ.Oso8J9MdOVIrbaLlc1cZ4uRcmz6eNl8ei7XGe_hOsZ8
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -414,18 +377,20 @@ collection:
           rebuildPath: true
   - name: Patio
     meta:
-      id: fld_6603d212d0c048f5b83d66185ab209e2
+      id: fld_b10d3617accd4fd6bbc53c09109c0757
       created: 1755181324225
       modified: 1755181324225
       sortKey: -1755181324225
+      description: ""
     children:
       - url: http://localhost:8080/api/patio/1
         name: GetPatioInfos
         meta:
-          id: req_33a5e08bafa541cf8197d792304fa9be
+          id: req_f8dccac4167142c7b518bd397b95e838
           created: 1755181327273
-          modified: 1756428688729
+          modified: 1757988425012
           isPrivate: false
+          description: ""
           sortKey: -1755181327273
         method: GET
         headers:
@@ -433,7 +398,7 @@ collection:
             value: insomnia/11.4.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwiZXhwIjoxNzU3MDMzNDgwfQ.oC5vhdxX6HFb_9eqytFkP2iIPSxMAd7oVAVNZcq51ns
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -446,10 +411,11 @@ collection:
       - url: http://localhost:8080/api/patio
         name: GetAllPatios
         meta:
-          id: req_ad34ed2c96554713bd3715f9b85ed18e
+          id: req_f0febbc572fe4a2f907fb424213a103f
           created: 1756428714988
-          modified: 1756779001760
+          modified: 1757988418245
           isPrivate: false
+          description: ""
           sortKey: -1755140421866
         method: GET
         headers:
@@ -458,7 +424,7 @@ collection:
         authentication:
           type: bearer
           disabled: false
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwiZXhwIjoxNzU3MDMzNDgwfQ.oC5vhdxX6HFb_9eqytFkP2iIPSxMAd7oVAVNZcq51ns
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -468,22 +434,22 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/posicoes
-        name: Criar Posições
+      - url: http://localhost:8080/api/posicoes/2
+        name: Criar Setores
         meta:
-          id: req_e7db17cb0f154b86a53e6b8f65d6c536
+          id: req_db4b76a0cabb49458569a076ea291cf3
           created: 1756767687942
-          modified: 1757114288030
+          modified: 1757991249526
           isPrivate: false
+          description: ""
           sortKey: -1756767687942
         method: POST
         body:
           mimeType: application/json
           text: |-
             {
-            	"posicaoVerticalMax": 36,
-            	"posicaoHorizontal": "A",
-            	"idPatio": 1
+            	"setor":"B",
+            	"capacidadeSetor": 20
             }
         headers:
           - name: Content-Type
@@ -492,7 +458,7 @@ collection:
             value: insomnia/11.5.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU3NzE5MDY2fQ.GPKFAT6KC5qQW0rbAKOgMCrgN9XZUGm2TvzhAQTJCao
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -503,12 +469,13 @@ collection:
             store: true
           rebuildPath: true
       - url: http://localhost:8080/api/posicoes/1/A
-        name: Motos por pos. Horizontal
+        name: Motos por setor
         meta:
-          id: req_e3e18e8c77814e66bd6ce6a9430a43ca
+          id: req_4cd5c9aa88e5489ba51460098eac2d50
           created: 1757024464676
-          modified: 1757114334656
+          modified: 1757988742917
           isPrivate: false
+          description: ""
           sortKey: -1757024464676
         method: GET
         headers:
@@ -516,7 +483,7 @@ collection:
             value: insomnia/11.5.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU3NzE5MDY2fQ.GPKFAT6KC5qQW0rbAKOgMCrgN9XZUGm2TvzhAQTJCao
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -526,13 +493,14 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/posicoes/1
-        name: Posições Horizontais
+      - url: http://localhost:8080/api/posicoes/2
+        name: Todos os setores do patio
         meta:
-          id: req_b550467effc546d98cd76fe039ac73ce
+          id: req_6a71f45b25b04654a1431da7954c7636
           created: 1757024567663
-          modified: 1757024574627
+          modified: 1757991253774
           isPrivate: false
+          description: ""
           sortKey: -1756896076309
         method: GET
         headers:
@@ -540,7 +508,7 @@ collection:
             value: insomnia/11.5.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU3Mzc4NTczfQ.qjpm23fTw0tp4ZMz9UVFsbJti0eOnE7pw-GYK0W0QYA
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -553,13 +521,23 @@ collection:
 cookieJar:
   name: Default Jar
   meta:
-    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
-    created: 1748554608519
-    modified: 1748554608519
+    id: jar_e0dc90331cb6cb83740efb127bc94b708f9fdecf
+    created: 1747105768549
+    modified: 1756433025380
+  cookies:
+    - key: JSESSIONID
+      value: 267534F122527269900C88C6F859B085
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-08-25T23:25:51.932Z
+      lastAccessed: 2025-08-29T02:03:45.379Z
+      id: 91e06231-52a7-449a-84fb-a22a59225618
 environments:
   name: Base Environment
   meta:
-    id: env_99d30891da4bdcebc63947a8fc17f076de878684
-    created: 1748554608518
-    modified: 1748554608518
+    id: env_e0dc90331cb6cb83740efb127bc94b708f9fdecf
+    created: 1747105768547
+    modified: 1747105768547
     isPrivate: false

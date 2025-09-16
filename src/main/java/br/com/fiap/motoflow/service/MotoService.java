@@ -78,14 +78,14 @@ public class MotoService {
         Moto moto = buscarMotoOrException(placa);
 
         if (edicaoDto.status().equals(StatusMoto.ALUGADA)) {
-            moto.setStatusMoto(StatusMoto.ALUGADA);
             moto.setDataAluguel(LocalDate.now());
             moto.setDataEntrada(null);
             removerDoSetor(moto);
         } else if (edicaoDto.status().equals(StatusMoto.MANUTENCAO)) {
-            moto.setStatusMoto(StatusMoto.MANUTENCAO);
             removerDoSetor(moto);
         }
+
+        moto.setStatusMoto(edicaoDto.status());
 
         motoRepository.save(moto);
 

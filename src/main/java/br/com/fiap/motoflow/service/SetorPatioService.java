@@ -80,7 +80,7 @@ public class SetorPatioService {
         }
 
         final SetorPatio novoSetor = SetorPatio.builder()
-                .setor(dto.setor())
+                .setor(dto.setor().toUpperCase())
                 .capacidadeSetor(dto.capacidadeSetor())
                 .patio(patio)
                 .build();

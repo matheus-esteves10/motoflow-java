@@ -51,7 +51,7 @@ public class MotoService {
 
     @Transactional
     public ResponseMovimentacao alterarSetor(final SetorMotoDto dto, final Long patioId) {
-        Moto moto = buscarMotoOrException(dto.placa());
+        Moto moto = buscarMotoOrException(dto.placa(), dto.codRastreador());
 
         if (moto.getStatusMoto().equals(StatusMoto.ALUGADA) || moto.getStatusMoto().equals(StatusMoto.MANUTENCAO)) {
             throw new MotoIndisponivelException(dto.placa());
@@ -79,13 +79,14 @@ public class MotoService {
 
     @Transactional
     public ResponseMovimentacao alterarStatusMoto(final EditarStatusMotoDto edicaoDto, final String placa) {
-        Moto moto = buscarMotoOrException(placa);
+        Moto moto = buscarMotoOrException(placa, null);
 
         if (edicaoDto.status().equals(StatusMoto.ALUGADA)) {
             moto.setDataAluguel(LocalDate.now());
             moto.setDataEntrada(null);
             removerDoSetor(moto);
             moto.setPatioId(null);
+            moto.setCodRastreador(null);
         } else if (edicaoDto.status().equals(StatusMoto.MANUTENCAO)) {
             removerDoSetor(moto);
         }
@@ -109,7 +110,7 @@ public class MotoService {
 
     @Transactional
     public void deletarMoto(final String placa) {
-        final Moto moto = buscarMotoOrException(placa);
+        final Moto moto = buscarMotoOrException(placa, null);
         removerDoSetor(moto);
         motoRepository.delete(moto);
     }
@@ -118,15 +119,25 @@ public class MotoService {
     // --- CONSULTAS ---
 
     public PosicaoMotoResponse buscarSetorPorPlaca(final String placa) {
-        Moto moto = buscarMotoOrException(placa);
+        final Moto moto = buscarMotoOrException(placa, null);
+        return construirPosicaoMotoResponse(moto);
+    }
 
-        // Campos obrigatórios
-        final String placaMoto = moto.getPlaca();
-        final TipoMoto tipoMoto = moto.getTipoMoto();
-        final StatusMoto status = moto.getStatusMoto();
-        final int ano = moto.getAno();
-        final BigDecimal precoAluguel = moto.getPrecoAluguel();
+    public PosicaoMotoResponse buscarSetorPorRastreador(final String codRastreador) {
+        final Moto moto = buscarMotoOrException(null, codRastreador);
+        return construirPosicaoMotoResponse(moto);
+    }
 
+    public PosicaoMotoResponse buscarMotoMaisAntigaPorTipoEPatio(final TipoMoto tipoMoto, final Long patioId) {
+        patioExiste(patioId);
+
+        final Moto moto = motoRepository.findOldestMotoByTipoAndPatioId(tipoMoto, patioId)
+                .orElseThrow(() -> new MotoNotFoundException("Nenhuma moto do tipo '" + tipoMoto + "' encontrada no pátio " + patioId));
+
+        return construirPosicaoMotoResponse(moto);
+    }
+
+    private PosicaoMotoResponse construirPosicaoMotoResponse(Moto moto) {
         Patio patio = null;
         if (moto.getPatioId() != null) {
             patio = patioRepository.findById(moto.getPatioId()).orElse(null);
@@ -135,15 +146,17 @@ public class MotoService {
         final String setor = moto.getSetorPatio() != null ? moto.getSetorPatio().getSetor() : null;
 
         return new PosicaoMotoResponse(
-                placaMoto,
-                tipoMoto,
-                status,
-                ano,
-                precoAluguel,
+                moto.getPlaca(),
+                moto.getTipoMoto(),
+                moto.getStatusMoto(),
+                moto.getAno(),
+                moto.getPrecoAluguel(),
                 patio != null ? patio.getId() : null,
                 patio != null ? patio.getApelido() : null,
                 patio != null ? patio.getEndereco() : null,
-                setor
+                setor,
+                moto.getCodRastreador(),
+                moto.getDataEntrada()
         );
     }
 
@@ -188,9 +201,9 @@ public class MotoService {
         moto.setSetorPatio(null);
     }
 
-    private Moto buscarMotoOrException(final String placa) {
-        return motoRepository.findByPlaca(placa)
-                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
+    private Moto buscarMotoOrException(final String placa, final String codRastreador) {
+        return motoRepository.findByPlacaOrCodRastreador(placa, codRastreador)
+                .orElseThrow(() -> new MotoNotFoundException("Moto não encontrada"));
     }
 
     private SetorPatio setorExisite(final String setor, final Long patioId) {

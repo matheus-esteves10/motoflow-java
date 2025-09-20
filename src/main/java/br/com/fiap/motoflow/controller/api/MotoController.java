@@ -4,6 +4,7 @@ import br.com.fiap.motoflow.dto.*;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.dto.responses.ResponseMovimentacao;
 import br.com.fiap.motoflow.model.Operador;
+import br.com.fiap.motoflow.model.enums.TipoMoto;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,21 +45,48 @@ public class MotoController {
 
     @GetMapping("/posicao")
     @Operation(
-            summary = "Buscar posição da moto",
+            summary = "Buscar posição da moto por placa",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Moto encontrada no patio", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content),
-                    @ApiResponse(responseCode = "40", description = "Moto não alocada em nenhum setor", content = @Content)
+                    @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content)
             }
     )
     public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorPlaca(@RequestParam String placa, @AuthenticationPrincipal Operador operador) {
         return ResponseEntity.ok(motoService.buscarSetorPorPlaca(placa));
     }
 
+    @GetMapping("/posicao/rastreador")
+    @Operation(
+            summary = "Buscar posição da moto por código do rastreador",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Moto encontrada", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content)
+            }
+    )
+    public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorRastreador(@RequestParam String codRastreador, @AuthenticationPrincipal Operador operador) {
+        return ResponseEntity.ok(motoService.buscarSetorPorRastreador(codRastreador));
+    }
+
+    @GetMapping("/posicao/tipo/{tipoMoto}/patio/{patioId}")
+    @Operation(
+            summary = "Buscar moto mais antiga por tipo em um pátio específico",
+            description = "Retorna a moto mais antiga do tipo especificado que está no pátio informado",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Moto encontrada", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "Moto não encontrada ou pátio inexistente", content = @Content)
+            }
+    )
+    public ResponseEntity<PosicaoMotoResponse> buscarMotoMaisAntigaPorTipo(
+            @PathVariable TipoMoto tipoMoto,
+            @PathVariable Long patioId,
+            @AuthenticationPrincipal Operador operador) {
+        return ResponseEntity.ok(motoService.buscarMotoMaisAntigaPorTipoEPatio(tipoMoto, patioId));
+    }
+
     @PutMapping("/alocacao/{idPatio}")
     @Operation(
             summary = "Alterar setor da moto",
-            description = "Altera o setor da moto, caso a moto esteja disponível",
+            description = "Altera o setor da moto, caso a moto esteja disponível (no body somente o setor é obrigatório, caso adicione setor não precisa de placa ou vice-versa)",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Setor alterado com sucesso", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "400", description = "Moto Indisponível", content = @Content),

@@ -2,6 +2,7 @@ package br.com.fiap.motoflow.dto.responses;
 
 import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.model.enums.TipoMoto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,7 +18,10 @@ public class ResponseMovimentacao {
     private int ano;
     private BigDecimal precoAluguel;
     private StatusMoto statusMoto;
-    private int codRastreador;
+    private String codRastreador;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataEntrada;
+
     private String setor;
 }

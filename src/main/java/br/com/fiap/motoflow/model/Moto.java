@@ -51,8 +51,8 @@ public class Moto {
     @Column(name = "dt_alocacao")
     private LocalDate dataAluguel;
 
-    @Column(name = "nr_cod_rastreador", unique = true, nullable = false)
-    private Integer codRastreador;
+    @Column(name = "nr_cod_rastreador", unique = true)
+    private String codRastreador;
 
     @Column(name = "dt_entrada")
     private LocalDateTime dataEntrada;
@@ -65,7 +65,7 @@ public class Moto {
     private Long patioId;
 
 
-    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, StatusMoto statusMoto, LocalDate dataAluguel, Integer codRastreador, LocalDateTime dataEntrada) {
+    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, StatusMoto statusMoto, LocalDate dataAluguel, String codRastreador, LocalDateTime dataEntrada) {
         this.tipoMoto = tipoMoto;
         validaAnoMax(ano);
         this.ano = ano;

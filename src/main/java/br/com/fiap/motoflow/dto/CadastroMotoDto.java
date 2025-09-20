@@ -4,10 +4,7 @@ import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.model.enums.TipoMoto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,7 +28,8 @@ public record CadastroMotoDto(
         @NotNull
         String setor,
 
-        int codRastreador,
+        @NotBlank(message = "É necessário informar o código do Beacon colocado na moto.")
+        String codRastreador,
 
         LocalDateTime dataEntrada
 ) {

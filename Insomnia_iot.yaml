@@ -218,12 +218,12 @@ collection:
       sortKey: -1747248763848
       description: ""
     children:
-      - url: http://localhost:8080/api/motos/posicao?placa=ABC1231
-        name: Pegar posicao por placa
+      - url: http://localhost:8080/api/motos/posicao?placa=ABC1223
+        name: PosiçãoByPlaca
         meta:
           id: req_7a8c912a86ae4d138a8645b281f4becc
           created: 1747248767822
-          modified: 1757990364300
+          modified: 1758377453729
           isPrivate: false
           description: ""
           sortKey: -1747248767822
@@ -248,7 +248,7 @@ collection:
         meta:
           id: req_7eca6328aa294a89add125f0e2ee2e6f
           created: 1747279100528
-          modified: 1757991258578
+          modified: 1758377192755
           isPrivate: false
           description: ""
           sortKey: -1747177291458
@@ -259,11 +259,11 @@ collection:
             {
               "tipoMoto": "MOTTU_POP",
               "ano": 2022,
-              "placa": "ABC1231",
+              "placa": "ABC1223",
               "precoAluguel": 150.00,
               "statusMoto": "DISPONIVEL",
               "setor": "A",
-              "codRastreador": 98762,
+              "codRastreador": "12345678ABC",
               "dataEntrada": "2025-09-14T22:30:00"
             }
         headers:
@@ -313,7 +313,7 @@ collection:
         meta:
           id: req_d930501da1a44304a1667cc301eef315
           created: 1747279193501
-          modified: 1757990595639
+          modified: 1758377299069
           isPrivate: false
           description: ""
           sortKey: -1747279115392
@@ -322,8 +322,9 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "placa": "ABC1231",
-              "setor": "A"
+             "placa": "ABC1223", 
+             "setor": "B",
+             "codRastreador": "12345678ABC"
             }
         headers:
           - name: Content-Type
@@ -342,12 +343,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/motos/ABC1231
+      - url: http://localhost:8080/api/motos/ABC1223
         name: Alterar para moto alugada
         meta:
           id: req_7e4c54d6e3a64da4ae695307a0f47299
           created: 1747329416638
-          modified: 1757990523391
+          modified: 1758377376746
           isPrivate: false
           description: ""
           sortKey: -1747329416638
@@ -361,6 +362,56 @@ collection:
         headers:
           - name: Content-Type
             value: application/json
+          - name: User-Agent
+            value: insomnia/11.1.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/motos/posicao/rastreador?codRastreador=12345678ABC
+        name: PosiçãoByRastreador
+        meta:
+          id: req_833b456217fc4b6dafd614cc3315be2a
+          created: 1758377465248
+          modified: 1758377539112
+          isPrivate: false
+          description: ""
+          sortKey: -1747213029640
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/motos/posicao/tipo/MOTTU_POP/patio/1
+        name: PosiçãoByTipoMoto
+        meta:
+          id: req_09e21ae4863e4bde920b72e1b8385515
+          created: 1758377474332
+          modified: 1758377581561
+          isPrivate: false
+          description: ""
+          sortKey: -1747195160549
+        method: GET
+        headers:
           - name: User-Agent
             value: insomnia/11.1.0
         authentication:
@@ -434,12 +485,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/posicoes/2
+      - url: http://localhost:8080/api/posicoes/1
         name: Criar Setores
         meta:
           id: req_db4b76a0cabb49458569a076ea291cf3
           created: 1756767687942
-          modified: 1757991249526
+          modified: 1758377253857
           isPrivate: false
           description: ""
           sortKey: -1756767687942
@@ -448,7 +499,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"setor":"B",
+            	"setor":"A",
             	"capacidadeSetor": 20
             }
         headers:

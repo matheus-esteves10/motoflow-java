@@ -1,20 +1,23 @@
 package br.com.fiap.motoflow.service;
 
-import br.com.fiap.motoflow.dto.EditarStatusMotoDto;
 import br.com.fiap.motoflow.dto.CadastroMotoDto;
-import br.com.fiap.motoflow.dto.responses.ResponseMovimentacao;
-import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
+import br.com.fiap.motoflow.dto.EditarStatusMotoDto;
 import br.com.fiap.motoflow.dto.SetorMotoDto;
+import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
+import br.com.fiap.motoflow.dto.responses.ResponseMovimentacao;
 import br.com.fiap.motoflow.exceptions.*;
 import br.com.fiap.motoflow.model.Moto;
+import br.com.fiap.motoflow.model.Patio;
 import br.com.fiap.motoflow.model.SetorPatio;
 import br.com.fiap.motoflow.model.enums.StatusMoto;
+import br.com.fiap.motoflow.model.enums.TipoMoto;
 import br.com.fiap.motoflow.repository.MotoRepository;
 import br.com.fiap.motoflow.repository.PatioRepository;
 import br.com.fiap.motoflow.repository.SetorPatioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Service
@@ -57,6 +60,7 @@ public class MotoService {
         final SetorPatio setorPatio = setorExisite(dto.setor(), patioId);
 
         moto.setSetorPatio(setorPatio);
+        moto.setPatioId(patioId);
         motoRepository.save(moto);
 
         return ResponseMovimentacao.builder().
@@ -81,6 +85,7 @@ public class MotoService {
             moto.setDataAluguel(LocalDate.now());
             moto.setDataEntrada(null);
             removerDoSetor(moto);
+            moto.setPatioId(null);
         } else if (edicaoDto.status().equals(StatusMoto.MANUTENCAO)) {
             removerDoSetor(moto);
         }
@@ -113,22 +118,34 @@ public class MotoService {
     // --- CONSULTAS ---
 
     public PosicaoMotoResponse buscarSetorPorPlaca(final String placa) {
-        final Moto moto = buscarMotoOrException(placa);
-        final SetorPatio setorPatio = setorPatioRepository.findByMotoPlaca(placa).orElseThrow(() -> new MotoNotAllocatedException(placa));
+        Moto moto = buscarMotoOrException(placa);
+
+        // Campos obrigatórios
+        final String placaMoto = moto.getPlaca();
+        final TipoMoto tipoMoto = moto.getTipoMoto();
+        final StatusMoto status = moto.getStatusMoto();
+        final int ano = moto.getAno();
+        final BigDecimal precoAluguel = moto.getPrecoAluguel();
+
+        Patio patio = null;
+        if (moto.getPatioId() != null) {
+            patio = patioRepository.findById(moto.getPatioId()).orElse(null);
+        }
+
+        final String setor = moto.getSetorPatio() != null ? moto.getSetorPatio().getSetor() : null;
 
         return new PosicaoMotoResponse(
-                moto.getPlaca(),
-                moto.getTipoMoto(),
-                moto.getStatusMoto(),
-                moto.getAno(),
-                moto.getPrecoAluguel(),
-                setorPatio.getPatio().getId(),
-                setorPatio.getPatio().getApelido(),
-                setorPatio.getPatio().getEndereco(),
-                setorPatio.getSetor()
+                placaMoto,
+                tipoMoto,
+                status,
+                ano,
+                precoAluguel,
+                patio != null ? patio.getId() : null,
+                patio != null ? patio.getApelido() : null,
+                patio != null ? patio.getEndereco() : null,
+                setor
         );
     }
-
 
     private void alocarNoSetor(final CadastroMotoDto dto, final Long patioId) {
         SetorPatio setorPatio = setorExisite(dto.setor(), patioId);
@@ -141,6 +158,7 @@ public class MotoService {
 
         final Moto moto = saveMoto(dto);
         moto.setSetorPatio(setorPatio);
+        moto.setPatioId(patioId);
         motoRepository.save(moto);
         setorPatio.getMotos().add(moto);
         setorPatioRepository.save(setorPatio);
@@ -170,12 +188,12 @@ public class MotoService {
         moto.setSetorPatio(null);
     }
 
-    private Moto buscarMotoOrException(String placa) {
+    private Moto buscarMotoOrException(final String placa) {
         return motoRepository.findByPlaca(placa)
                 .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
     }
 
-    private SetorPatio setorExisite(String setor, Long patioId) {
+    private SetorPatio setorExisite(final String setor, final Long patioId) {
         patioExiste(patioId);
         return setorPatioRepository.findSetor(setor, patioId)
                 .orElseThrow(() -> new SetorNaoExisteException(setor));

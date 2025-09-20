@@ -61,6 +61,10 @@ public class Moto {
     @JoinColumn(name = "cd_id_setor")
     private SetorPatio setorPatio;
 
+    @Column(name = "cd_id_patio")
+    private Long patioId;
+
+
     public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, StatusMoto statusMoto, LocalDate dataAluguel, Integer codRastreador, LocalDateTime dataEntrada) {
         this.tipoMoto = tipoMoto;
         validaAnoMax(ano);

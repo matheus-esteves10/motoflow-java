@@ -30,13 +30,23 @@ public class SetorPatioService {
     }
 
     public List<SetoresDto> getSetores(final Long idPatio) {
+        patioExiste(idPatio);
 
-        final List<String> posicoesHorizontais = setorPatioRepository.posicoesHorizontais(idPatio)
-                .orElseThrow(() -> new PatioNotFoundException(idPatio));
+        final List<SetorPatio> setores = setorPatioRepository.findAllByPatioId(idPatio);
 
+        return setores.stream()
+                .map(setor -> {
+                    final int capacidadeSetor = setor.getCapacidadeSetor();
+                    final int motosOcupadas = setor.getMotos() != null ? setor.getMotos().size() : 0;
+                    final int vagasDisponiveis = capacidadeSetor - motosOcupadas;
 
-        return posicoesHorizontais.stream()
-                .map(SetoresDto::new)
+                    return new SetoresDto(
+                            setor.getSetor(),
+                            capacidadeSetor,
+                            motosOcupadas,
+                            vagasDisponiveis
+                    );
+                })
                 .collect(Collectors.toList());
     }
 

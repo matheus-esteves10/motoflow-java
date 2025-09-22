@@ -22,7 +22,7 @@ public record MotoDtoWeb (
             @Positive(message = "O preço de aluguel deve ser um valor positivo.")
             BigDecimal precoAluguel,
             StatusMoto statusMoto,
-            String posicaoPatio)
+            String setor)
     {
 
 }

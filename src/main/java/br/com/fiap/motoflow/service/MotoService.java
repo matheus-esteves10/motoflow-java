@@ -15,6 +15,8 @@ import br.com.fiap.motoflow.repository.MotoRepository;
 import br.com.fiap.motoflow.repository.PatioRepository;
 import br.com.fiap.motoflow.repository.SetorPatioRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -116,6 +118,10 @@ public class MotoService {
 
 
     // --- CONSULTAS ---
+
+    public Page<Moto> findAllByPatioId(Long patioId, Pageable pageable) {
+        return motoRepository.findAllByPatioId(patioId, pageable);
+    }
 
     public PosicaoMotoResponse buscarSetorPorPlaca(final String placa) {
         final Moto moto = buscarMotoOrException(placa, null);

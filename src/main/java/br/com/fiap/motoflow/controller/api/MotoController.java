@@ -39,7 +39,7 @@ public class MotoController {
             }
     )
     public ResponseEntity<ResponseMovimentacao> alocarMoto(@Valid @RequestBody CadastroMotoDto dto,
-                                                           @PathVariable Long idPatio, @AuthenticationPrincipal Operador operador) {
+                                                           @PathVariable Long idPatio) {
         return new ResponseEntity<>(motoService.alocarMoto(dto, idPatio), HttpStatus.CREATED);
     }
 
@@ -51,7 +51,7 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content)
             }
     )
-    public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorPlaca(@RequestParam String placa, @AuthenticationPrincipal Operador operador) {
+    public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorPlaca(@RequestParam String placa) {
         return ResponseEntity.ok(motoService.buscarSetorPorPlaca(placa));
     }
 
@@ -63,7 +63,7 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto não encontrada", content = @Content)
             }
     )
-    public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorRastreador(@RequestParam String codRastreador, @AuthenticationPrincipal Operador operador) {
+    public ResponseEntity<PosicaoMotoResponse> buscarPosicaoPorRastreador(@RequestParam String codRastreador) {
         return ResponseEntity.ok(motoService.buscarSetorPorRastreador(codRastreador));
     }
 
@@ -78,8 +78,7 @@ public class MotoController {
     )
     public ResponseEntity<PosicaoMotoResponse> buscarMotoMaisAntigaPorTipo(
             @PathVariable TipoMoto tipoMoto,
-            @PathVariable Long patioId,
-            @AuthenticationPrincipal Operador operador) {
+            @PathVariable Long patioId) {
         return ResponseEntity.ok(motoService.buscarMotoMaisAntigaPorTipoEPatio(tipoMoto, patioId));
     }
 
@@ -94,7 +93,7 @@ public class MotoController {
             }
     )
     public ResponseEntity<ResponseMovimentacao> alterarSetorMoto(@Valid @RequestBody SetorMotoDto dto,
-                                                                 @PathVariable Long idPatio, @AuthenticationPrincipal Operador operador) {
+                                                                 @PathVariable Long idPatio) {
         return ResponseEntity.ok(motoService.alterarSetor(dto, idPatio));
     }
 
@@ -105,8 +104,7 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
             }
     )
-    public ResponseEntity<ResponseMovimentacao> alterarStatusMoto(@PathVariable String placa, @Valid @RequestBody EditarStatusMotoDto dto,
-                                                                 @AuthenticationPrincipal Operador operador) {
+    public ResponseEntity<ResponseMovimentacao> alterarStatusMoto(@PathVariable String placa, @Valid @RequestBody EditarStatusMotoDto dto) {
         return ResponseEntity.ok(motoService.alterarStatusMoto(dto, placa));
     }
 
@@ -118,7 +116,7 @@ public class MotoController {
                     @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
             }
     )
-    public ResponseEntity<Void> removerMoto(@PathVariable String placa, @AuthenticationPrincipal Operador operador) {
+    public ResponseEntity<Void> removerMoto(@PathVariable String placa) {
         motoService.deletarMoto(placa);
         return ResponseEntity.noContent().build();
     }

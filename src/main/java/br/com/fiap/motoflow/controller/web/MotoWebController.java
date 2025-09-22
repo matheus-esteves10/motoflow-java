@@ -1,7 +1,9 @@
 package br.com.fiap.motoflow.controller.web;
 
 import br.com.fiap.motoflow.dto.web.MotoDtoWeb;
+import br.com.fiap.motoflow.model.Moto;
 import br.com.fiap.motoflow.service.MotoService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -24,12 +26,12 @@ public class MotoWebController {
 
     @GetMapping("/{id}")
     public String index(@PathVariable Long id, Model model, Pageable pageable) {
-        var motosPage = motoService.findAllByPatioId(id, pageable);
+        Page<Moto> motosPage = motoService.findAllByPatioId(id, pageable);
 
         var motoDtos = motosPage.getContent().stream().map(moto -> {
-            String posicaoPatio = "-";
-            if (moto.getPosicaoPatio() != null) {
-                posicaoPatio = moto.getPosicaoPatio().getPosicaoHorizontal() + moto.getPosicaoPatio().getPosicaoVertical();
+            String setor = "-";
+            if (moto.getSetorPatio() != null) {
+                setor = moto.getSetorPatio().getSetor();
             }
             return new MotoDtoWeb(
                     moto.getId(),
@@ -38,7 +40,7 @@ public class MotoWebController {
                     moto.getPlaca(),
                     moto.getPrecoAluguel(),
                     moto.getStatusMoto(),
-                    posicaoPatio
+                    setor
             );
         }).collect(Collectors.toList());
 
@@ -49,4 +51,3 @@ public class MotoWebController {
         return "motos";
     }
 }
-

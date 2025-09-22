@@ -1,21 +1,20 @@
-package br.com.fiap.motoflow.dto.responses;
+package br.com.fiap.motoflow.dto.web;
 
 import br.com.fiap.motoflow.model.Endereco;
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.Set;
+import java.util.List;
 
 @Builder
 @Getter
-public class PatioQuantityResponse {
+public class PatioDashboardResponse {
     private Long id;
     private String apelido;
     private Integer area;
     private Integer capacidadeMax;
     private Endereco endereco;
-    private Set<String> setoresComPosicoesDisponiveis;
-    private Set<String> setoresCheios;
-
+    private List<SetorDashboardDto> setores;
+    private int totalMotosOcupadas;
+    private int totalVagasLivres;
 }

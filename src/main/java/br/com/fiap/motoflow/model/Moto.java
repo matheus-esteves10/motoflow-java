@@ -1,28 +1,25 @@
 package br.com.fiap.motoflow.model;
 
-import br.com.fiap.motoflow.dto.MotoDto;
 import br.com.fiap.motoflow.exceptions.InvalidYearException;
 import br.com.fiap.motoflow.model.enums.StatusMoto;
 import br.com.fiap.motoflow.model.enums.TipoMoto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "t_mtf_moto")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Moto {
 
     @Id
@@ -39,9 +36,8 @@ public class Moto {
     @Column(name = "nr_ano", nullable = false)
     private int ano;
 
-    @NotBlank(message = "A placa é obrigatória.")
     @Pattern(regexp = "^[A-Z]{3}[0-9]{4}$", message = "A placa deve estar no formato AAA0000.")
-    @Column(name = "nr_placa", length = 7, nullable = false)
+    @Column(name = "nr_placa", length = 7)
     private String placa;
 
     @Positive(message = "O preço de aluguel deve ser um valor positivo.")
@@ -52,16 +48,24 @@ public class Moto {
     @Enumerated(EnumType.STRING)
     private StatusMoto statusMoto;
 
-    @Column(name = "dt_aluguel")
+    @Column(name = "dt_alocacao")
     private LocalDate dataAluguel;
 
-    @OneToOne(mappedBy = "moto")
-    private PosicaoPatio posicaoPatio;
+    @Column(name = "nr_cod_rastreador", unique = true)
+    private String codRastreador;
 
-    public Moto() {
-    }
+    @Column(name = "dt_entrada")
+    private LocalDateTime dataEntrada;
 
-    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, StatusMoto statusMoto, LocalDate dataAluguel) {
+    @ManyToOne
+    @JoinColumn(name = "cd_id_setor")
+    private SetorPatio setorPatio;
+
+    @Column(name = "cd_id_patio")
+    private Long patioId;
+
+
+    public Moto(TipoMoto tipoMoto, int ano, String placa, BigDecimal precoAluguel, StatusMoto statusMoto, LocalDate dataAluguel, String codRastreador, LocalDateTime dataEntrada) {
         this.tipoMoto = tipoMoto;
         validaAnoMax(ano);
         this.ano = ano;
@@ -69,6 +73,8 @@ public class Moto {
         this.precoAluguel = precoAluguel;
         this.statusMoto = statusMoto;
         this.dataAluguel = dataAluguel;
+        this.codRastreador = codRastreador;
+        this.dataEntrada = dataEntrada != null ? dataEntrada : LocalDateTime.now();
     }
 
     private void validaAnoMax(int ano) {
@@ -78,17 +84,4 @@ public class Moto {
         }
     }
 
-    public static Moto from(MotoDto dto) {
-        return new Moto(
-                dto.tipoMoto(),
-                dto.ano(),
-                dto.placa(),
-                dto.precoAluguel(),
-                dto.statusMoto(),
-                dto.dataAlocacao()
-        );
-    }
-
-
 }
-

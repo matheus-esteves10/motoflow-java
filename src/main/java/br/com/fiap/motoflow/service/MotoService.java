@@ -1,18 +1,20 @@
 package br.com.fiap.motoflow.service;
 
-import br.com.fiap.motoflow.dto.CadastroMotoComPatioDto;
-import br.com.fiap.motoflow.dto.MotoDto;
+import br.com.fiap.motoflow.dto.CadastroMotoDto;
+import br.com.fiap.motoflow.dto.EditarStatusMotoDto;
+import br.com.fiap.motoflow.dto.SetorMotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
-import br.com.fiap.motoflow.dto.responses.ResponsePosicao;
-import br.com.fiap.motoflow.exceptions.MotoNotFoundException;
-import br.com.fiap.motoflow.exceptions.PosicaoNotFoundException;
+import br.com.fiap.motoflow.dto.responses.ResponseMovimentacao;
+import br.com.fiap.motoflow.exceptions.*;
 import br.com.fiap.motoflow.model.Moto;
-import br.com.fiap.motoflow.model.PosicaoPatio;
+import br.com.fiap.motoflow.model.Patio;
+import br.com.fiap.motoflow.model.SetorPatio;
 import br.com.fiap.motoflow.model.enums.StatusMoto;
+import br.com.fiap.motoflow.model.enums.TipoMoto;
 import br.com.fiap.motoflow.repository.MotoRepository;
-import br.com.fiap.motoflow.repository.PosicaoPatioRepository;
+import br.com.fiap.motoflow.repository.PatioRepository;
+import br.com.fiap.motoflow.repository.SetorPatioRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,115 +24,131 @@ import java.time.LocalDate;
 @Service
 public class MotoService {
 
-    @Autowired
-    private MotoRepository motoRepository;
+    private final MotoRepository motoRepository;
+    private final SetorPatioRepository setorPatioRepository;
+    private final PatioRepository patioRepository;
 
-    @Autowired
-    private PosicaoPatioRepository posicaoPatioRepository;
-
-    public Page<Moto> findAllByPatioId(Long patioId, Pageable pageable) {
-        return motoRepository.findByPatioId(patioId, pageable);
+    public MotoService(MotoRepository motoRepository, SetorPatioRepository setorPatioRepository, PatioRepository patioRepository) {
+        this.motoRepository = motoRepository;
+        this.setorPatioRepository = setorPatioRepository;
+        this.patioRepository = patioRepository;
     }
 
     @Transactional
-    public void excluirMotoPorPlaca(String placa) {
-        Moto moto = buscarMotoOrException(placa);
-        if (!moto.getStatusMoto().equals(StatusMoto.ALUGADA)) {
-            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
+    public ResponseMovimentacao alocarMoto(final CadastroMotoDto motoDto, final Long patioId) {
+        alocarNoSetor(motoDto, patioId);
+
+        return ResponseMovimentacao.builder().
+                placa(motoDto.placa()).
+                tipoMoto(motoDto.tipoMoto()).
+                ano(motoDto.ano()).
+                precoAluguel(motoDto.precoAluguel()).
+                statusMoto(StatusMoto.DISPONIVEL).
+                codRastreador(motoDto.codRastreador()).
+                dataEntrada(motoDto.dataEntrada()).
+                setor(motoDto.setor()).
+                build();
+    }
+
+    @Transactional
+    public ResponseMovimentacao alterarSetor(final SetorMotoDto dto, final Long patioId) {
+        Moto moto = buscarMotoOrException(dto.placa(), dto.codRastreador());
+
+        if (moto.getStatusMoto().equals(StatusMoto.ALUGADA) || moto.getStatusMoto().equals(StatusMoto.MANUTENCAO)) {
+            throw new MotoIndisponivelException(dto.placa());
         }
+
+        final SetorPatio setorPatio = setorExisite(dto.setor(), patioId);
+
+        moto.setSetorPatio(setorPatio);
+        moto.setPatioId(patioId);
+        motoRepository.save(moto);
+
+        return ResponseMovimentacao.builder().
+                placa(moto.getPlaca()).
+                tipoMoto(moto.getTipoMoto()).
+                ano(moto.getAno()).
+                precoAluguel(moto.getPrecoAluguel()).
+                statusMoto(moto.getStatusMoto()).
+                codRastreador(moto.getCodRastreador()).
+                dataEntrada(moto.getDataEntrada()).
+                setor(moto.getSetorPatio().getSetor()).
+                build();
+    }
+
+
+
+    @Transactional
+    public ResponseMovimentacao alterarStatusMoto(final EditarStatusMotoDto edicaoDto, final String placa) {
+        Moto moto = buscarMotoOrException(placa, null);
+
+        if (edicaoDto.status().equals(StatusMoto.ALUGADA)) {
+            moto.setDataAluguel(LocalDate.now());
+            moto.setDataEntrada(null);
+            removerDoSetor(moto);
+            moto.setPatioId(null);
+            moto.setCodRastreador(null);
+        } else if (edicaoDto.status().equals(StatusMoto.MANUTENCAO)) {
+            removerDoSetor(moto);
+        }
+
+        moto.setStatusMoto(edicaoDto.status());
+
+        motoRepository.save(moto);
+
+        return ResponseMovimentacao.builder().
+                placa(moto.getPlaca()).
+                tipoMoto(moto.getTipoMoto()).
+                ano(moto.getAno()).
+                precoAluguel(moto.getPrecoAluguel()).
+                statusMoto(moto.getStatusMoto()).
+                codRastreador(moto.getCodRastreador()).
+                dataEntrada(moto.getDataEntrada()).
+                setor(moto.getSetorPatio() != null ? moto.getSetorPatio().getSetor() : null).
+                build();
+
+    }
+
+    @Transactional
+    public void deletarMoto(final String placa) {
+        final Moto moto = buscarMotoOrException(placa, null);
+        removerDoSetor(moto);
         motoRepository.delete(moto);
     }
 
-    // --- ALOCAÇÃO ---
-
-    @Transactional
-    public ResponsePosicao cadastrarMotoEAlocar(MotoDto motoDto, Long idPatio) {
-        Moto moto = save(motoDto);
-        return alocarMotoEmPosicaoLivre(moto, idPatio);
-    }
-
-    @Transactional
-    public ResponsePosicao alocarMotoExistente(String placa, Long idPatio) {
-        Moto moto = buscarMotoOrException(placa);
-
-        posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
-
-        return alocarMotoEmPosicaoLivre(moto, idPatio);
-    }
-
-    @Transactional
-    public ResponsePosicao alocarMotoNaPosicao(String placa, String posicaoHorizontal, int posicaoVertical, Long idPatio) {
-        Moto moto = buscarMotoOrException(placa);
-
-        posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
-
-        PosicaoPatio novaPosicao = posicaoPatioRepository
-                .findByPosicaoHorizontalAndPosicaoVerticalAndPatioIdAndIsPosicaoLivreTrue(
-                        posicaoHorizontal, posicaoVertical, idPatio)
-                .orElseThrow(() -> new PosicaoNotFoundException("Posição " + posicaoHorizontal + posicaoVertical + " não encontrada ou já ocupada"));
-
-        alocarMoto(novaPosicao, moto);
-        return new ResponsePosicao(
-                moto.getPlaca(),
-                novaPosicao.getPosicaoHorizontal(),
-                novaPosicao.getPosicaoVertical(),
-                novaPosicao.getPatio().getId()
-        );
-    }
-
-    @Transactional
-    public ResponsePosicao cadastrarMotoEAlocarEmPosicao(CadastroMotoComPatioDto dto, Long idPatio) {
-        Moto moto = save(new MotoDto(
-                dto.getTipoMoto(),
-                dto.getAno(),
-                dto.getPlaca(),
-                dto.getPrecoAluguel(),
-                dto.getStatusMoto(),
-                null
-        ));
-
-        PosicaoPatio posicao = posicaoPatioRepository
-                .findByPosicaoHorizontalAndPosicaoVerticalAndPatioIdAndIsPosicaoLivreTrue(
-                        dto.getPosicaoHorizontal(),
-                        dto.getPosicaoVertical(),
-                        idPatio
-                )
-                .orElseThrow(() -> new PosicaoNotFoundException("Posição " + dto.getPosicaoHorizontal() + dto.getPosicaoVertical() + " não encontrada ou já ocupada no pátio " + idPatio));
-        alocarMoto(posicao, moto);
-        return new ResponsePosicao(
-                moto.getPlaca(),
-                posicao.getPosicaoHorizontal(),
-                posicao.getPosicaoVertical(),
-                posicao.getPatio().getId()
-        );
-    }
-
-    // --- ATUALIZAÇÃO DE STATUS ---
-
-    @Transactional
-    public Moto atualizarStatus(String placa, StatusMoto statusMoto) {
-        Moto moto = buscarMotoOrException(placa);
-        moto.setStatusMoto(statusMoto);
-
-        if (statusMoto.equals(StatusMoto.ALUGADA)) {
-            moto.setDataAluguel(LocalDate.now());
-            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
-            // Remove a referência da posição na moto
-            moto.setPosicaoPatio(null);
-        } else if (statusMoto.equals(StatusMoto.MANUTENCAO)) {
-            posicaoPatioRepository.findByMotoPlaca(placa).ifPresent(this::liberarPosicao);
-            // Remove a referência da posição na moto
-            moto.setPosicaoPatio(null);
-        }
-
-        return motoRepository.save(moto);
-    }
 
     // --- CONSULTAS ---
 
-    public PosicaoMotoResponse buscarPosicaoPorPlaca(String placa) {
-        Moto moto = buscarMotoOrException(placa);
-        PosicaoPatio posicao = posicaoPatioRepository.findByMotoPlaca(placa).orElse(null);
+    public Page<Moto> findAllByPatioId(Long patioId, Pageable pageable) {
+        return motoRepository.findAllByPatioId(patioId, pageable);
+    }
+
+    public PosicaoMotoResponse buscarSetorPorPlaca(final String placa) {
+        final Moto moto = buscarMotoOrException(placa, null);
+        return construirPosicaoMotoResponse(moto);
+    }
+
+    public PosicaoMotoResponse buscarSetorPorRastreador(final String codRastreador) {
+        final Moto moto = buscarMotoOrException(null, codRastreador);
+        return construirPosicaoMotoResponse(moto);
+    }
+
+    public PosicaoMotoResponse buscarMotoMaisAntigaPorTipoEPatio(final TipoMoto tipoMoto, final Long patioId) {
+        patioExiste(patioId);
+
+        final Moto moto = motoRepository.findOldestMotoByTipoAndPatioId(tipoMoto, patioId)
+                .orElseThrow(() -> new MotoNotFoundException("Nenhuma moto do tipo '" + tipoMoto + "' encontrada no pátio " + patioId));
+
+        return construirPosicaoMotoResponse(moto);
+    }
+
+    private PosicaoMotoResponse construirPosicaoMotoResponse(Moto moto) {
+        Patio patio = null;
+        if (moto.getPatioId() != null) {
+            patio = patioRepository.findById(moto.getPatioId()).orElse(null);
+        }
+
+        final String setor = moto.getSetorPatio() != null ? moto.getSetorPatio().getSetor() : null;
 
         return new PosicaoMotoResponse(
                 moto.getPlaca(),
@@ -138,56 +156,69 @@ public class MotoService {
                 moto.getStatusMoto(),
                 moto.getAno(),
                 moto.getPrecoAluguel(),
-                posicao == null ? null : posicao.getPatio().getId(),
-                posicao == null ? null : posicao.getPatio().getApelido(),
-                posicao == null ? null : posicao.getPatio().getEndereco(),
-                posicao == null ? 0 : posicao.getPosicaoVertical(),
-                posicao == null ? null : posicao.getPosicaoHorizontal(),
-                posicao != null && posicao.isPosicaoLivre()
+                patio != null ? patio.getId() : null,
+                patio != null ? patio.getApelido() : null,
+                patio != null ? patio.getEndereco() : null,
+                setor,
+                moto.getCodRastreador(),
+                moto.getDataEntrada()
         );
     }
 
-    // --- MÉTODOS AUXILIARES PRIVADOS ---
+    private void alocarNoSetor(final CadastroMotoDto dto, final Long patioId) {
+        SetorPatio setorPatio = setorExisite(dto.setor(), patioId);
 
-    private Moto buscarMotoOrException(String placa) {
-        return motoRepository.findByPlaca(placa)
-                .orElseThrow(() -> new MotoNotFoundException("Moto com placa '" + placa + "' não encontrada"));
-    }
+        boolean excedido = setorPatioRepository.setorComCapacidadeExcedida(patioId, dto.setor());
 
-    private ResponsePosicao alocarMotoEmPosicaoLivre(Moto moto, Long idPatio) {
-        PosicaoPatio posicaoLivre = posicaoPatioRepository
-                .findFirstByIsPosicaoLivreTrueAndPatioIdOrderByPosicaoHorizontalAscPosicaoVerticalAsc(idPatio)
-                .orElseThrow(() -> new PosicaoNotFoundException("Nenhuma posição livre disponível no pátio com ID " + idPatio));
+        if (excedido) {
+            throw new SetorCheioException(dto.setor());
+        }
 
-        alocarMoto(posicaoLivre, moto);
-
-        return new ResponsePosicao(
-                moto.getPlaca(),
-                posicaoLivre.getPosicaoHorizontal(),
-                posicaoLivre.getPosicaoVertical(),
-                posicaoLivre.getPatio().getId()
-        );
-    }
-
-    private void liberarPosicao(PosicaoPatio posicao) {
-        posicao.setMoto(null);
-        posicao.setPosicaoLivre(true);
-        posicaoPatioRepository.save(posicao);
-    }
-
-    private void alocarMoto(PosicaoPatio posicao, Moto moto) {
-        posicao.setMoto(moto);
-        posicao.setPosicaoLivre(false);
-        moto.setPosicaoPatio(posicao);
-        moto.setDataAluguel(null);
-        moto.setStatusMoto(StatusMoto.DISPONIVEL);
-        posicaoPatioRepository.save(posicao);
+        final Moto moto = saveMoto(dto);
+        moto.setSetorPatio(setorPatio);
+        moto.setPatioId(patioId);
         motoRepository.save(moto);
+        setorPatio.getMotos().add(moto);
+        setorPatioRepository.save(setorPatio);
     }
 
-    private Moto save(MotoDto motoDto) {
-        return motoRepository.save(Moto.from(motoDto));
+    private Moto saveMoto(final CadastroMotoDto motoDto) {
+        var moto = Moto.builder()
+                .tipoMoto(motoDto.tipoMoto())
+                .ano(motoDto.ano())
+                .placa(motoDto.placa())
+                .precoAluguel(motoDto.precoAluguel())
+                .statusMoto(StatusMoto.DISPONIVEL)
+                .dataAluguel(null)
+                .codRastreador(motoDto.codRastreador())
+                .dataEntrada(motoDto.dataEntrada())
+                .build();
+
+        return motoRepository.save(moto);
+    }
+
+    private void removerDoSetor(Moto moto) {
+        SetorPatio setorPatio = moto.getSetorPatio();
+        if (setorPatio != null) {
+            setorPatio.getMotos().remove(moto);
+            setorPatioRepository.save(setorPatio);
+        }
+        moto.setSetorPatio(null);
+    }
+
+    private Moto buscarMotoOrException(final String placa, final String codRastreador) {
+        return motoRepository.findByPlacaOrCodRastreador(placa, codRastreador)
+                .orElseThrow(() -> new MotoNotFoundException("Moto não encontrada"));
+    }
+
+    private SetorPatio setorExisite(final String setor, final Long patioId) {
+        patioExiste(patioId);
+        return setorPatioRepository.findSetor(setor, patioId)
+                .orElseThrow(() -> new SetorNaoExisteException(setor));
+    }
+
+    private void patioExiste(final Long patioId) {
+        patioRepository.findById(patioId).orElseThrow(() -> new PatioNotFoundException(patioId));
     }
 
 }
-

@@ -155,12 +155,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/login
+      - url: http://motoflow-server.eastus.azurecontainer.io:8080/api/login
         name: Login
         meta:
           id: req_86ba4b07b2c74ec9bf849a6bfc924a0d
           created: 1749491761597
-          modified: 1756428678798
+          modified: 1758583290454
           isPrivate: false
           description: ""
           sortKey: -1749491761597
@@ -243,12 +243,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/motos/2
+      - url: http://localhost:8080/api/motos/1
         name: Adicionar Moto
         meta:
           id: req_7eca6328aa294a89add125f0e2ee2e6f
           created: 1747279100528
-          modified: 1758377192755
+          modified: 1758583195824
           isPrivate: false
           description: ""
           sortKey: -1747177291458
@@ -259,11 +259,11 @@ collection:
             {
               "tipoMoto": "MOTTU_POP",
               "ano": 2022,
-              "placa": "ABC1223",
+              "placa": "ABC6578",
               "precoAluguel": 150.00,
               "statusMoto": "DISPONIVEL",
-              "setor": "A",
-              "codRastreador": "12345678ABC",
+              "setor": "B",
+              "codRastreador": "1431ABC",
               "dataEntrada": "2025-09-14T22:30:00"
             }
         headers:
@@ -490,7 +490,7 @@ collection:
         meta:
           id: req_db4b76a0cabb49458569a076ea291cf3
           created: 1756767687942
-          modified: 1758377253857
+          modified: 1758585024755
           isPrivate: false
           description: ""
           sortKey: -1756767687942
@@ -500,7 +500,7 @@ collection:
           text: |-
             {
             	"setor":"A",
-            	"capacidadeSetor": 20
+            	"capacidadeSetor": 2
             }
         headers:
           - name: Content-Type
@@ -524,7 +524,7 @@ collection:
         meta:
           id: req_4cd5c9aa88e5489ba51460098eac2d50
           created: 1757024464676
-          modified: 1757988742917
+          modified: 1758585013288
           isPrivate: false
           description: ""
           sortKey: -1757024464676
@@ -544,16 +544,41 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/posicoes/2
+      - url: http://localhost:8080/api/posicoes/1
         name: Todos os setores do patio
         meta:
           id: req_6a71f45b25b04654a1431da7954c7636
           created: 1757024567663
-          modified: 1757991253774
+          modified: 1758585038136
           isPrivate: false
           description: ""
           sortKey: -1756896076309
         method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.5.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/posicoes/c/1
+        name: Deletar Setor
+        meta:
+          id: req_3ed7685b77ba46f4b03f530f85268c29
+          created: 1758584900006
+          modified: 1758585044707
+          isPrivate: false
+          description: ""
+          sortKey: -1756960270492.5
+        method: DELETE
         headers:
           - name: User-Agent
             value: insomnia/11.5.0

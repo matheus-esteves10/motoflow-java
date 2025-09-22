@@ -165,4 +165,13 @@ public class ValidationHandler {
         error.put("message", e.getMessage());
         return error;
     }
+
+    @ExceptionHandler(SetorComMotosException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> setorComMotos(SetorComMotosException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getClass().getSimpleName());
+        error.put("message", e.getMessage());
+        return error;
+    }
 }

@@ -56,4 +56,15 @@ public class SetorPatioController {
     public ResponseEntity<SetorDto> getMotosPorSetor(@PathVariable Long patioId, @PathVariable String setor) {
         return ResponseEntity.ok(setorPatioService.motosPorSetor(patioId, setor));
     }
+
+    @Operation(summary = "Deletar um setor de um pátio")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Setor deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Pátio ou setor não encontrado")
+    })
+    @DeleteMapping("/{setor}/{patioId}")
+    public ResponseEntity<Void> deletarSetor(@PathVariable String setor, @PathVariable Long patioId) {
+        setorPatioService.deletarSetor(setor, patioId);
+        return ResponseEntity.noContent().build();
+    }
 }

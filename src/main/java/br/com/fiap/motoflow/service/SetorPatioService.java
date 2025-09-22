@@ -4,10 +4,7 @@ import br.com.fiap.motoflow.dto.CriarSetorDto;
 import br.com.fiap.motoflow.dto.responses.SetoresDto;
 import br.com.fiap.motoflow.dto.responses.SetorDto;
 import br.com.fiap.motoflow.dto.responses.MotoResponseDto;
-import br.com.fiap.motoflow.exceptions.ExceededSpaceException;
-import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
-import br.com.fiap.motoflow.exceptions.SetorAlreadyExists;
-import br.com.fiap.motoflow.exceptions.SetorNaoExisteException;
+import br.com.fiap.motoflow.exceptions.*;
 import br.com.fiap.motoflow.model.Patio;
 import br.com.fiap.motoflow.model.SetorPatio;
 import br.com.fiap.motoflow.repository.PatioRepository;
@@ -113,6 +110,16 @@ public class SetorPatioService {
         );
     }
 
+    @Transactional
+    public void deletarSetor(final String setor, final Long patioId) {
+        final SetorPatio setorDeletar = setorExisite(setor, patioId);
+
+        if (setorDeletar.getMotos() != null && !setorDeletar.getMotos().isEmpty()) {
+            throw new SetorComMotosException();
+        }
+
+        setorPatioRepository.delete(setorDeletar);
+    }
 
     private SetorPatio setorExisite(String setor, Long patioId) {
         patioExiste(patioId);
@@ -123,6 +130,4 @@ public class SetorPatioService {
     private Patio patioExiste(final Long patioId) {
         return patioRepository.findById(patioId).orElseThrow(() -> new PatioNotFoundException(patioId));
     }
-
-
 }

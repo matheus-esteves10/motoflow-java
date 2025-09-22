@@ -6,6 +6,7 @@ import br.com.fiap.motoflow.dto.responses.SetorDto;
 import br.com.fiap.motoflow.dto.responses.MotoResponseDto;
 import br.com.fiap.motoflow.exceptions.ExceededSpaceException;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
+import br.com.fiap.motoflow.exceptions.SetorAlreadyExists;
 import br.com.fiap.motoflow.exceptions.SetorNaoExisteException;
 import br.com.fiap.motoflow.model.Patio;
 import br.com.fiap.motoflow.model.SetorPatio;
@@ -81,6 +82,12 @@ public class SetorPatioService {
     public SetorDto criarSetorNoPatio(final Long patioId, final CriarSetorDto dto) {
         final Patio patio = patioExiste(patioId);
 
+        final String setorNome = dto.setor().toUpperCase();
+        final boolean setorJaExiste = setorPatioRepository.findSetor(setorNome, patioId).isPresent();
+        if (setorJaExiste) {
+            throw new SetorAlreadyExists(setorNome, patio.getApelido());
+        }
+
         final List<SetorPatio> setores = setorPatioRepository.findAllByPatioId(patioId);
 
         final int capacidadeTotalSetores = setores.stream().mapToInt(SetorPatio::getCapacidadeSetor).sum();
@@ -90,7 +97,7 @@ public class SetorPatioService {
         }
 
         final SetorPatio novoSetor = SetorPatio.builder()
-                .setor(dto.setor().toUpperCase())
+                .setor(setorNome)
                 .capacidadeSetor(dto.capacidadeSetor())
                 .patio(patio)
                 .build();

@@ -1,7 +1,9 @@
 package br.com.fiap.motoflow.service;
 
+import br.com.fiap.motoflow.dto.web.PatioDashboardResponse;
 import br.com.fiap.motoflow.dto.responses.PatioQuantityResponse;
 import br.com.fiap.motoflow.dto.responses.PatioResponse;
+import br.com.fiap.motoflow.dto.web.SetorDashboardDto;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
 import br.com.fiap.motoflow.model.Patio;
 import br.com.fiap.motoflow.model.SetorPatio;
@@ -23,6 +25,8 @@ public class PatioService {
         this.patioRepository = patioRepository;
         this.setorPatioRepository = setorPatioRepository;
     }
+
+
 
     public PatioQuantityResponse getPatioInfos(final Long id){
         final Patio patio = patioExiste(id);
@@ -68,6 +72,46 @@ public class PatioService {
 
     private Patio patioExiste(final Long patioId) {
         return patioRepository.findById(patioId).orElseThrow(() -> new PatioNotFoundException(patioId));
+    }
+
+/* THYMELEAF - DASHBOARD DO PÁTIO */
+
+    public PatioDashboardResponse getDashboardInfos(final Long id) {
+        final Patio patio = patioExiste(id);
+        final List<SetorPatio> setores = setorPatioRepository.findAllByPatioId(id);
+
+        List<SetorDashboardDto> setoresDashboard = setores.stream()
+                .map(setor -> {
+                    int motosOcupadas = setor.getMotos() != null ? setor.getMotos().size() : 0;
+                    int vagasLivres = setor.getCapacidadeSetor() - motosOcupadas;
+
+                    return SetorDashboardDto.builder()
+                            .nomeSetor(setor.getSetor())
+                            .capacidadeTotal(setor.getCapacidadeSetor())
+                            .motosOcupadas(motosOcupadas)
+                            .vagasLivres(vagasLivres)
+                            .build();
+                })
+                .toList();
+
+        int totalMotosOcupadas = setoresDashboard.stream()
+                .mapToInt(SetorDashboardDto::getMotosOcupadas)
+                .sum();
+
+        int totalVagasLivres = setoresDashboard.stream()
+                .mapToInt(SetorDashboardDto::getVagasLivres)
+                .sum();
+
+        return PatioDashboardResponse.builder()
+                .id(patio.getId())
+                .apelido(patio.getApelido())
+                .area(patio.getArea())
+                .endereco(patio.getEndereco())
+                .capacidadeMax(patio.getCapacidade())
+                .setores(setoresDashboard)
+                .totalMotosOcupadas(totalMotosOcupadas)
+                .totalVagasLivres(totalVagasLivres)
+                .build();
     }
 
 }

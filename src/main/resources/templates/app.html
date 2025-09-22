@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Motoflow - App</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -79,11 +78,6 @@
             const doc = parser.parseFromString(html, 'text/html');
             const container = doc.querySelector('.container');
             return container ? container.outerHTML : html;
-        },
-
-        getPatioId: () => {
-            const sidebarTitle = document.querySelector('.sidebar h2');
-            return sidebarTitle ? sidebarTitle.textContent.match(/\d+/)?.[0] : null;
         }
     };
 
@@ -100,25 +94,10 @@
                 const html = await response.text();
                 mainContent.innerHTML = Utils.extractContainer(html);
 
-                PageHandlers.applySpecificStyles();
                 FormHandlers.attachListeners();
             } catch (error) {
                 console.error('Error loading content:', error);
                 Utils.showError(mainContent, error.message);
-            }
-        }
-    };
-
-    // Page-specific handlers
-    const PageHandlers = {
-        applySpecificStyles: () => {
-            const mainContent = document.getElementById('mainContent');
-
-            if (mainContent.querySelector('#patioChart')) {
-                const patioId = Utils.getPatioId();
-                if (patioId) {
-                    DashboardChart.load(patioId);
-                }
             }
         }
     };
@@ -183,76 +162,6 @@
         }
     };
 
-    // Dashboard Chart Management
-    const DashboardChart = {
-        load: async (patioId) => {
-            try {
-                const response = await fetch(`/web/patio/${patioId}/stats`);
-                const data = await response.json();
-                DashboardChart.create(data);
-            } catch (error) {
-                console.error('Erro ao carregar dados do pátio:', error);
-                DashboardChart.create({ posicoesDisponiveis: 0, posicoesOcupadas: 0 });
-            }
-        },
-
-        create: (data) => {
-            const canvas = document.querySelector('#patioChart');
-            if (!canvas) return;
-
-            const ctx = canvas.getContext('2d');
-
-            // Destroy existing chart
-            if (canvas.chart) {
-                canvas.chart.destroy();
-            }
-
-            // Create new chart with improved styling
-            canvas.chart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Posições Disponíveis', 'Posições Ocupadas'],
-                    datasets: [{
-                        label: 'Ocupação do Pátio',
-                        data: [data.posicoesDisponiveis, data.posicoesOcupadas],
-                        backgroundColor: [
-                            'rgba(34, 197, 94, 0.1)',
-                            'rgba(34, 197, 94, 0.8)'
-                        ],
-                        borderColor: [
-                            'rgba(34, 197, 94, 0.3)',
-                            'rgba(34, 197, 94, 1)'
-                        ],
-                        borderWidth: 2,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: { size: 14, weight: '500' },
-                                padding: 20,
-                                usePointStyle: true,
-                                pointStyle: 'circle'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: 'white',
-                            bodyColor: 'white',
-                            cornerRadius: 8,
-                            padding: 12
-                        }
-                    },
-                    cutout: '60%'
-                }
-            });
-        }
-    };
 
     // Global function for sidebar navigation
     window.loadContent = ContentManager.load;

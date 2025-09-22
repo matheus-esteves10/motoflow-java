@@ -30,27 +30,23 @@ public class PatioService {
 
     public PatioQuantityResponse getPatioInfos(final Long id){
         final Patio patio = patioExiste(id);
-
         final List<SetorPatio> setores = setorPatioRepository.findAllByPatioId(id);
 
-        Set<String> setoresComPosicoesDisponiveis = new HashSet<>();
-        Set<String> setoresCheios = new HashSet<>();
 
-        for (var setor : setores) {
-            if (setor.getMotos().size() < setor.getCapacidadeSetor()) {
-                setoresComPosicoesDisponiveis.add(setor.getSetor());
-            } else {
-                setoresCheios.add(setor.getSetor());
-            }
-        }
+        final int capacidadeMax = patio.getCapacidade();
+        final int quantidadeOcupadas = setores.stream()
+                .mapToInt(setor -> setor.getMotos() != null ? setor.getMotos().size() : 0)
+                .sum();
+        final int quantidadeDisponiveis = capacidadeMax - quantidadeOcupadas;
+
         return PatioQuantityResponse.builder()
                 .id(patio.getId())
                 .apelido(patio.getApelido())
                 .area(patio.getArea())
                 .endereco(patio.getEndereco())
-                .capacidadeMax(patio.getCapacidade())
-                .setoresComPosicoesDisponiveis(setoresComPosicoesDisponiveis)
-                .setoresCheios(setoresCheios)
+                .capacidadeMax(capacidadeMax)
+                .quantidadeOcupadas(quantidadeOcupadas)
+                .quantidadeDisponiveis(quantidadeDisponiveis)
                 .build();
     }
 

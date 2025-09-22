@@ -15,7 +15,7 @@ public class PatioQuantityResponse {
     private Integer area;
     private Integer capacidadeMax;
     private Endereco endereco;
-    private Set<String> setoresComPosicoesDisponiveis;
-    private Set<String> setoresCheios;
+    private int quantidadeOcupadas;
+    private int quantidadeDisponiveis;
 
 }

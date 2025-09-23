@@ -53,7 +53,7 @@ A aplicação conta com:
 | Área                      | Tecnologia                           |
 |---------------------------|--------------------------------------|
 | Localização BLE           | ESP32 + BLE + RSSI                   |
-| Visão Computacional       | API Plate Recognizer                 |
+| Visão Computacional       | API Plate Recognizer + Modelo ML     |
 | Backend                   | Java + Spring Boot                   |
 | Aplicativo Mobile         | React Native/Kotlin + Biblioteca BLE |
 | Frontend Web              | Thymeleaf                            |

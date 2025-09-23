@@ -1,76 +1,79 @@
-# 📍 Mapeamento Inteligente de Pátio com Visão Computacional
+# 🛵 Mottu - Localização Inteligente de Motos no Pátio
 
-## 🚀 Visão Geral
+Solução inteligente para gerenciamento e localização de motos em pátios de locadoras, utilizando tecnologia BLE com beacons (prototipado com **ESP32**) e visão computacional para preenchimento automático de dados.
 
-Este projeto tem como objetivo desenvolver uma solução baseada em **visão computacional** para otimizar a gestão de pátios de motos da Mottu, empresa referência no aluguel de motocicletas para entregadores de aplicativo. A proposta automatiza a alocação, localização e remoção de motos em tempo real, aumentando a eficiência, escalabilidade e precisão da operação.
+## 🌐 Visão Geral
 
-## ❗ O Problema
+Este projeto foi desenvolvido com o objetivo de **automatizar e facilitar a movimentação e localização de motos no pátio** da Mottu, especialmente durante o processo de retirada e devolução dos veículos.
 
-Com mais de 100 filiais espalhadas por diferentes localidades e tamanhos, a Mottu enfrenta desafios críticos relacionados à operação manual de seus pátios:
+A aplicação conta com:
 
-- Localização manual das motos gera erros e retrabalho;
-- Baixa produtividade dos operadores;
-- Falta de padronização e visibilidade em tempo real;
-- Atrasos na operação e riscos de segurança;
-- Dificuldade de escalar o processo para novas filiais.
-
-## 🎯 Objetivos da Solução
-
-A solução idealizada busca resolver os problemas acima com os seguintes pilares:
-
-### ✅ Localização Inteligente
-
-- Identificação automática das motos por imagem e leitura de placas;
-- Mapeamento digital do pátio com exibição em tempo real da posição das motos.
-
-### ✅ Automação de Processos
-
-- Alocação automática de motos em vagas disponíveis;
-- Remoção de motos do pátio ao serem alugadas, com simples leitura de placa.
-
-### ✅ Interface Visual e Escalável
-
-- Plataforma web ou aplicativo com interface intuitiva para os operadores;
-- Compatível com qualquer layout de pátio, permitindo fácil adaptação.
-
-## 🔄 Fluxo da Aplicação
-
-O fluxo operacional da aplicação ocorre da seguinte forma:
-
-1. **Upload da Imagem da Placa**  
-   O operador utiliza o aplicativo mobile para capturar e enviar a imagem da placa da moto por meio da interface da aplicação.
-
-2. **Processamento com Visão Computacional**  
-   Um script em Python consome essa imagem e utiliza um modelo de indentificação de imagem (API Plate Recognizer) para identificar automaticamente a placa da moto.
-
-3. **Envio ao Backend**  
-   Após a leitura, o script envia para o backend em Java os dados da placa juntamente com a tarefa a ser executada (como o cadastro e posicionamento de uma nova moto no pátio, por exemplo).
-
-4. **Persistência dos Dados**  
-   O backend processa a solicitação, atualiza o banco de dados com as informações recebidas e associa a moto a uma posição no pátio.
-
-5. **Visualização na Interface**  
-   A interface web ou mobile exibe a nova posição da moto em tempo real no mapa do pátio, permitindo acompanhamento completo pelos operadores.
-
-
-## 🧠 Tecnologias Envolvidas
-
-- Visão Computacional para leitura da iamgem das placas (API Plater Recognizer)
-- Backend com integração de câmeras/sensores
-- Frontend Web/App com visualização do pátio em tempo real
-- Banco de dados georreferenciado/localização
-
-## 🧩 Benefícios Esperados
-
-- Redução de erros e retrabalho manual
-- Aumento da produtividade e agilidade operacional
-- Operação mais segura e escalável
-- Suporte tecnológico ao crescimento da Mottu
+- Um **sistema de localização baseado em sinal BLE (RSSI)** para encontrar motos no pátio;
+- Preenchimento automático de **placa** e **tipo da moto** por meio de uma foto;
+- Interface amigável para operadores, com **visualização em tempo real da posição das motos**.
 
 ---
 
-> **Status**: Em desenvolvimento  
-> **Equipe**: [Matheus Esteves, Gabriel Falanga e Arthur Spedine]  
-> **Cliente/Desafio**: Mottu – Challenge  
-> **Instruções**: Somente rodar o projeto e fazer os requests no endpoint (swagger ou arquivo do insomnia que foi adicionado ao repositório)
+## 📲 Funcionalidades
 
+### 📍 Localização com Beacon BLE (ESP32)
+- Cada moto possui um **beacon ESP32** que emite sinais BLE constantemente.
+- A aplicação mobile usa a **intensidade do sinal (RSSI)** captado pelo smartphone para estimar a **distância até a moto**.
+- Isso permite que o operador encontre rapidamente a moto no pátio, mesmo sem saber sua posição exata.
+
+### 🧠 Preenchimento Automático via Visão Computacional
+- Durante o cadastro, o operador tira uma foto da placa da moto.
+- Um modelo de visão computacional (API Plate Recognizer e Modelo desenvolvido por nós) **identifica automaticamente a placa e o tipo da moto**.
+- Essas informações são então enviadas ao backend para finalização do cadastro.
+
+---
+
+## 🔄 Fluxo da Aplicação
+
+1. **Captura da Placa**
+   - O operador tira uma foto da moto via app mobile.
+
+2. **Leitura Automática**
+   - A imagem é processada pelo modelo para extração da placa e do tipo da moto.
+
+3. **Cadastro**
+   - Os dados extraídos são enviados ao backend e armazenados no banco de dados.
+
+4. **Localização**
+   - O app detecta o beacon BLE especifico da moto que está sendo buscada e calcula a distância com base no RSSI.
+   - A interface mostra, em tempo real, a posição da moto no pátio.
+
+5. **Visualização**
+   - O operador visualiza e interage com a posição das motos via aplicativo ou sistema web.
+
+---
+
+## 🧪 Tecnologias Utilizadas
+
+| Área                      | Tecnologia                           |
+|---------------------------|--------------------------------------|
+| Localização BLE           | ESP32 + BLE + RSSI                   |
+| Visão Computacional       | API Plate Recognizer                 |
+| Backend                   | Java + Spring Boot                   |
+| Aplicativo Mobile         | React Native/Kotlin + Biblioteca BLE |
+| Frontend Web              | Thymeleaf                            |
+| Banco de Dados            | PostgreSQL                           |
+
+---
+
+## 🎯 Benefícios Esperados
+
+- 🚀 Redução de tempo na localização de motos
+- 🔍 Precisão no cadastro com leitura automatizada
+- 🛠️ Menos erros e retrabalho manual
+- 📈 Escalabilidade para grandes pátios
+- 🔐 Mais segurança e controle operacional
+
+---
+
+## 🚧 Status do Projeto
+
+> 🧪 **Em desenvolvimento (MVP funcional com ESP32 e RSSI)**  
+> 👨‍💻 **Equipe**: Matheus Esteves, Gabriel Falanga, Arthur Spedine  
+> 🏁 **Desafio**: Mottu – Challenge  
+> 📄 **Instruções**: Execute o projeto e utilize os endpoints via Swagger ou Insomnia (arquivo incluído no repositório)

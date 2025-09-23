@@ -62,7 +62,8 @@ public class SetorPatioService {
                         m.getPlaca(),
                         m.getTipoMoto(),
                         m.getAno(),
-                        m.getStatusMoto()
+                        m.getStatusMoto(),
+                        m.getCodRastreador()
                 ))
                 .collect(Collectors.toList());
 

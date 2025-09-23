@@ -7,5 +7,6 @@ public record MotoResponseDto(Long id,
                               String placa,
                               TipoMoto tipoMoto,
                               int ano,
-                              StatusMoto statusMoto) {
+                              StatusMoto statusMoto,
+                              String codRastreador) {
 }

@@ -66,9 +66,9 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Motos Ocupadas</p>
+                    <p class="text-sm font-medium text-gray-600">Posições Ocupadas</p>
                     <p class="text-2xl font-bold text-gray-900"
-                       th:text="${patioInfo.totalMotosOcupadas}">-</p>
+                       th:text="${patioInfo.totalPosicoesOcupadas}">-</p>
                 </div>
             </div>
         </div>
@@ -102,7 +102,7 @@
                 <div>
                     <p class="text-sm font-medium text-gray-600">Taxa de Ocupação</p>
                     <p class="text-2xl font-bold text-gray-900"
-                       th:text="${patioInfo.capacidadeMax > 0 ? #numbers.formatInteger((patioInfo.totalMotosOcupadas * 100) / patioInfo.capacidadeMax, 0) + '%' : '0%'}">-%</p>
+                       th:text="${patioInfo.capacidadeMax > 0 ? #numbers.formatInteger((patioInfo.totalPosicoesOcupadas * 100) / patioInfo.capacidadeMax, 0) + '%' : '0%'}">-%</p>
                 </div>
             </div>
         </div>
@@ -112,13 +112,6 @@
     <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-8">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold text-gray-800">Detalhamento por Setor</h2>
-            <div class="flex items-center text-sm text-gray-500">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                Atualizado agora
-            </div>
         </div>
 
         <!-- Setores Grid -->
@@ -137,14 +130,14 @@
                     </div>
 
                     <div class="flex items-center justify-between">
-                        <span class="text-sm font-medium text-gray-600">Motos Ocupadas:</span>
-                        <span class="text-sm font-bold text-primary-600" th:text="${setor.motosOcupadas}">18</span>
+                        <span class="text-sm font-medium text-gray-600">Posições Ocupadas:</span>
+                        <span class="text-sm font-bold text-primary-600" th:text="${setor.posicoesOcupadas}">18</span>
                     </div>
 
                     <div class="flex items-center justify-between">
                         <span class="text-sm font-medium text-gray-600">Taxa de Ocupação:</span>
                         <span class="text-sm font-bold text-gray-800"
-                              th:text="${setor.capacidadeTotal > 0 ? #numbers.formatInteger((setor.motosOcupadas * 100) / setor.capacidadeTotal, 0) + '%' : '0%'}">90%</span>
+                              th:text="${setor.capacidadeTotal > 0 ? #numbers.formatInteger((setor.posicoesOcupadas * 100) / setor.capacidadeTotal, 0) + '%' : '0%'}">90%</span>
                     </div>
                 </div>
 
@@ -152,7 +145,7 @@
                 <div class="mt-4">
                     <div class="w-full bg-gray-200 rounded-full h-3">
                         <div class="bg-gradient-to-r from-primary-500 to-primary-600 h-3 rounded-full transition-all duration-300"
-                             th:style="'width: ' + ${setor.capacidadeTotal > 0 ? (setor.motosOcupadas * 100) / setor.capacidadeTotal : 0} + '%;'"></div>
+                             th:style="'width: ' + ${setor.capacidadeTotal > 0 ? (setor.posicoesOcupadas * 100) / setor.capacidadeTotal : 0} + '%;'"></div>
                     </div>
                 </div>
             </div>

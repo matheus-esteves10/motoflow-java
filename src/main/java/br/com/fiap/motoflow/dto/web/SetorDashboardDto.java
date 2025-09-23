@@ -8,6 +8,6 @@ import lombok.Getter;
 public class SetorDashboardDto {
     private String nomeSetor;
     private int capacidadeTotal;
-    private int motosOcupadas;
+    private int posicoesOcupadas;
     private int vagasLivres;
 }

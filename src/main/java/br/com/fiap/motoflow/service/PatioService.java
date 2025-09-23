@@ -1,8 +1,8 @@
 package br.com.fiap.motoflow.service;
 
-import br.com.fiap.motoflow.dto.web.PatioDashboardResponse;
 import br.com.fiap.motoflow.dto.responses.PatioQuantityResponse;
 import br.com.fiap.motoflow.dto.responses.PatioResponse;
+import br.com.fiap.motoflow.dto.web.PatioDashboardResponse;
 import br.com.fiap.motoflow.dto.web.SetorDashboardDto;
 import br.com.fiap.motoflow.exceptions.PatioNotFoundException;
 import br.com.fiap.motoflow.model.Patio;
@@ -11,9 +11,7 @@ import br.com.fiap.motoflow.repository.PatioRepository;
 import br.com.fiap.motoflow.repository.SetorPatioRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class PatioService {
@@ -78,20 +76,20 @@ public class PatioService {
 
         List<SetorDashboardDto> setoresDashboard = setores.stream()
                 .map(setor -> {
-                    int motosOcupadas = setor.getMotos() != null ? setor.getMotos().size() : 0;
-                    int vagasLivres = setor.getCapacidadeSetor() - motosOcupadas;
+                    int posicoesOcupadas = setor.getMotos() != null ? setor.getMotos().size() : 0;
+                    int vagasLivres = setor.getCapacidadeSetor() - posicoesOcupadas;
 
                     return SetorDashboardDto.builder()
                             .nomeSetor(setor.getSetor())
                             .capacidadeTotal(setor.getCapacidadeSetor())
-                            .motosOcupadas(motosOcupadas)
+                            .posicoesOcupadas(posicoesOcupadas)
                             .vagasLivres(vagasLivres)
                             .build();
                 })
                 .toList();
 
-        int totalMotosOcupadas = setoresDashboard.stream()
-                .mapToInt(SetorDashboardDto::getMotosOcupadas)
+        int totalPosicoesOcupadas = setoresDashboard.stream()
+                .mapToInt(SetorDashboardDto::getPosicoesOcupadas)
                 .sum();
 
         int totalVagasLivres = setoresDashboard.stream()
@@ -105,7 +103,7 @@ public class PatioService {
                 .endereco(patio.getEndereco())
                 .capacidadeMax(patio.getCapacidade())
                 .setores(setoresDashboard)
-                .totalMotosOcupadas(totalMotosOcupadas)
+                .totalPosicoesOcupadas(totalPosicoesOcupadas)
                 .totalVagasLivres(totalVagasLivres)
                 .build();
     }

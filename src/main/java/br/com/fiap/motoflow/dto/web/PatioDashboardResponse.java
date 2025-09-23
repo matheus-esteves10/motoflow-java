@@ -15,6 +15,6 @@ public class PatioDashboardResponse {
     private Integer capacidadeMax;
     private Endereco endereco;
     private List<SetorDashboardDto> setores;
-    private int totalMotosOcupadas;
+    private int totalPosicoesOcupadas;
     private int totalVagasLivres;
 }

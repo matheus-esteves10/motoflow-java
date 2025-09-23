@@ -1,9 +1,10 @@
 package br.com.fiap.motoflow.controller.api;
 
-import br.com.fiap.motoflow.dto.*;
+import br.com.fiap.motoflow.dto.CadastroMotoDto;
+import br.com.fiap.motoflow.dto.EditarStatusMotoDto;
+import br.com.fiap.motoflow.dto.SetorMotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
 import br.com.fiap.motoflow.dto.responses.ResponseMovimentacao;
-import br.com.fiap.motoflow.model.Operador;
 import br.com.fiap.motoflow.model.enums.TipoMoto;
 import br.com.fiap.motoflow.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +15,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

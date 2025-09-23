@@ -35,13 +35,13 @@ public class SetorPatioService {
         return setores.stream()
                 .map(setor -> {
                     final int capacidadeSetor = setor.getCapacidadeSetor();
-                    final int motosOcupadas = setor.getMotos() != null ? setor.getMotos().size() : 0;
-                    final int vagasDisponiveis = capacidadeSetor - motosOcupadas;
+                    final int posicoesOcupadas = setor.getMotos() != null ? setor.getMotos().size() : 0;
+                    final int vagasDisponiveis = capacidadeSetor - posicoesOcupadas;
 
                     return new SetoresDto(
                             setor.getSetor(),
                             capacidadeSetor,
-                            motosOcupadas,
+                            posicoesOcupadas,
                             vagasDisponiveis
                     );
                 })

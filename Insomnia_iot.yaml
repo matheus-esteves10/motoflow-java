@@ -243,12 +243,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/motos/1
+      - url: http://motoflow-server.eastus.azurecontainer.io:8080/api/motos/1
         name: Adicionar Moto
         meta:
           id: req_7eca6328aa294a89add125f0e2ee2e6f
           created: 1747279100528
-          modified: 1758583195824
+          modified: 1758585902110
           isPrivate: false
           description: ""
           sortKey: -1747177291458
@@ -259,11 +259,11 @@ collection:
             {
               "tipoMoto": "MOTTU_POP",
               "ano": 2022,
-              "placa": "ABC6578",
+              "placa": "ABC6576",
               "precoAluguel": 150.00,
               "statusMoto": "DISPONIVEL",
-              "setor": "B",
-              "codRastreador": "1431ABC",
+              "setor": "A",
+              "codRastreador": "1433ABC",
               "dataEntrada": "2025-09-14T22:30:00"
             }
         headers:
@@ -273,7 +273,7 @@ collection:
             value: insomnia/11.1.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU5MTk4ODkzfQ.5QGhpgk5_SzSsWGSy52N_8QnxvkHlJ2Da_y3CXZJDC0
           prefix: Bearer
         settings:
           renderRequestBody: true
@@ -426,6 +426,33 @@ collection:
             send: true
             store: true
           rebuildPath: true
+      - url: http://localhost:8080/api/motos/beacon/EEE1234
+        name: Editar Id Beacon
+        meta:
+          id: req_12d29f9f2d7448279044f2ca09ddbb34
+          created: 1758843033983
+          modified: 1758843043094
+          isPrivate: false
+          description: ""
+          sortKey: -1758843033983
+        method: PUT
+        body:
+          text: '{     "codRastreador": "TESTE12345" }'
+          mimeType: application/json
+        headers:
+          - name: Authorization
+            value: Bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU5MzY3ODA0fQ.Tj06PYUouw61DkSbUCDBtO-Wuv9Toi02bwOH2CmqMFo
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
   - name: Patio
     meta:
       id: fld_b10d3617accd4fd6bbc53c09109c0757
@@ -485,12 +512,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:8080/api/posicoes/1
+      - url: http://motoflow-server.eastus.azurecontainer.io:8080/api/posicoes/1
         name: Criar Setores
         meta:
           id: req_db4b76a0cabb49458569a076ea291cf3
           created: 1756767687942
-          modified: 1758585024755
+          modified: 1758585850858
           isPrivate: false
           description: ""
           sortKey: -1756767687942
@@ -500,7 +527,7 @@ collection:
           text: |-
             {
             	"setor":"A",
-            	"capacidadeSetor": 2
+            	"capacidadeSetor": 30
             }
         headers:
           - name: Content-Type
@@ -509,7 +536,7 @@ collection:
             value: insomnia/11.5.0
         authentication:
           type: bearer
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU4NTkzMTc1fQ.s1rVqRyYE41Wc2hamOOssstIw3wOg-WJD0VYInpk9FU
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Iiwibm9tZSI6IkFETUlOIEdFUkFMIiwicm9sZSI6IkFETUlOIiwicGF0aW9JZCI6MSwiZXhwIjoxNzU5MTk4ODkzfQ.5QGhpgk5_SzSsWGSy52N_8QnxvkHlJ2Da_y3CXZJDC0
           prefix: Bearer
         settings:
           renderRequestBody: true

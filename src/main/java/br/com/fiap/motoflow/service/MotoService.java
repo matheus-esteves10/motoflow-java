@@ -1,6 +1,7 @@
 package br.com.fiap.motoflow.service;
 
 import br.com.fiap.motoflow.dto.CadastroMotoDto;
+import br.com.fiap.motoflow.dto.EdicaoRastreador;
 import br.com.fiap.motoflow.dto.EditarStatusMotoDto;
 import br.com.fiap.motoflow.dto.SetorMotoDto;
 import br.com.fiap.motoflow.dto.responses.PosicaoMotoResponse;
@@ -20,6 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class MotoService {
@@ -142,6 +146,20 @@ public class MotoService {
         return construirPosicaoMotoResponse(moto);
     }
 
+    public Map<String, String> editarRastreador(final String placa, final EdicaoRastreador dto) {
+        Moto moto = buscarMotoOrException(placa, null);
+
+        if (moto.getCodRastreador() == null) {
+            moto.setDataEntrada(LocalDateTime.now());
+        }
+
+        moto.setCodRastreador(dto.codRastreador());
+        Map<String, String> resultado = new HashMap<>();
+        resultado.put("codRastreador", moto.getCodRastreador());
+
+        return resultado;
+    }
+
     private PosicaoMotoResponse construirPosicaoMotoResponse(Moto moto) {
         Patio patio = null;
         if (moto.getPatioId() != null) {
@@ -220,5 +238,4 @@ public class MotoService {
     private void patioExiste(final Long patioId) {
         patioRepository.findById(patioId).orElseThrow(() -> new PatioNotFoundException(patioId));
     }
-
 }

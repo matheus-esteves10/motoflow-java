@@ -120,6 +120,21 @@ public class MotoService {
         motoRepository.delete(moto);
     }
 
+    @Transactional
+    public Map<String, String> editarRastreador(final String placa, final EdicaoRastreador dto) {
+        Moto moto = buscarMotoOrException(placa, null);
+
+        if (moto.getCodRastreador() == null) {
+            moto.setDataEntrada(LocalDateTime.now());
+        }
+
+        moto.setCodRastreador(dto.codRastreador());
+        Map<String, String> resultado = new HashMap<>();
+        resultado.put("codRastreador", moto.getCodRastreador());
+
+        return resultado;
+    }
+
 
     // --- CONSULTAS ---
 
@@ -144,20 +159,6 @@ public class MotoService {
                 .orElseThrow(() -> new MotoNotFoundException("Nenhuma moto do tipo '" + tipoMoto + "' encontrada no pátio " + patioId));
 
         return construirPosicaoMotoResponse(moto);
-    }
-
-    public Map<String, String> editarRastreador(final String placa, final EdicaoRastreador dto) {
-        Moto moto = buscarMotoOrException(placa, null);
-
-        if (moto.getCodRastreador() == null) {
-            moto.setDataEntrada(LocalDateTime.now());
-        }
-
-        moto.setCodRastreador(dto.codRastreador());
-        Map<String, String> resultado = new HashMap<>();
-        resultado.put("codRastreador", moto.getCodRastreador());
-
-        return resultado;
     }
 
     private PosicaoMotoResponse construirPosicaoMotoResponse(Moto moto) {

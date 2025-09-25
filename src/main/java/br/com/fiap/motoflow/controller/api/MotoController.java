@@ -125,17 +125,18 @@ public class MotoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("beacon/{placa}")
+    @PutMapping("/beacon/{placa}")
     @Operation(summary = "Editar o id do rastreador da moto",
             description = "Endpoint feito para alterar o id do rastreador ou resetar um para uma moto que foi alugada e voltou para o pátio",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Novo Rastreador adicionado", content = @Content),
+                    @ApiResponse(responseCode = "200", description = "Novo Rastreador adicionado", content = @Content),
                     @ApiResponse(responseCode = "404", description = "Moto nao encontrada", content = @Content)
             }
     )
     public ResponseEntity<Map<String,String>> editarRastreador(@PathVariable final String placa,
                                                  @Valid @RequestBody final EdicaoRastreador edicaoRastreador) {
-        return ResponseEntity.ok(motoService.editarRastreador(placa, edicaoRastreador));
+        Map<String, String> body = motoService.editarRastreador(placa, edicaoRastreador);
+        return ResponseEntity.ok(body);
     }
 
 

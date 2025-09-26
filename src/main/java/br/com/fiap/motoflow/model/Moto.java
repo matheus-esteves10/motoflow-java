@@ -36,7 +36,10 @@ public class Moto {
     @Column(name = "nr_ano", nullable = false)
     private int ano;
 
-    @Pattern(regexp = "^[A-Z]{3}[0-9]{4}$", message = "A placa deve estar no formato AAA0000.")
+    @Pattern(
+            regexp = "^[A-Z]{3}[0-9]{4}$|^[A-Z]{3}[0-9][A-Z][0-9]{2}$",
+            message = "A placa deve estar no formato AAA0000 ou Mercosul AAA0A00."
+    )
     @Column(name = "nr_placa", length = 7)
     private String placa;
 

@@ -24,8 +24,6 @@ public class PatioService {
         this.setorPatioRepository = setorPatioRepository;
     }
 
-
-
     public PatioQuantityResponse getPatioInfos(final Long id){
         final Patio patio = patioExiste(id);
         final List<SetorPatio> setores = setorPatioRepository.findAllByPatioId(id);
